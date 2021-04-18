@@ -1,0 +1,103 @@
+# Copyright (c) 2021 Emanuele Bellocchia
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
+#
+# Imports
+#
+import pyrogram
+import time
+from telegram_payment_bot.config import ConfigTypes, Config
+from telegram_payment_bot.logger import Logger
+from telegram_payment_bot.payments_checker import PaymentsChecker
+from telegram_payment_bot.subscription_emailer import SubscriptionEmailer
+from telegram_payment_bot.payments_data import PaymentsDict
+
+
+#
+# Classes
+#
+
+# Constants for payments emailer class
+class PaymentsEmailerConst:
+    # Sleep time for sending emails
+    SEND_EMAIL_SLEEP_TIME_SEC: float = 0.05
+
+
+# Payments emailer class
+class PaymentsEmailer:
+    # Constructor
+    def __init__(self,
+                 client: pyrogram.Client,
+                 config: Config,
+                 logger: Logger) -> None:
+        self.client = client
+        self.config = config
+        self.logger = logger
+        self.emailer = SubscriptionEmailer(self.config)
+        self.payment_checker = PaymentsChecker(self.client, self.config, self.logger)
+
+    # Email all users with expired payment
+    def EmailAllWithExpiredPayment(self) -> PaymentsDict:
+        # Get expired members
+        expired_payments = self.payment_checker.GetAllEmailsWithExpiredPayment()
+
+        # Send emails
+        self.__SendEmails(expired_payments)
+
+        return expired_payments
+
+    # Email all users with expiring payment in the specified number of days
+    def EmailAllWithExpiringPayment(self,
+                                    days: int) -> PaymentsDict:
+        # Get expired members
+        expired_payments = self.payment_checker.GetAllEmailsWithExpiringPayment(days)
+
+        # Send emails
+        self.__SendEmails(expired_payments)
+
+        return expired_payments
+
+    # Send emails to expired payments
+    def __SendEmails(self,
+                     expired_payments: PaymentsDict):
+        # Email members if any
+        if expired_payments.Any():
+            # Connect
+            self.emailer.Connect()
+
+            for username in expired_payments:
+                payment = expired_payments.GetByUsername(username)
+
+                if payment.Email() != "":
+                    # Prepare and send message
+                    self.emailer.PrepareMsg(payment.Email())
+                    # Send email only if not test mode
+                    if not self.config.GetValue(ConfigTypes.APP_TEST_MODE):
+                        self.emailer.Send()
+                        self.logger.GetLogger().info("Email successfully sent to: %s (@%s)" % (payment.Email(), payment.Username()))
+                    else:
+                        self.logger.GetLogger().info("Test mode ON: no email sent to %s (@%s)" % (payment.Email(), payment.Username()))
+                    # Sleep
+                    time.sleep(PaymentsEmailerConst.SEND_EMAIL_SLEEP_TIME_SEC)
+                else:
+                    self.logger.GetLogger().warning("No email set for user @%s" % payment.Username())
+
+            # Disconnect
+            self.emailer.Disconnect()

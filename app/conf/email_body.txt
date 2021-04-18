@@ -1,0 +1,2 @@
+Hi, your payment for the Telegram group GROUP_NAME is about to expire.
+Please pay within the end of the month or you'll removed from the group.
