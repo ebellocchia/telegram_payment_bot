@@ -7,8 +7,10 @@ __pycache__
 .coverage
 htmlcov
 *.egg-info
+.idea
 build
 dist
+venv
 *.xls
 *.xlsx
 *.log
