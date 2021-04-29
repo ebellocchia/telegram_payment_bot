@@ -22,7 +22,7 @@ To run the bot, move to the *app* folder and run the *bot.py* script:
     cd app
     python bot.py
 
-When run with no parameter, *conf/config.ini* will be the default configuration file.\
+When run with no parameter, *conf/config.ini* will be the default configuration file (in this way it can be used for different groups).\
 To specify a different configuration file:
 
     python bot.py -c another_conf.ini
