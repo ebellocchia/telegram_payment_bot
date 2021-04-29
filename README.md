@@ -45,10 +45,10 @@ The list of all possible fields that can be set is shown below.
 |**[users]**|Configuration for users|
 |authorized_users|List of Telegram usernames that are authorized to use the bot, comma separated|
 |**[support]**|Configuration for support|
-|support_email|Email for getting support or send payments receipts|
-|support_telegram|Telegram username for getting support or send payments receipts|
+|support_email|Email for getting support or send payments receipts (can be left emtpy if none)|
+|support_telegram|Telegram username for getting support or send payments receipts (can be left emtpy if none)|
 |**[payment]**|Configuration for payment|
-|payment_website|Website for payment|
+|payment_website|Website for payment (can be left emtpy if none)|
 |payment_check_period_sec|Period in seconds for periodical checks, -1 for disabling it|
 |payment_check_chat_ids|IDs of groups to be periodical checked, comma separated. This assumes that all groups are linked to the same payments.|
 |payment_type|Input for payment data: *EXCEL_FILE* for using xls/xlsx file, *GOOGLE_SHEET* for using a Google Sheet|
