@@ -15,7 +15,7 @@ To get them, create an app using the following website: [https://my.telegram.org
 
 Just run pip in this folder as follows:
 
-    pip install .
+    python setup.py install
 
 To run the bot, move to the *app* folder and run the *bot.py* script:
 
