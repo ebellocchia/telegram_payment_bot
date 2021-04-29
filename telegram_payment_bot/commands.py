@@ -171,8 +171,10 @@ class CheckNoUsernameCmd(CommandBase):
             msg += "Members list:\n%s\n" % chat_members.ToString()
             msg += "Please set the username %s or you'll be removed from the group.\n" % self.__HoursToStr(left_hours)
             msg += "To set it: **Settings -> Edit Profile -> username**.\n\n"
-            msg += "**The username shall be sent via email to: ** %s." % self.config.GetValue(
-                ConfigTypes.SUPPORT_EMAIL)
+
+            support_email =  self.config.GetValue(ConfigTypes.SUPPORT_EMAIL)
+            if support_email != "":
+                msg += "**The username shall be sent via email to: ** %s." % support_email
         else:
             msg = "**USERNAME CHECK**\nChat group: **%s**\nAll members has the username set." % self.cmd_data.Chat().title
 
@@ -267,10 +269,21 @@ class CheckNoPaymentCmd(CommandBase):
             msg += "Members whose payment is about to expire %s: **%d**\n" % (days_left_str, expired_members.Count())
             msg += "Members list:\n%s\n" % expired_members.ToString()
             msg += "Please pay within %s or you'll be removed from the group.\n" % last_day_str
-            msg += "You can pay directly on the website: %s\n\n" % self.config.GetValue(
-                ConfigTypes.PAYMENT_WEBSITE)
-            msg += "If you are on the list but you paid, please send an email to %s or contact @%s **specifying your Telegram username**." % (
-                (self.config.GetValue(ConfigTypes.SUPPORT_EMAIL), self.config.GetValue(ConfigTypes.SUPPORT_TELEGRAM)))
+
+            website = self.config.GetValue(ConfigTypes.PAYMENT_WEBSITE)
+            if website != "":
+                msg += "You can pay directly on the website: %s\n\n" % website
+
+            support_email =  self.config.GetValue(ConfigTypes.SUPPORT_EMAIL)
+            support_tg = self.config.GetValue(ConfigTypes.SUPPORT_TELEGRAM)
+
+            if support_email != "" and support_tg != "":
+                msg += "If you are on the list but you paid, please send an email to %s or contact @%s **specifying your Telegram username**." % (
+                    support_email, support_tg)
+            elif support_email != "":
+                msg += "If you are on the list but you paid, please send an email to %s **specifying your Telegram username**." % support_email
+            elif support_tg != "":
+                msg += "If you are on the list but you paid, please contact @%s **specifying your Telegram username**." % support_tg
         else:
             msg = "**PAYMENTS CHECK**\nChat group: **%s**\nAll members paid." % self.cmd_data.Chat().title
 
