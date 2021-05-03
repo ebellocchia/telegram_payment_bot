@@ -42,6 +42,7 @@ The list of all possible fields that can be set is shown below.
 |bot_token|Bot token from BotFather|
 |**[app]**|Configuration for app|
 |app_is_test_mode|True to activate test modem false otherwise|
+|app_lang_file|Language file in XML format (default: English)|
 |**[users]**|Configuration for users|
 |authorized_users|List of Telegram usernames that are authorized to use the bot, comma separated|
 |**[support]**|Configuration for support|
@@ -94,13 +95,13 @@ List of supported commands:
     - *DAYS_LEFT*: number of days within which the payment expires. Zero means expiring today.
 - **/check_no_payment [<DAYS_LEFT>] [<LAST_DAY>]**: show the list of chat members whose payment is expiring in the specified number of days (can be run only in group)
     - *DAYS_LEFT*: number of days within which the payment expires. Zero means expiring today.
-    - *LAST_DAY*: last day to complete the payment before begin removed (only for printing the message). If zero, it'll print "within few days".
+    - *LAST_DAY*: last day to complete the payment before being removed (only for printing the message). If zero, it'll print "within few days".
 - **/remove_no_payment**: remove the chat members whose payment has expired (can be run only in group)
 
 Add *quiet* or *q* as last parameter to send the bot response in a private chat instead of the group chat.
 
 Users removed from the group are just kicked and not banned, so they can re-join later via invite links if necessary.\
-When users are removed from the group (either because they had no usernames or they didn't pay), a new invite link is generated and sent to all authorized users in a private chat.\
+When users are removed from the group (either because they had no username or they didn't pay), a new invite link is generated and sent to all authorized users in a private chat.\
 This automatically revokes the old invite link and prevents those users to join again.
 
 ## Periodical Checks
@@ -137,6 +138,12 @@ When checking for payments, a user is removed by group if:
 Test mode can be used to test the bot without any effect to the users of the group. When active:
 - Users are not kicked from the group if they don't have a username or don't have paid, both when running a command and during periodical checks
 - Emails are not sent to the users that hasn't paid yet
+
+## Translation
+
+The messages sent by the bot on Telegram can be translated into different languages (the default language is English) by providing a custom XML file.\
+The XML file path is specified in the configuration file (*app_lang_file* field).\
+An example XML file in italian is provided in the folder *app/lang*.
 
 # License
 
