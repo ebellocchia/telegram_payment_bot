@@ -22,11 +22,20 @@
 # Imports
 #
 import pyrogram
+from typing import Optional
 
 
 #
 # Classes
 #
+
+# Chat helper class
+class ChatHelper:
+    # Get title
+    @staticmethod
+    def GetTitle(chat: pyrogram.types.Chat) -> str:
+        return chat.title if chat.title is not None else "not specified"
+
 
 # User helper class
 class UserHelper:
@@ -34,14 +43,18 @@ class UserHelper:
     @staticmethod
     def GetNameOrId(user: pyrogram.types.User) -> str:
         if user.username is not None:
-            return "@%s (Name: %s - ID: %d)" % (user.username, UserHelper.GetName(user), user.id)
+            return "@%s (%s - ID: %d)" % (user.username, UserHelper.GetName(user), user.id)
         else:
-            return "%s (ID: %d)" % (UserHelper.GetName(user), user.id)
+            name = UserHelper.GetName(user)
+            if name is not None:
+                return "%s (ID: %d)" % (name, user.id)
+            else:
+                return "ID: %d" % user.id
 
     # Get user name
     @staticmethod
-    def GetName(user: pyrogram.types.User) -> str:
+    def GetName(user: pyrogram.types.User) -> Optional[str]:
         if user.first_name is not None:
             return "%s %s" % (user.first_name, user.last_name) if user.last_name is not None else user.first_name
         else:
-            return user.last_name if user.last_name is not None else "Name not specified"
+            return user.last_name
