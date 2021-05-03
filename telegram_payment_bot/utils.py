@@ -22,7 +22,6 @@
 # Classes
 #
 
-
 # Wrapper for utility functions
 class Utils:
     # Convert string to bool
