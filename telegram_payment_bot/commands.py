@@ -224,22 +224,25 @@ class RemoveNoUsernameCmd(CommandBase):
 class EmailNoPaymentCmd(CommandBase):
     # Execute command
     def _ExecuteCommand(self) -> None:
-        # Get parameter
-        days_left = self.cmd_data.Params().GetAsInt(0)
-        # Get expired payments
-        expired_payments = PaymentsEmailer(self.client, self.config, self.logger).EmailAllWithExpiringPayment(days_left)
-
-        # Build message
-        if expired_payments.Any():
-            # Build strings for easier reading
-            days_left_str = "in %d days" % days_left if days_left > 1 else ("tomorrow" if days_left == 1 else "today")
-
-            msg = "**PAYMENTS CHECK**\n"
-            msg += "Members whose payment is about to expire %s: **%d**\n" % (days_left_str, expired_payments.Count())
-            msg += "Members list:\n%s\n" % expired_payments.ToString()
-            msg += "A reminder email has been sent to all members."
+        if not self.config.GetValue(ConfigTypes.EMAIL_ENABLED):
+            msg = "**PAYMENTS CHECK**\nEmail is currently disabled."
         else:
-            msg = "**PAYMENTS CHECK**\nAll members paid, no email sent."
+            # Get parameter
+            days_left = self.cmd_data.Params().GetAsInt(0)
+            # Get expired payments
+            expired_payments = PaymentsEmailer(self.client, self.config, self.logger).EmailAllWithExpiringPayment(days_left)
+
+            # Build message
+            if expired_payments.Any():
+                # Build strings for easier reading
+                days_left_str = "in %d days" % days_left if days_left > 1 else ("tomorrow" if days_left == 1 else "today")
+
+                msg = "**PAYMENTS CHECK**\n"
+                msg += "Members whose payment is about to expire %s: **%d**\n" % (days_left_str, expired_payments.Count())
+                msg += "Members list:\n%s\n" % expired_payments.ToString()
+                msg += "A reminder email has been sent to all members."
+            else:
+                msg = "**PAYMENTS CHECK**\nAll members paid, no email sent."
 
         # Send message
         self._SendMessage(msg)

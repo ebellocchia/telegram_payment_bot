@@ -53,6 +53,7 @@ class ConfigTypes(Enum):
     PAYMENT_USERNAME_COL = auto(),
     PAYMENT_EXPIRATION_COL = auto(),
     # Email
+    EMAIL_ENABLED = auto(),
     EMAIL_FROM = auto(),
     EMAIL_REPLY_TO = auto(),
     EMAIL_HOST = auto(),

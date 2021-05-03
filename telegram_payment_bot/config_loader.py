@@ -161,7 +161,7 @@ class PaymentConfigLoader(ConfigLoaderBase):
         self._SetValue(ConfigTypes.PAYMENT_CHECK_CHAT_IDS,
                        "payment",
                        "payment_check_chat_ids",
-                       lambda val: [int(chat_id) for chat_id in val.split(",")])
+                       lambda val: [int(chat_id) for chat_id in val.split(",")] if val != "" else [])
 
         self._SetValue(ConfigTypes.PAYMENT_TYPE, "payment", "payment_type", ConfigTypeConverter.StrToPaymentType)
 
@@ -216,27 +216,33 @@ class PaymentConfigLoader(ConfigLoaderBase):
 class EmailConfigLoader(ConfigLoaderBase):
     # Load configuration
     def Load(self) -> None:
-        self._SetValue(ConfigTypes.EMAIL_FROM, "email", "email_from")
-        self._SetValue(ConfigTypes.EMAIL_REPLY_TO, "email", "email_reply_to")
-        self._SetValue(ConfigTypes.EMAIL_HOST, "email", "email_host")
-        self._SetValue(ConfigTypes.EMAIL_USER, "email", "email_user")
-        self._SetValue(ConfigTypes.EMAIL_PASSWORD, "email", "email_password")
-        self._SetValue(ConfigTypes.EMAIL_SUBJECT, "email", "email_subject")
-        self._SetValue(ConfigTypes.EMAIL_ALT_BODY_FILE, "email", "email_alt_body")
-        self._SetValue(ConfigTypes.EMAIL_HTML_BODY_FILE,"email", "email_html_body")
-        self.config.SetValue(ConfigTypes.EMAIL_ALT_BODY, self.__ReadFile(ConfigTypes.EMAIL_ALT_BODY_FILE))
-        self.config.SetValue(ConfigTypes.EMAIL_HTML_BODY, self.__ReadFile(ConfigTypes.EMAIL_HTML_BODY_FILE))
+        self._SetValue(ConfigTypes.EMAIL_ENABLED, "email", "email_enabled", Utils.StrToBool)
+
+        if self.config.GetValue(ConfigTypes.EMAIL_ENABLED):
+            self._SetValue(ConfigTypes.EMAIL_FROM, "email", "email_from")
+            self._SetValue(ConfigTypes.EMAIL_REPLY_TO, "email", "email_reply_to")
+            self._SetValue(ConfigTypes.EMAIL_HOST, "email", "email_host")
+            self._SetValue(ConfigTypes.EMAIL_USER, "email", "email_user")
+            self._SetValue(ConfigTypes.EMAIL_PASSWORD, "email", "email_password")
+            self._SetValue(ConfigTypes.EMAIL_SUBJECT, "email", "email_subject")
+            self._SetValue(ConfigTypes.EMAIL_ALT_BODY_FILE, "email", "email_alt_body")
+            self._SetValue(ConfigTypes.EMAIL_HTML_BODY_FILE,"email", "email_html_body")
+            self.config.SetValue(ConfigTypes.EMAIL_ALT_BODY, self.__ReadFile(ConfigTypes.EMAIL_ALT_BODY_FILE))
+            self.config.SetValue(ConfigTypes.EMAIL_HTML_BODY, self.__ReadFile(ConfigTypes.EMAIL_HTML_BODY_FILE))
 
     # Print configuration
     def Print(self) -> None:
-        print(" - Email from: %s" % self.config.GetValue(ConfigTypes.EMAIL_FROM))
-        print(" - Email reply-to: %s" % self.config.GetValue(ConfigTypes.EMAIL_REPLY_TO))
-        print(" - Email host: %s" % self.config.GetValue(ConfigTypes.EMAIL_HOST))
-        print(" - Email user: %s" % self.config.GetValue(ConfigTypes.EMAIL_USER))
-        print(" - Email password: %s" % self.config.GetValue(ConfigTypes.EMAIL_PASSWORD))
-        print(" - Email subject: %s" % self.config.GetValue(ConfigTypes.EMAIL_SUBJECT))
-        print(" - Email ALT body file: %s" % self.config.GetValue(ConfigTypes.EMAIL_ALT_BODY_FILE))
-        print(" - Email HTML body file: %s" % self.config.GetValue(ConfigTypes.EMAIL_HTML_BODY_FILE))
+        print(" - Email enabled: %s" % self.config.GetValue(ConfigTypes.EMAIL_ENABLED))
+
+        if self.config.GetValue(ConfigTypes.EMAIL_ENABLED):
+            print(" - Email from: %s" % self.config.GetValue(ConfigTypes.EMAIL_FROM))
+            print(" - Email reply-to: %s" % self.config.GetValue(ConfigTypes.EMAIL_REPLY_TO))
+            print(" - Email host: %s" % self.config.GetValue(ConfigTypes.EMAIL_HOST))
+            print(" - Email user: %s" % self.config.GetValue(ConfigTypes.EMAIL_USER))
+            print(" - Email password: %s" % self.config.GetValue(ConfigTypes.EMAIL_PASSWORD))
+            print(" - Email subject: %s" % self.config.GetValue(ConfigTypes.EMAIL_SUBJECT))
+            print(" - Email ALT body file: %s" % self.config.GetValue(ConfigTypes.EMAIL_ALT_BODY_FILE))
+            print(" - Email HTML body file: %s" % self.config.GetValue(ConfigTypes.EMAIL_HTML_BODY_FILE))
 
     # Read file
     def __ReadFile(self,
