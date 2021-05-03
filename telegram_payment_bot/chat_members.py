@@ -24,7 +24,7 @@
 import pyrogram
 from typing import Callable, Optional
 from telegram_payment_bot.config import ConfigTypes, Config
-from telegram_payment_bot.user_helper import UserHelper
+from telegram_payment_bot.helpers import UserHelper
 from telegram_payment_bot.wrapped_list import WrappedList
 
 

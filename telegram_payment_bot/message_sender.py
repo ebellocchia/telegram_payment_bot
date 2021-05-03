@@ -27,7 +27,7 @@ from typing import List, Union
 from telegram_payment_bot.chat_members import ChatMembersGetter
 from telegram_payment_bot.config import Config
 from telegram_payment_bot.logger import Logger
-from telegram_payment_bot.user_helper import UserHelper
+from telegram_payment_bot.helpers import UserHelper
 
 
 #

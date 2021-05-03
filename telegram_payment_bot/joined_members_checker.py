@@ -26,7 +26,7 @@ from typing import List
 from telegram_payment_bot.config import Config
 from telegram_payment_bot.logger import Logger
 from telegram_payment_bot.members_kicker import MembersKicker
-from telegram_payment_bot.user_helper import UserHelper
+from telegram_payment_bot.helpers import UserHelper
 
 
 #
