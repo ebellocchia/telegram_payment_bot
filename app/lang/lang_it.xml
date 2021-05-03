@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<translation>
+    <!-- Generic error message -->
+    <sentence id="GENERIC_ERR">**ERRORE**
+Si è verificato un errore durante l'esecuzione del comando.</sentence>
+    <!-- Authorized-only users message -->
+    <sentence id="AUTH_ONLY_ERR">**ERRORE**
+Non sei autorizzato a utilizzare il comando.</sentence>
+    <!-- Group-only message -->
+    <sentence id="GROUP_ONLY_ERR">**ERRORE**
+Questo comando può essere eseguito solo nel gruppo.</sentence>
+    <!-- Help command message -->
+    <sentence id="HELP_CMD">**HELP**
+Ciao %s,
+benvenuto nel Telegram Payment Bot.
+Qui trovi la lista dei comandi supportati.
+
+**Generici**
+/help : mostra questo messaggio
+/alive : mostra se il bot è attivo
+/auth_users : mostra la lista degli utenti autorizzati a usare il bot
+/chat_info : mostra le informazioni sulla chat - **Solo Gruppo**
+/users_list : mostra la lista di tutti gli utenti del gruppo - **Solo Gruppo**
+/invite_link : genera un nuovo link di invito - **Solo Gruppo**
+
+**Controllo Username**
+/check_no_username [HOURS_LEFT] : mostra gli utenti senza username - **Solo Gruppo**
+/remove_no_username : rimuove gli utenti senza username - **Solo Gruppo**
+
+**Controllo Pagamenti**
+/email_no_payment [DAYS_LEFT]: invia una email agli utenti il cui pagamento sta per scadere
+/check_no_payment [DAYS_LEFT] [LAST_DAY]: mostra gli utenti il cui pagamento sta per scadere - **Solo Gruppo**
+/remove_no_payment : rimuove gli utenti il cui pagamento sta per scadere - **Solo Gruppo**
+
+I comandi che possono essere eseguiti solo nella chat di gruoppo sono specificati in grassetto.
+
+**NOTA:** è possibile aggiungere "quiet" o "q" come ultimo parametro per ottenere il risultato del comando in chat privata, per evitare di intasare il gruppo</sentence>
+    <!-- Invite link command message (sent to authorized users) -->
+    <sentence id="INVITE_LINK_AUTH_CMD">**LINK DI INVITO**
+Nuovo link di invito per il gruppo **"%s"**: %s
+Il vecchio link è stato revocato.
+Se avete un link di invito generato da voi, revocatelo e usate quello generato dal bot.</sentence>
+    <!-- Invite link command message (sent to all users) -->
+    <sentence id="INVITE_LINK_ALL_CMD">**LINK DI INVITO**
+Nuovo link di invito generato.
+Il link è stato inviato in privato agli utenti autorizzati.</sentence>
+    <!-- Alive command message -->
+    <sentence id="ALIVE_CMD">**STATO**
+Il bot è attivo.</sentence>
+    <!-- Authorized users command message -->
+    <sentence id="AUTH_USERS_CMD">**UTENTI AUTORIZZATI**
+Utenti autorizzati a utilizzare il bot:
+%s</sentence>
+    <!-- Chat information command message -->
+    <sentence id="CHAT_INFO_CMD">**INFORMAZIONI CHAT**
+Nome: %s
+Tipo: %s
+ID: %d</sentence>
+    <!-- Users list command message -->
+    <sentence id="USERS_LIST_CMD">**LISTA UTENTI**
+Gruppo: **%s**
+Lista membri:
+%s</sentence>
+    <!-- Check username command message (part 1) -->
+    <sentence id="CHECK_NO_USERNAME_P1_CMD">**CONTROLLO USERNAME**
+Gruppo: **%s**
+Membri senza username: **%d**
+Lista membri:
+%s
+Siete pregati di impostare lo username %s o verrete rimossi dal gruppo.
+Per impostarlo: **Impostazioni -> Modifica profilo -> username**</sentence>
+    <!-- Check username command message (part 2) -->
+    <sentence id="CHECK_NO_USERNAME_P2_CMD">\n\n**Lo username deve essere inviato via email a %s** o in privato a @%s.</sentence>
+    <!-- Check username command message (part 3) -->
+    <sentence id="CHECK_NO_USERNAME_P3_CMD">\n\n**Lo username deve essere inviato via email a %s**.</sentence>
+    <!-- Check username command message (part 4) -->
+    <sentence id="CHECK_NO_USERNAME_P4_CMD">\n\n**Lo username deve essere inviato in privato a @%s**.</sentence>
+    <!-- Check username command message (part 5) -->
+    <sentence id="CHECK_NO_USERNAME_P5_CMD">**CONTROLLO USERNAME**
+Gruppo: **%s**
+Tutti i membri hanno impostato lo username.</sentence>
+    <!-- Remove no username command message (part 1) -->
+    <sentence id="REMOVE_NO_USERNAME_P1_CMD">**CONTROLLO USERNAME**
+Gruppo: **%s**
+I membri senza username stanno per essere rimossi.</sentence>
+    <!-- Remove no username command message (part 2) -->
+    <sentence id="REMOVE_NO_USERNAME_P2_CMD">Operazione completata. Membri rimossi: **%d**</sentence>
+    <!-- Remove no username command message (part 3) -->
+    <sentence id="REMOVE_NO_USERNAME_P3_CMD">\nLista membri:
+%s</sentence>
+    <!-- Email no payment command message (disabled) -->
+    <sentence id="EMAIL_NO_PAYMENT_DISABLED_CMD">**CONTROLLO PAGAMENTI**
+Le email sono al momento disabilitate.</sentence>
+    <!-- Email no payment command message (part 1) -->
+    <sentence id="EMAIL_NO_PAYMENT_P1_CMD">**CONTROLLO PAGAMENTI**
+Membri il cui pagamento sta per cadere %s: **%d**
+Lista membri:
+%s
+Una email è stata inviata a tutti i membri.</sentence>
+    <!-- Email no payment command message (part 2) -->
+    <sentence id="EMAIL_NO_PAYMENT_P2_CMD">**CONTROLLO PAGAMENTI**
+Tutti i membri hanno pagato, nessuna email inviata.</sentence>
+    <!-- Check no payment command message (part 1) -->
+    <sentence id="CHECK_NO_PAYMENT_P1_CMD">**CONTROLLO PAGAMENTI**
+Gruppo: **%s**
+Membri il cui pagamento sta per cadere %s: **%d**
+Lista membri:
+%s
+Siete pregati di pagare entro %s o verrete rimossi dal gruppo.</sentence>
+    <!-- Check no payment command message (part 2) -->
+    <sentence id="CHECK_NO_PAYMENT_P2_CMD">\n\nPotete pagare direttamente dal sito: %s</sentence>
+    <!-- Check no payment command message (part 3) -->
+    <sentence id="CHECK_NO_PAYMENT_P3_CMD">\n\nSe siete nella lista ma avete pagato, inviate una email a %s o contattate @%s **specificando il vostro username Telegram**.</sentence>
+    <!-- Check no payment command message (part 4) -->
+    <sentence id="CHECK_NO_PAYMENT_P4_CMD">\n\nSe siete nella lista ma avete pagato, inviate una email a %s **specificando il vostro username Telegram**.</sentence>
+    <!-- Check no payment command message (part 5) -->
+    <sentence id="CHECK_NO_PAYMENT_P5_CMD">\n\nSe siete nella lista ma avete pagato, contattate @%s **specificando il vostro username Telegram**.</sentence>
+    <!-- Check no payment command message (part 6) -->
+    <sentence id="CHECK_NO_PAYMENT_P6_CMD">**CONTROLLO PAGAMENTI**
+Gruppo: **%s**
+Tutti i membri hanno rinnovato il pagamento.</sentence>
+    <!-- Remove no payment command message (part 1) -->
+    <sentence id="REMOVE_NO_PAYMENT_P1_CMD">**CONTROLLO PAGAMENTI**
+Gruppo: **%s**
+I membri il cui pagamento sta per scadere stanno per essere rimossi.</sentence>
+    <!-- Remove no payment command message (part 2) -->
+    <sentence id="REMOVE_NO_PAYMENT_P2_CMD">Operazione completata. Membri rimossi: **%d**</sentence>
+    <!-- Remove no payment command message (part 3) -->
+    <sentence id="REMOVE_NO_PAYMENT_P3_CMD">\nLista membri:
+%s</sentence>
+    <!-- Misc -->
+    <sentence id="WITHIN_HOURS_MSG">entro %d ore</sentence>
+    <sentence id="WITHIN_DAYS_MSG">entro %d giorni</sentence>
+    <sentence id="ASAP_MSG">il prima possibile</sentence>
+    <sentence id="IN_DAYS_MSG">in %d giorni</sentence>
+    <sentence id="TODAY_MSG">oggi</sentence>
+    <sentence id="TOMORROW_MSG">domani</sentence>
+    <sentence id="DAY_OF_MONTH_MSG">il %d del mese</sentence>
+    <sentence id="FEW_DAYS_MSG">pochi giorni</sentence>
+</translation>
