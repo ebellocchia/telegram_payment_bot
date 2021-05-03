@@ -60,7 +60,9 @@ class ConfigTypeConverter:
     # Convert string to log level
     @staticmethod
     def StrToLogLevel(log_level: str) -> int:
-        return ConfigTypeConverter.STR_TO_LOG_LEVEL[log_level] if log_level in ConfigTypeConverter.STR_TO_LOG_LEVEL else logging.INFO
+        return (ConfigTypeConverter.STR_TO_LOG_LEVEL[log_level]
+                if log_level in ConfigTypeConverter.STR_TO_LOG_LEVEL
+                else logging.INFO)
 
 
 # Configuration loader base class

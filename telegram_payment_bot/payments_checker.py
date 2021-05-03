@@ -63,10 +63,12 @@ class PaymentsChecker:
 
         # Filter chat members
         chat_members_getter = ChatMembersGetter(self.client, self.config)
-        return chat_members_getter.FilterMembers(chat,
-                                                 lambda member: member.status == "member" and
-                                                                member.user.username is not None and
-                                                                not payments.IsExpiredByUsername(member.user.username))
+        return chat_members_getter.FilterMembers(
+            chat,
+            lambda member: member.status == "member" and
+                           member.user.username is not None and
+                           not payments.IsExpiredByUsername(member.user.username)
+        )
 
     # Get all members with expired payment
     def GetAllMembersWithExpiredPayment(self,
@@ -80,10 +82,12 @@ class PaymentsChecker:
 
         # Filter chat members
         chat_members_getter = ChatMembersGetter(self.client, self.config)
-        return chat_members_getter.FilterMembers(chat,
-                                                 lambda member: member.status == "member" and
-                                                                (member.user.username is None or
-                                                                 payments.IsExpiredByUsername(member.user.username)))
+        return chat_members_getter.FilterMembers(
+            chat,
+            lambda member: member.status == "member" and
+                           (member.user.username is None or
+                            payments.IsExpiredByUsername(member.user.username))
+        )
 
     # Get all members with expiring payment
     def GetAllMembersWithExpiringPayment(self,
@@ -98,11 +102,12 @@ class PaymentsChecker:
 
         # Filter chat members
         chat_members_getter = ChatMembersGetter(self.client, self.config)
-        return chat_members_getter.FilterMembers(chat,
-                                                 lambda member: member.status == "member" and
-                                                                (member.user.username is None or
-                                                                 payments.IsExpiringInDaysByUsername(
-                                                                     member.user.username, days)))
+        return chat_members_getter.FilterMembers(
+            chat,
+            lambda member: member.status == "member" and
+                           (member.user.username is None or
+                            payments.IsExpiringInDaysByUsername(member.user.username, days))
+        )
 
     # Get all emails with expired payment
     def GetAllEmailsWithExpiredPayment(self) -> PaymentsDict:

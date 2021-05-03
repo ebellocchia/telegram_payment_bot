@@ -44,15 +44,17 @@ class UsernameChecker:
                            chat: pyrogram.types.Chat) -> ChatMembersList:
         # Filter chat members
         chat_members_getter = ChatMembersGetter(self.client, self.config)
-        return chat_members_getter.FilterMembers(chat,
-                                                 lambda member: member.status == "member" and
-                                                                member.user.username is not None)
+        return chat_members_getter.FilterMembers(
+            chat,
+            lambda member: member.status == "member" and member.user.username is not None
+        )
 
     # Get all with no username
     def GetAllWithNoUsername(self,
                              chat: pyrogram.types.Chat) -> ChatMembersList:
         # Filter chat members
         chat_members_getter = ChatMembersGetter(self.client, self.config)
-        return chat_members_getter.FilterMembers(chat,
-                                                 lambda member: member.status == "member" and
-                                                                member.user.username is None)
+        return chat_members_getter.FilterMembers(
+            chat,
+            lambda member: member.status == "member" and member.user.username is None
+        )

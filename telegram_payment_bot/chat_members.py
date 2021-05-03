@@ -100,6 +100,8 @@ class ChatMembersGetter:
     # Get authorized users
     def GetAuthorizedUsers(self,
                            chat: pyrogram.types.Chat) -> ChatMembersList:
-        return self.FilterMembers(chat,
-                                  lambda member: member.user.username is not None and
-                                                 member.user.username in self.config.GetValue(ConfigTypes.AUTHORIZED_USERS))
+        return self.FilterMembers(
+            chat,
+            lambda member: member.user.username is not None and
+                           member.user.username in self.config.GetValue(ConfigTypes.AUTHORIZED_USERS)
+        )
