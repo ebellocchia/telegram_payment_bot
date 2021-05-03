@@ -91,11 +91,14 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
         for i in range(sheet.nrows):
             # Skip header (first row)
             if i > 0:
-                # Get cell values
-                email = str(sheet.cell_value(i, email_col_idx)).strip()
-                username = str(sheet.cell_value(i, username_col_idx)).strip()
-                # Convert date to datetime object
-                expiration = sheet.cell_value(i, expiration_col_idx)
+                try:
+                    # Get cell values
+                    email = str(sheet.cell_value(i, email_col_idx)).strip()
+                    username = str(sheet.cell_value(i, username_col_idx)).strip()
+                    # Convert date to datetime object
+                    expiration = sheet.cell_value(i, expiration_col_idx)
+                except IndexError:
+                    self.logger.GetLogger().warning("Row index %d is not valid (some fields are missing), skipping it..." % i)
 
                 # Skip empty usernames
                 if username != "":

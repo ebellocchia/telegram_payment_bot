@@ -89,9 +89,12 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
             # Skip header (first row)
             if row_cnt > 0:
                 # Get cell values
-                email = row[email_col_idx].strip()
-                username = row[username_col_idx].strip()
-                expiration = row[expiration_col_idx].strip()
+                try:
+                    email = row[email_col_idx].strip()
+                    username = row[username_col_idx].strip()
+                    expiration = row[expiration_col_idx].strip()
+                except IndexError:
+                    self.logger.GetLogger().warning("Row index %d is not valid (some fields are missing), skipping it..." % row_cnt)
 
                 # Skip empty usernames
                 if username != "":
