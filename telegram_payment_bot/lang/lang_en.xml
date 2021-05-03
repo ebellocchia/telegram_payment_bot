@@ -62,7 +62,7 @@ Chat group: **%s**
 Users list:
 %s</sentence>
     <!-- Check username command message (part 1) -->
-    <sentence id="CHECK_USERNAME_P1_CMD">**USERNAME CHECK**
+    <sentence id="CHECK_NO_USERNAME_P1_CMD">**USERNAME CHECK**
 Chat group: **%s**
 Members with no username: **%d**
 Members list:
@@ -70,9 +70,13 @@ Members list:
 Please set the username %s or you'll be removed from the group.
 To set it: **Settings -> Edit Profile -> username**</sentence>
     <!-- Check username command message (part 2) -->
-    <sentence id="CHECK_USERNAME_P2_CMD">\n**The username shall be sent via email to: %s**.</sentence>
+    <sentence id="CHECK_NO_USERNAME_P2_CMD">\n\n**The username shall be sent via email to %s or to @%s**.</sentence>
     <!-- Check username command message (part 3) -->
-    <sentence id="CHECK_USERNAME_P3_CMD">**USERNAME CHECK**
+    <sentence id="CHECK_USERNAME_P3_CMD">\n\n**The username shall be sent via email to %s**.</sentence>
+    <!-- Check username command message (part 4) -->
+    <sentence id="CHECK_USERNAME_P4_CMD">\n\n**The username shall be sent to @%s**.</sentence>
+    <!-- Check username command message (part 5) -->
+    <sentence id="CHECK_NO_USERNAME_P5_CMD">**USERNAME CHECK**
 Chat group: **%s**
 All members has the username set.</sentence>
     <!-- Remove no username command message (part 1) -->
@@ -104,13 +108,13 @@ Members list:
 %s
 Please pay within %s or you'll be removed from the group.</sentence>
     <!-- Check no payment command message (part 2) -->
-    <sentence id="CHECK_NO_PAYMENT_P2_CMD">You can pay directly on the website: %s\n\n</sentence>
+    <sentence id="CHECK_NO_PAYMENT_P2_CMD">\n\nYou can pay directly on the website: %s</sentence>
     <!-- Check no payment command message (part 3) -->
-    <sentence id="CHECK_NO_PAYMENT_P3_CMD">If you are on the list but you paid, please send an email to %s or contact @%s **specifying your Telegram username**.</sentence>
+    <sentence id="CHECK_NO_PAYMENT_P3_CMD">\n\nIf you are on the list but you paid, please send an email to %s or contact @%s **specifying your Telegram username**.</sentence>
     <!-- Check no payment command message (part 4) -->
-    <sentence id="CHECK_NO_PAYMENT_P4_CMD">If you are on the list but you paid, please send an email to %s **specifying your Telegram username**.</sentence>
+    <sentence id="CHECK_NO_PAYMENT_P4_CMD">\n\nIf you are on the list but you paid, please send an email to %s **specifying your Telegram username**.</sentence>
     <!-- Check no payment command message (part 5) -->
-    <sentence id="CHECK_NO_PAYMENT_P5_CMD">If you are on the list but you paid, please contact @%s **specifying your Telegram username**.</sentence>
+    <sentence id="CHECK_NO_PAYMENT_P5_CMD">\n\nIf you are on the list but you paid, please contact @%s **specifying your Telegram username**.</sentence>
     <!-- Check no payment command message (part 6) -->
     <sentence id="CHECK_NO_PAYMENT_P6_CMD">**PAYMENTS CHECK**
 Chat group: **%s**
