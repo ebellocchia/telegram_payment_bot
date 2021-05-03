@@ -50,7 +50,7 @@ The list of all possible fields that can be set is shown below.
 |**[payment]**|Configuration for payment|
 |payment_website|Website for payment (can be left emtpy if none)|
 |payment_check_period_sec|Period in seconds for periodical checks, -1 for disabling it|
-|payment_check_chat_ids|IDs of groups to be periodical checked, comma separated. This assumes that all groups are linked to the same payments.|
+|payment_check_chat_ids|IDs of groups to be periodical checked, comma separated (can be left empty). This assumes that all groups are linked to the same payments.|
 |payment_type|Input for payment data: *EXCEL_FILE* for using xls/xlsx file, *GOOGLE_SHEET* for using a Google Sheet|
 |payment_excel_file|Name of the Excel file used for payment data, valid only if *payment_type* is *EXCEL_FILE*|
 |payment_google_sheet_id|ID of the Google Sheet used for payment data, valid only if *payment_type* is *GOOGLE_SHEET*|
@@ -60,6 +60,7 @@ The list of all possible fields that can be set is shown below.
 |payment_username_col|Index of the table column containing the username (default: 1)|
 |payment_expiration_col|Index of the table column containing the payment expiration date (default: 2)|
 |**[email]**|Configuration for email that reminds users to pay|
+|email_enabled|Email enable flag. If False, all the next fields can be skipped.|
 |email_from|Email sender|
 |email_reply_to|Email reply-to|
 |email_host|Host for sending email|
