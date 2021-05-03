@@ -76,8 +76,8 @@ class MessageSender:
         auth_members = ChatMembersGetter(self.client, self.config).GetAuthorizedUsers(chat)
         for auth_member in auth_members:
             self.__SendSplitMessage(auth_member.user, split_msg)
-            self.logger.GetLogger().info(
-                "Message sent to authorized user: %s" % UserHelper.GetNameOrId(auth_member.user))
+            self.logger.GetLogger().info("Message sent to authorized user: %s" %
+                                         UserHelper.GetNameOrId(auth_member.user))
 
     # Send split message
     def __SendSplitMessage(self,
