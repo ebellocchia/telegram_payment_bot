@@ -30,6 +30,7 @@ from telegram_payment_bot.config_loader import ConfigLoader
 from telegram_payment_bot.logger import Logger
 from telegram_payment_bot.message_dispatcher import MessageDispatcher
 from telegram_payment_bot.payments_periodic_checker import PaymentsPeriodicChecker
+from telegram_payment_bot.translation_loader import TranslationLoader
 
 
 #
@@ -50,8 +51,9 @@ class PaymentBot:
              config_file: str) -> None:
         # Load configuration
         self.__LoadConfiguration(config_file)
-        # Initialize logger
+        # Initialize logger and translations
         self.__InitLogging()
+        self.__InitTranslations()
         # Initialize client
         self.__InitClient(config_file)
         # Initialize payment checker
@@ -81,6 +83,11 @@ class PaymentBot:
     def __InitLogging(self) -> None:
         self.logger = Logger(self.config)
         self.logger.Init()
+
+    # Initialize translation
+    def __InitTranslations(self) -> None:
+        self.translator = TranslationLoader()
+        self.translator.Load()
 
     # Initialize client
     def __InitClient(self,
@@ -154,7 +161,7 @@ class PaymentBot:
                           client: pyrogram.Client,
                           message: pyrogram.types.Message,
                           cmd_type: CommandTypes) -> None:
-        cmd_dispatcher = CommandDispatcher(self.config, self.logger)
+        cmd_dispatcher = CommandDispatcher(self.config, self.logger, self.translator)
         cmd_dispatcher.Dispatch(client, message, cmd_type)
 
     # Handle message
