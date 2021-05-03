@@ -156,6 +156,10 @@ class SupportConfigLoader(ConfigLoaderBase):
 
 # Payment config loader
 class PaymentConfigLoader(ConfigLoaderBase):
+    # Default values
+    DEF_CREDENTIALS = "credentials.json"
+    DEF_PICKLE = "token.pickle"
+
     # Load configuration
     def Load(self) -> None:
         self._SetValue(ConfigTypes.PAYMENT_WEBSITE, "payment", "payment_website")
@@ -171,8 +175,8 @@ class PaymentConfigLoader(ConfigLoaderBase):
         payment_type = self.config.GetValue(ConfigTypes.PAYMENT_TYPE)
         if payment_type == PaymentTypes.GOOGLE_SHEET:
             self._SetValue(ConfigTypes.PAYMENT_GOOGLE_SHEET_ID, "payment", "payment_google_sheet_id")
-            self._SetValueWithDefault(ConfigTypes.PAYMENT_GOOGLE_CRED, "payment", "payment_google_cred", "credentials.json")
-            self._SetValueWithDefault(ConfigTypes.PAYMENT_GOOGLE_PICKLE, "payment", "payment_google_pickle", "token.pickle")
+            self._SetValueWithDefault(ConfigTypes.PAYMENT_GOOGLE_CRED, "payment", "payment_google_cred", self.DEF_CREDENTIALS)
+            self._SetValueWithDefault(ConfigTypes.PAYMENT_GOOGLE_PICKLE, "payment", "payment_google_pickle", self.DEF_PICKLE)
         elif payment_type == PaymentTypes.EXCEL_FILE:
             self._SetValue(ConfigTypes.PAYMENT_EXCEL_FILE, "payment", "payment_excel_file")
 
