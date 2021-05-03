@@ -93,7 +93,7 @@ def print_header() -> None:
     print("****                          ****")
     print("***                            ***")
     print("**                              **")
-    print("*      Payment Telegram Bot      *")
+    print("*      Telegram Payment Bot      *")
     print("*   Author: Emanuele Bellocchia  *")
     print("*         Version: %s         *" % __version__)
     print("**                              **")
