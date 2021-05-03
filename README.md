@@ -107,14 +107,14 @@ This automatically revokes the old invite link and prevents those users to join 
 
 In addition to the commands, it's possible to run periodical checks.\
 These checks are:
-- Remove a user that hasn't paid as soon as he enters the group.
+- Remove a user that hasn't paid as soon as he joins the group.
 - Remove users that hasn't paid periodically
 
 ## Payment File
 
 The payment file can be either a *xls*/*xlsx* file (*xlrd* library is used to read it) or a Google Sheet.\
 In case a Google Sheet is used:
-1. You should create a project for the bot on Google Cloud Console and download the *json* file for OAuth 2.0 client ID. For more information: [create project](https://developers.google.com/workspace/guides/create-project), [create credentials](https://developers.google.com/workspace/guides/create-credentials)
+1. You should create a project for the bot on Google Cloud Console, create the credentials and download the *json* file for OAuth 2.0 client ID. For more information: [create project](https://developers.google.com/workspace/guides/create-project), [create credentials](https://developers.google.com/workspace/guides/create-credentials)
 2. Rename the *json* file to the name specified in the configuration file and place it in the *app* folder
 2. The first time you'll load the Google Sheet, you'll be asked to login into your Google account and allow the bot to access the sheet. After this, a *pickle* file will be automatically created.
 3. This *pickle* files allows the bot to access the sheet next times, without the need to allow it
