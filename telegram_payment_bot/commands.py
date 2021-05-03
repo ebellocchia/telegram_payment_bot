@@ -131,17 +131,23 @@ class CheckNoUsernameCmd(CommandBase):
             # Get parameter
             left_hours = self.cmd_data.Params().GetAsInt(0)
 
-            msg = (self.translator.GetSentence("CHECK_USERNAME_P1_CMD") %
+            msg = (self.translator.GetSentence("CHECK_NO_USERNAME_P1_CMD") %
                    (ChatHelper.GetTitle(self.cmd_data.Chat()),
                     chat_members.Count(),
                     chat_members.ToString(),
                     self.__HoursToStr(left_hours)))
 
+            # Add contact information if any
             support_email = self.config.GetValue(ConfigTypes.SUPPORT_EMAIL)
-            if support_email != "":
-                msg += self.translator.GetSentence("CHECK_USERNAME_P2_CMD") % support_email
+            support_tg = self.config.GetValue(ConfigTypes.SUPPORT_TELEGRAM)
+            if support_email != "" and support_tg != "":
+                msg += self.translator.GetSentence("CHECK_NO_USERNAME_P2_CMD") % (support_email, support_tg)
+            elif support_email != "":
+                msg += self.translator.GetSentence("CHECK_NO_USERNAME_P3_CMD") % support_email
+            elif support_tg != "":
+                msg += self.translator.GetSentence("CHECK_NO_USERNAME_P4_CMD") % support_tg
         else:
-            msg = self.translator.GetSentence("CHECK_USERNAME_P3_CMD") % ChatHelper.GetTitle(self.cmd_data.Chat())
+            msg = self.translator.GetSentence("CHECK_NO_USERNAME_P5_CMD") % ChatHelper.GetTitle(self.cmd_data.Chat())
 
         # Send message
         self._SendMessage(msg)
