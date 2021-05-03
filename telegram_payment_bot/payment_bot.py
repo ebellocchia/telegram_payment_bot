@@ -87,7 +87,7 @@ class PaymentBot:
     # Initialize translation
     def __InitTranslations(self) -> None:
         self.translator = TranslationLoader()
-        self.translator.Load()
+        self.translator.Load(self.config.GetValue(ConfigTypes.APP_LANG_FILE))
 
     # Initialize client
     def __InitClient(self,

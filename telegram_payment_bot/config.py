@@ -35,6 +35,7 @@ class ConfigTypes(Enum):
     SESSION_NAME = auto(),
     # App
     APP_TEST_MODE = auto(),
+    APP_LANG_FILE = auto(),
     # Users
     AUTHORIZED_USERS = auto(),
     # Support

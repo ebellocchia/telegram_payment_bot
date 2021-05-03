@@ -90,10 +90,8 @@ class ConfigLoaderBase(ABC):
                   section: str,
                   field: str,
                   fct: Optional[Callable[[str], Any]] = None):
-        if fct is None:
-            self.config.SetValue(config_type, self.config_parser[section][field])
-        else:
-            self.config.SetValue(config_type, fct(self.config_parser[section][field]))
+        val = self.config_parser[section][field] if fct is None else fct(self.config_parser[section][field])
+        self.config.SetValue(config_type, val)
 
     # Set value with default
     def _SetValueWithDefault(self,
@@ -104,7 +102,7 @@ class ConfigLoaderBase(ABC):
                              fct: Optional[Callable[[str], Any]] = None):
         try:
             self._SetValue(config_type, section, field, fct)
-        except Exception:
+        except KeyError:
             self.config.SetValue(config_type, default_val)
 
 
@@ -124,10 +122,15 @@ class AppConfigLoader(ConfigLoaderBase):
     # Load configuration
     def Load(self) -> None:
         self._SetValue(ConfigTypes.APP_TEST_MODE, "app", "app_test_mode", Utils.StrToBool)
+        self._SetValueWithDefault(ConfigTypes.APP_LANG_FILE, "app", "app_lang_file", None)
 
     # Print configuration
     def Print(self) -> None:
         print(" - App test mode: %s" % self.config.GetValue(ConfigTypes.APP_TEST_MODE))
+
+        lang_file = self.config.GetValue(ConfigTypes.APP_LANG_FILE)
+        if lang_file is not None:
+            print(" - App language file: %s" % lang_file)
 
 
 # User config loader
@@ -184,7 +187,7 @@ class PaymentConfigLoader(ConfigLoaderBase):
         self._SetValueWithDefault(ConfigTypes.PAYMENT_EMAIL_COL, "payment", "payment_email_col", 0, Utils.StrToInt)
         self._SetValueWithDefault(ConfigTypes.PAYMENT_USERNAME_COL, "payment", "payment_username_col", 1, Utils.StrToInt)
         self._SetValueWithDefault(ConfigTypes.PAYMENT_EXPIRATION_COL, "payment", "payment_expiration_col", 2, Utils.StrToInt)
-
+        # Check indexes
         self.__CheckColumnIndexes()
 
     # Print configuration
@@ -212,9 +215,9 @@ class PaymentConfigLoader(ConfigLoaderBase):
         username_col_idx = self.config.GetValue(ConfigTypes.PAYMENT_USERNAME_COL)
         expiration_col_idx = self.config.GetValue(ConfigTypes.PAYMENT_EXPIRATION_COL)
 
-        if email_col_idx == username_col_idx or \
-           email_col_idx == expiration_col_idx or \
-           username_col_idx == expiration_col_idx:
+        if (email_col_idx == username_col_idx or
+                email_col_idx == expiration_col_idx or
+                username_col_idx == expiration_col_idx):
             raise ValueError("Invalid payment column indexes, they shall be all different")
 
 
