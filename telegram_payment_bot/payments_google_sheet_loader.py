@@ -58,7 +58,8 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
             payments = self.__LoadSheet(gs_reader)
 
             # Log
-            self.logger.GetLogger().info("Google Sheet ID \"%s\" successfully loaded, number of rows: %d" % (sheet_id, payments.Count()))
+            self.logger.GetLogger().info("Google Sheet ID \"%s\" successfully loaded, number of rows: %d" %
+                                         (sheet_id, payments.Count()))
 
             return payments
 
@@ -94,6 +95,9 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
                     username = row[username_col_idx].strip()
                     expiration = row[expiration_col_idx].strip()
                 except IndexError:
+                    email = ""
+                    username = ""
+                    expiration = ""
                     self.logger.GetLogger().warning("Row index %d is not valid (some fields are missing), skipping it..." % row_cnt)
 
                 # Skip empty usernames

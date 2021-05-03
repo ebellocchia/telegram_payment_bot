@@ -91,9 +91,11 @@ class PaymentsEmailer:
                     # Send email only if not test mode
                     if not self.config.GetValue(ConfigTypes.APP_TEST_MODE):
                         self.emailer.Send()
-                        self.logger.GetLogger().info("Email successfully sent to: %s (@%s)" % (payment.Email(), payment.Username()))
+                        self.logger.GetLogger().info("Email successfully sent to: %s (@%s)" %
+                                                     (payment.Email(), payment.Username()))
                     else:
-                        self.logger.GetLogger().info("Test mode ON: no email sent to %s (@%s)" % (payment.Email(), payment.Username()))
+                        self.logger.GetLogger().info("Test mode ON: no email sent to %s (@%s)" %
+                                                     (payment.Email(), payment.Username()))
                     # Sleep
                     time.sleep(PaymentsEmailerConst.SEND_EMAIL_SLEEP_TIME_SEC)
                 else:

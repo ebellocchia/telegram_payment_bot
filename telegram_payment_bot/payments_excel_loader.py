@@ -56,7 +56,8 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
             payments = self.__LoadSheet(sheet)
 
             # Log
-            self.logger.GetLogger().info("File \"%s\" successfully loaded, number of rows: %d" % (payment_file, payments.Count()))
+            self.logger.GetLogger().info("File \"%s\" successfully loaded, number of rows: %d" %
+                                         (payment_file, payments.Count()))
 
             return payments
 
@@ -98,6 +99,9 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
                     # Convert date to datetime object
                     expiration = sheet.cell_value(i, expiration_col_idx)
                 except IndexError:
+                    email = ""
+                    username = ""
+                    expiration = ""
                     self.logger.GetLogger().warning("Row index %d is not valid (some fields are missing), skipping it..." % i)
 
                 # Skip empty usernames

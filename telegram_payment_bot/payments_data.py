@@ -105,8 +105,8 @@ class PaymentsDict(WrappedDict):
     # Filter expired payments
     def FilterExpired(self) -> PaymentsDict:
         expired_payments = {username: payment for (username, payment)
-                                              in self.dict_elements.items()
-                                              if payment.IsExpired()}
+                            in self.dict_elements.items()
+                            if payment.IsExpired()}
 
         payments = PaymentsDict()
         payments.AddMultiple(expired_payments)
@@ -117,8 +117,8 @@ class PaymentsDict(WrappedDict):
     def FilterExpiringInDays(self,
                              days: int) -> PaymentsDict:
         expiring_payments = {username: payment for (username, payment)
-                                               in self.dict_elements.items()
-                                               if payment.IsExpiringInDays(days)}
+                             in self.dict_elements.items()
+                             if payment.IsExpiringInDays(days)}
 
         payments = PaymentsDict()
         payments.AddMultiple(expiring_payments)
@@ -129,5 +129,5 @@ class PaymentsDict(WrappedDict):
     def ToString(self) -> str:
         return "".join(
             ["- %s (@%s): %s\n" %
-                (payment.Email(), payment.Username(), payment.Expiration().date().strftime("%d/%m/%Y"))
-                for (_, payment) in self.dict_elements.items()])
+             (payment.Email(), payment.Username(), payment.Expiration().date().strftime("%d/%m/%Y"))
+             for (_, payment) in self.dict_elements.items()])

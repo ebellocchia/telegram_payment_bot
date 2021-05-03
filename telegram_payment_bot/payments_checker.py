@@ -101,7 +101,8 @@ class PaymentsChecker:
         return chat_members_getter.FilterMembers(chat,
                                                  lambda member: member.status == "member" and
                                                                 (member.user.username is None or
-                                                                 payments.IsExpiringInDaysByUsername(member.user.username, days)))
+                                                                 payments.IsExpiringInDaysByUsername(
+                                                                     member.user.username, days)))
 
     # Get all emails with expired payment
     def GetAllEmailsWithExpiredPayment(self) -> PaymentsDict:
@@ -139,8 +140,9 @@ class PaymentsChecker:
                            user: pyrogram.types.User) -> Optional[SinglePayment]:
         # Load only the first time
         if self.single_payment_cache is None or self.single_payment_cache["user_id"] != user.id:
-            self.single_payment_cache = {}
-            self.single_payment_cache["payment"] = self.payments_loader.LoadSingleByUsername(user.username)
-            self.single_payment_cache["user_id"] = user.id
+            self.single_payment_cache = {
+                "payment": self.payments_loader.LoadSingleByUsername(user.username),
+                "user_id": user.id,
+            }
 
         return self.single_payment_cache["payment"]

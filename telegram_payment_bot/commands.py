@@ -62,7 +62,7 @@ class HelpCmd(CommandBase):
         # Build message
         msg = "**HELP**\n"
         msg += "Hi %s,\n" % UserHelper.GetName(self.cmd_data.User())
-        msg += "welcome to the Payment Telegram Bot.\n"
+        msg += "welcome to the Telegram Payment Bot.\n"
         msg += "Here is the list of supported commands.\n"
         msg += "\n**Generic**\n"
         msg += "/help : show this message\n"
@@ -172,7 +172,7 @@ class CheckNoUsernameCmd(CommandBase):
             msg += "Please set the username %s or you'll be removed from the group.\n" % self.__HoursToStr(left_hours)
             msg += "To set it: **Settings -> Edit Profile -> username**.\n\n"
 
-            support_email =  self.config.GetValue(ConfigTypes.SUPPORT_EMAIL)
+            support_email = self.config.GetValue(ConfigTypes.SUPPORT_EMAIL)
             if support_email != "":
                 msg += "**The username shall be sent via email to: ** %s." % support_email
         else:
@@ -277,7 +277,7 @@ class CheckNoPaymentCmd(CommandBase):
             if website != "":
                 msg += "You can pay directly on the website: %s\n\n" % website
 
-            support_email =  self.config.GetValue(ConfigTypes.SUPPORT_EMAIL)
+            support_email = self.config.GetValue(ConfigTypes.SUPPORT_EMAIL)
             support_tg = self.config.GetValue(ConfigTypes.SUPPORT_TELEGRAM)
 
             if support_email != "" and support_tg != "":

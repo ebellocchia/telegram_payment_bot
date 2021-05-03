@@ -24,7 +24,7 @@
 import configparser
 import logging
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Type
+from typing import Any, Callable, Dict, List, Type
 from telegram_payment_bot.config import ConfigTypes, Config
 from telegram_payment_bot.payment_types import PaymentTypes
 from telegram_payment_bot.utils import Utils
@@ -87,7 +87,7 @@ class ConfigLoaderBase(ABC):
                   config_type: ConfigTypes,
                   section: str,
                   field: str,
-                  fct = None):
+                  fct: Callable[[str], Any] = None):
         if fct is None:
             self.config.SetValue(config_type, self.config_parser[section][field])
         else:
@@ -99,10 +99,10 @@ class ConfigLoaderBase(ABC):
                              section: str,
                              field: str,
                              default_val: Any,
-                             fct = None):
+                             fct: Callable[[str], Any] = None):
         try:
             self._SetValue(config_type, section, field, fct)
-        except:
+        except Exception:
             self.config.SetValue(config_type, default_val)
 
 
@@ -226,7 +226,7 @@ class EmailConfigLoader(ConfigLoaderBase):
             self._SetValue(ConfigTypes.EMAIL_PASSWORD, "email", "email_password")
             self._SetValue(ConfigTypes.EMAIL_SUBJECT, "email", "email_subject")
             self._SetValue(ConfigTypes.EMAIL_ALT_BODY_FILE, "email", "email_alt_body")
-            self._SetValue(ConfigTypes.EMAIL_HTML_BODY_FILE,"email", "email_html_body")
+            self._SetValue(ConfigTypes.EMAIL_HTML_BODY_FILE, "email", "email_html_body")
             self.config.SetValue(ConfigTypes.EMAIL_ALT_BODY, self.__ReadFile(ConfigTypes.EMAIL_ALT_BODY_FILE))
             self.config.SetValue(ConfigTypes.EMAIL_HTML_BODY, self.__ReadFile(ConfigTypes.EMAIL_HTML_BODY_FILE))
 
