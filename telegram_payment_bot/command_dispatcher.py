@@ -28,6 +28,7 @@ from telegram_payment_bot.command_base import CommandBase
 from telegram_payment_bot.commands import *
 from telegram_payment_bot.config import Config
 from telegram_payment_bot.logger import Logger
+from telegram_payment_bot.translation_loader import TranslationLoader
 
 
 #
@@ -84,9 +85,11 @@ class CommandDispatcher:
     # Constructor
     def __init__(self,
                  config: Config,
-                 logger: Logger) -> None:
+                 logger: Logger,
+                 translator: TranslationLoader) -> None:
         self.config = config
         self.logger = logger
+        self.translator = translator
 
     # Dispatch command
     def Dispatch(self,
@@ -98,6 +101,9 @@ class CommandDispatcher:
 
         # Create and execute command if existent
         if cmd_type in CommandDispatcherConst.CMD_TYPE_TO_CLASS:
-            cmd_class = CommandDispatcherConst.CMD_TYPE_TO_CLASS[cmd_type](client, self.config, self.logger)
+            cmd_class = CommandDispatcherConst.CMD_TYPE_TO_CLASS[cmd_type](client,
+                                                                           self.config,
+                                                                           self.logger,
+                                                                           self.translator)
             cmd_class.SetMessage(message)
             cmd_class.Execute()
