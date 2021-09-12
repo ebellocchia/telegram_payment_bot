@@ -137,4 +137,6 @@ Members whose payment is about to expire are going to be removed.</sentence>
     <sentence id="TOMORROW_MSG">tomorrow</sentence>
     <sentence id="DAY_OF_MONTH_MSG">day %d of the month</sentence>
     <sentence id="FEW_DAYS_MSG">few days</sentence>
+    <sentence id="JOINED_MEMBER_KICKED_FOR_PAYMENT_MSG">New member %s kicked (joined with no payment)</sentence>
+    <sentence id="JOINED_MEMBER_KICKED_FOR_USERNAME_MSG">New member %s kicked (joined with no username)</sentence>
 </translation>

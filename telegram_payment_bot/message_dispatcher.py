@@ -22,9 +22,10 @@
 # Imports
 #
 import pyrogram
-from telegram_payment_bot.config import Config
+from telegram_payment_bot.config import ConfigTypes, Config
 from telegram_payment_bot.logger import Logger
 from telegram_payment_bot.joined_members_checker import JoinedMembersChecker
+from telegram_payment_bot.translation_loader import TranslationLoader
 
 
 #
@@ -38,14 +39,19 @@ class MessageDispatcher:
     # Constructor
     def __init__(self,
                  config: Config,
-                 logger: Logger) -> None:
+                 logger: Logger,
+                 translator: TranslationLoader) -> None:
         self.config = config
         self.logger = logger
+        self.translator = translator
 
     # Dispatch command
     def Dispatch(self,
                  client: pyrogram.Client,
                  message: pyrogram.types.Message) -> None:
         # New members joined
-        if message.new_chat_members is not None:
-            JoinedMembersChecker(client, self.config, self.logger).CheckUsers(message.chat, message.new_chat_members)
+        if self.config.GetValue(ConfigTypes.PAYMENT_CHECK_ON_JOIN) and message.new_chat_members is not None:
+            JoinedMembersChecker(client,
+                                 self.config,
+                                 self.logger,
+                                 self.translator).CheckUsers(message.chat, message.new_chat_members)

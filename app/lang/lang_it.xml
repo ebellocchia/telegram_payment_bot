@@ -137,4 +137,6 @@ I membri il cui pagamento sta per scadere stanno per essere rimossi.</sentence>
     <sentence id="TOMORROW_MSG">domani</sentence>
     <sentence id="DAY_OF_MONTH_MSG">il %d del mese</sentence>
     <sentence id="FEW_DAYS_MSG">pochi giorni</sentence>
+    <sentence id="JOINED_MEMBER_KICKED_FOR_PAYMENT_MSG">Nuovo membro %s rimosso (si è unito al gruppo senza pagamento)</sentence>
+    <sentence id="JOINED_MEMBER_KICKED_FOR_USERNAME_MSG">Nuovo membro %s rimosso (si è unito al gruppo senza username)</sentence>
 </translation>

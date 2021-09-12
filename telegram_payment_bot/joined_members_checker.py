@@ -26,7 +26,9 @@ from typing import List
 from telegram_payment_bot.config import Config
 from telegram_payment_bot.logger import Logger
 from telegram_payment_bot.members_kicker import MembersKicker
+from telegram_payment_bot.message_sender import MessageSender
 from telegram_payment_bot.helpers import UserHelper
+from telegram_payment_bot.translation_loader import TranslationLoader
 
 
 #
@@ -41,10 +43,13 @@ class JoinedMembersChecker:
     def __init__(self,
                  client: pyrogram.Client,
                  config: Config,
-                 logger: Logger) -> None:
+                 logger: Logger,
+                 translator: TranslationLoader) -> None:
         self.config = config
         self.logger = logger
         self.client = client
+        self.message_sender = MessageSender(client, config, logger)
+        self.translator = translator
         self.member_kicker = MembersKicker(client, config, logger)
 
     # Check users
@@ -62,9 +67,13 @@ class JoinedMembersChecker:
         # Kick if no username
         if self.member_kicker.KickSingleIfNoUsername(chat, user):
             self.logger.GetLogger().info("New user %s kicked (joined with no username)" % UserHelper.GetNameOrId(user))
+            self.message_sender.SendMessageToAuthUsers(chat,
+                                                       self.translator.GetSentence("JOINED_MEMBER_KICKED_FOR_USERNAME_MSG") % UserHelper.GetNameOrId(user))
         # Kick if no payment
         elif self.member_kicker.KickSingleIfExpiredPayment(chat, user):
             self.logger.GetLogger().info("New user %s kicked (joined with no payment)" % UserHelper.GetNameOrId(user))
+            self.message_sender.SendMessageToAuthUsers(chat,
+                                                       self.translator.GetSentence("JOINED_MEMBER_KICKED_FOR_PAYMENT_MSG") % UserHelper.GetNameOrId(user))
         # Everything ok
         else:
             self.logger.GetLogger().info("New user %s joined, username and payment ok" % UserHelper.GetNameOrId(user))

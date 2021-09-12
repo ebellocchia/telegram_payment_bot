@@ -96,7 +96,10 @@ class PaymentBot:
 
     # Initialize payment checker
     def __InitPaymentChecker(self) -> None:
-        self.payments_periodic_checker = PaymentsPeriodicChecker(self.client, self.config, self.logger)
+        self.payments_periodic_checker = PaymentsPeriodicChecker(self.client,
+                                                                 self.config,
+                                                                 self.logger,
+                                                                 self.translator)
         self.payments_periodic_checker.Init()
 
     # Setup handlers
@@ -109,7 +112,7 @@ class PaymentBot:
         self.client.add_handler(MessageHandler(
             lambda client, message: self.__DispatchCommand(client, message, CommandTypes.HELP_CMD),
             filters.command(["help"])))
-        # Test command
+        # Alive command
         self.client.add_handler(MessageHandler(
             lambda client, message: self.__DispatchCommand(client, message, CommandTypes.ALIVE_CMD),
             filters.command(["alive"])))
@@ -168,5 +171,5 @@ class PaymentBot:
     def __HandleMessage(self,
                         client: pyrogram.Client,
                         message: pyrogram.types.Message) -> None:
-        msg_dispatcher = MessageDispatcher(self.config, self.logger)
+        msg_dispatcher = MessageDispatcher(self.config, self.logger, self.translator)
         msg_dispatcher.Dispatch(client, message)
