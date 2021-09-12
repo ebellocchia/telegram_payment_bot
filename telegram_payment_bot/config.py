@@ -43,6 +43,7 @@ class ConfigTypes(Enum):
     SUPPORT_TELEGRAM = auto(),
     # Payment
     PAYMENT_WEBSITE = auto(),
+    PAYMENT_CHECK_ON_JOIN = auto(),
     PAYMENT_CHECK_PERIOD_SEC = auto(),
     PAYMENT_CHECK_CHAT_IDS = auto()
     PAYMENT_TYPE = auto(),

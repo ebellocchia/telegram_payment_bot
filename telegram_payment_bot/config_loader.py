@@ -166,6 +166,7 @@ class PaymentConfigLoader(ConfigLoaderBase):
     # Load configuration
     def Load(self) -> None:
         self._SetValue(ConfigTypes.PAYMENT_WEBSITE, "payment", "payment_website")
+        self._SetValue(ConfigTypes.PAYMENT_CHECK_ON_JOIN, "payment", "payment_check_on_join", Utils.StrToBool)
         self._SetValue(ConfigTypes.PAYMENT_CHECK_PERIOD_SEC, "payment", "payment_check_period_sec", Utils.StrToInt)
         self._SetValue(ConfigTypes.PAYMENT_CHECK_CHAT_IDS,
                        "payment",
@@ -193,6 +194,7 @@ class PaymentConfigLoader(ConfigLoaderBase):
     # Print configuration
     def Print(self) -> None:
         print(" - Payment website: %s" % self.config.GetValue(ConfigTypes.PAYMENT_WEBSITE))
+        print(" - Payment check on join: %s" % self.config.GetValue(ConfigTypes.PAYMENT_CHECK_ON_JOIN))
         print(" - Payment check period (sec): %s" % self.config.GetValue(ConfigTypes.PAYMENT_CHECK_PERIOD_SEC))
         print(" - Payment chat IDs: %s" % self.config.GetValue(ConfigTypes.PAYMENT_CHECK_CHAT_IDS))
 
