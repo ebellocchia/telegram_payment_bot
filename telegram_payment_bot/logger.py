@@ -31,7 +31,7 @@ from telegram_payment_bot.config import ConfigTypes, Config
 # Classes
 #
 
-# Constant for logger class
+# Constants for logger class
 class LoggerConst:
     # Logger name
     LOGGER_NAME: str = ""

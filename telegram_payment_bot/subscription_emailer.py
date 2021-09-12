@@ -29,7 +29,6 @@ from telegram_payment_bot.smtp_emailer import SmtpEmailer
 # Classes
 #
 
-
 # Subscription emailer class
 class SubscriptionEmailer:
     # Constructor

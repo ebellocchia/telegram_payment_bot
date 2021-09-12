@@ -33,8 +33,7 @@ from google.auth.transport.requests import Request
 # Classes
 #
 
-
-# Constant for Google sheet service class
+# Constants for Google sheet service class
 class GoogleSheetServiceConst:
     # Scope for authentication
     SCOPES: List[str] = ["https://www.googleapis.com/auth/spreadsheets.readonly"]

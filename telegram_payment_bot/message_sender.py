@@ -34,7 +34,7 @@ from telegram_payment_bot.helpers import UserHelper
 # Classes
 #
 
-# Constant for message sender class
+# Constants for message sender class
 class MessageSenderConst:
     # Maximum message length
     MSG_MAX_LEN: int = 4096

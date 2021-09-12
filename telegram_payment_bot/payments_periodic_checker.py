@@ -34,6 +34,11 @@ from telegram_payment_bot.translation_loader import TranslationLoader
 # Classes
 #
 
+# Constants for payments periodic checker class
+class PaymentsPeriodicCheckerConst:
+    MIN_PERIOD_SEC: int = 60
+
+
 # Payments periodic checker class
 class PaymentsPeriodicChecker:
     # Constructor
@@ -54,11 +59,11 @@ class PaymentsPeriodicChecker:
         self.scheduler = BackgroundScheduler()
 
         check_period = self.config.GetValue(ConfigTypes.PAYMENT_CHECK_PERIOD_SEC)
-        if check_period > 0:
-            self.logger.GetLogger().info("Background task started")
+        if check_period >= PaymentsPeriodicCheckerConst.MIN_PERIOD_SEC:
+            self.logger.GetLogger().info("Background task started (period: %d sec)" % check_period)
             self.scheduler.add_job(self.__PaymentsCheckTask, "interval", seconds=check_period)
         else:
-            self.logger.GetLogger().info("Background task disabled")
+            self.logger.GetLogger().info("Background task disabled (invalid period)")
 
     # Start
     def Start(self) -> None:

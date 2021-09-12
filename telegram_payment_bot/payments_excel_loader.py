@@ -33,7 +33,7 @@ from telegram_payment_bot.payments_data import SinglePayment, PaymentsDict
 # Classes
 #
 
-# Constant for payment Excel loader class
+# Constants for payment Excel loader class
 class PaymentsExcelLoaderConst:
     # Sheet index
     SHEET_IDX: int = 0
