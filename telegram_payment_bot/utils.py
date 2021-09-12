@@ -28,9 +28,9 @@ class Utils:
     @staticmethod
     def StrToBool(s: str) -> bool:
         s = s.lower()
-        if s == "true":
+        if s == "true" or s == "yes" or s == "y":
             return True
-        elif s == "false":
+        elif s == "false" or s == "no" or s == "n":
             return False
         else:
             raise ValueError("Invalid string")
