@@ -23,6 +23,7 @@
 #
 import pyrogram
 from typing import Union
+from telegram_payment_bot.utils import Utils
 from telegram_payment_bot.wrapped_list import WrappedList
 
 
@@ -32,6 +33,14 @@ from telegram_payment_bot.wrapped_list import WrappedList
 
 # Command parameters list class
 class CommandParametersList(WrappedList):
+    # Get parameter as bool
+    def GetAsBool(self,
+                  idx: int) -> bool:
+        try:
+            return Utils.StrToBool(self.list_elements[idx])
+        except (ValueError, IndexError):
+            return False
+
     # Get parameter as int
     def GetAsInt(self,
                  idx: int) -> int:
