@@ -92,28 +92,21 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
         for i in range(sheet.nrows):
             # Skip header (first row)
             if i > 0:
-                try:
-                    # Get cell values
-                    email = str(sheet.cell_value(i, email_col_idx)).strip()
-                    username = str(sheet.cell_value(i, username_col_idx)).strip()
-                    # Convert date to datetime object
-                    expiration = sheet.cell_value(i, expiration_col_idx)
-                except IndexError:
-                    email = ""
-                    username = ""
-                    expiration = ""
-                    self.logger.GetLogger().warning("Row index %d is not valid (some fields are missing), skipping it..." % i)
+                # Get cell values
+                email = str(sheet.cell_value(i, email_col_idx)).strip()
+                username = str(sheet.cell_value(i, username_col_idx)).strip()
+                expiration = sheet.cell_value(i, expiration_col_idx)
 
                 # Skip empty usernames
                 if username != "":
-                    # In Excel, a date can be a date or a string
+                    # In Excel, a date can be a date object or a string
                     try:
                         expiration_datetime = xlrd.xldate_as_datetime(expiration, 0)
                     except TypeError:
                         try:
                             expiration_datetime = datetime.strptime(expiration.strip(), "%d/%m/%Y")
                         except ValueError:
-                            expiration_datetime = datetime.strptime(expiration, "%Y-%m-%d")
+                            expiration_datetime = datetime.strptime(expiration.strip(), "%Y-%m-%d")
 
                     # Add data
                     payments.AddPayment(email, username, expiration_datetime)

@@ -94,25 +94,23 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
                     email = row[email_col_idx].strip()
                     username = row[username_col_idx].strip()
                     expiration = row[expiration_col_idx].strip()
+
+                    # Skip empty usernames
+                    if username != "":
+                        # Convert date to datetime object
+                        try:
+                            expiration_datetime = datetime.strptime(expiration, "%d/%m/%Y")
+                        except ValueError:
+                            expiration_datetime = datetime.strptime(expiration, "%Y-%m-%d")
+
+                        # Add data
+                        payments.AddPayment(email, username, expiration_datetime)
+                        # Log
+                        self.logger.GetLogger().debug("%3d - Row %3d | %s | %s | %s" % (
+                            payments.Count(), row_cnt, email, username, expiration_datetime.date()))
+
                 except IndexError:
-                    email = ""
-                    username = ""
-                    expiration = ""
                     self.logger.GetLogger().warning("Row index %d is not valid (some fields are missing), skipping it..." % row_cnt)
-
-                # Skip empty usernames
-                if username != "":
-                    # Convert date to datetime object
-                    try:
-                        expiration_datetime = datetime.strptime(expiration, "%d/%m/%Y")
-                    except ValueError:
-                        expiration_datetime = datetime.strptime(expiration, "%Y-%m-%d")
-
-                    # Add data
-                    payments.AddPayment(email, username, expiration_datetime)
-                    # Log
-                    self.logger.GetLogger().debug("%3d - Row %3d | %s | %s | %s" % (
-                        payments.Count(), row_cnt, email, username, expiration_datetime.date()))
 
             # Go to next row
             row_cnt += 1
