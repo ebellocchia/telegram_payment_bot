@@ -31,7 +31,7 @@ setuptools.setup(
     license="MIT",
     install_requires = ["google-api-python-client", "google-auth-httplib2", "google-auth-oauthlib", "pyrogram", "tgcrypto", "xlrd", "apscheduler"],
     packages=setuptools.find_packages(exclude=[]),
-package_data={"telegram_payment_bot": ["lang/lang_en.xml"]},
+    package_data={"telegram_payment_bot": ["lang/lang_en.xml"]},
     keywords="telegram, bot, telegram bot, payments, payments check",
     platforms = ["any"],
     classifiers=[
