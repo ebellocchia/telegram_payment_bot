@@ -51,7 +51,7 @@ The list of all possible fields that can be set is shown below.
 |**[payment]**|Configuration for payment|
 |payment_website|Website for payment (can be left emtpy if none)|
 |payment_check_on_join|Flag to check the payment of new members as soon as they join the group|
-|payment_check_period_sec|Period in seconds for periodical checks, -1 for disabling it|
+|payment_check_period_sec|Period in seconds for periodical check. 60 is the minimum value (any value less than 60 will disable the periodical check).|
 |payment_check_chat_ids|IDs of groups to be periodical checked, comma separated (can be left empty). This assumes that all groups are linked to the same payments.|
 |payment_type|Input for payment data: *EXCEL_FILE* for using xls/xlsx file, *GOOGLE_SHEET* for using a Google Sheet|
 |payment_excel_file|Name of the Excel file used for payment data, valid only if *payment_type* is *EXCEL_FILE*|
