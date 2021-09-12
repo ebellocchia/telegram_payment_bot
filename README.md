@@ -2,7 +2,7 @@
 
 Telegram bot for handling payments in groups based on *pyrogram* library.\
 The payment can be loaded either from an *xls*/*xlsx* file or from a Google Sheet (in this way, it can be shared with other admins).\
-It is possible to extend this in order to load payment data from other sources (e.g. a remote database) by inheriting and implementing the *PaymentsLoaderBase* class, but I didn't needed to do it.
+It is possible to extend this in order to load payment data from other sources (e.g. a remote database) by inheriting and implementing the *PaymentsLoaderBase* class, but I didn't need to do it.
 
 ## Setup
 
@@ -50,6 +50,7 @@ The list of all possible fields that can be set is shown below.
 |support_telegram|Telegram username for getting support or send payments receipts (can be left emtpy if none)|
 |**[payment]**|Configuration for payment|
 |payment_website|Website for payment (can be left emtpy if none)|
+|payment_check_on_join|Flag to check the payment of new members as soon as they join the group|
 |payment_check_period_sec|Period in seconds for periodical checks, -1 for disabling it|
 |payment_check_chat_ids|IDs of groups to be periodical checked, comma separated (can be left empty). This assumes that all groups are linked to the same payments.|
 |payment_type|Input for payment data: *EXCEL_FILE* for using xls/xlsx file, *GOOGLE_SHEET* for using a Google Sheet|
