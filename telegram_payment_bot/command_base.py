@@ -105,7 +105,6 @@ class CommandBase(ABC):
 
     # Get if quiet mode
     def _IsQuietMode(self) -> bool:
-        # It's ok in any position
         return self.cmd_data.Params().IsLast("q") or self.cmd_data.Params().IsLast("quiet")
 
     # Generate new invite link

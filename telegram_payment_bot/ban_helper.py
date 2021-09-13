@@ -52,7 +52,8 @@ class BanHelper:
     def KickUser(self,
                  chat: pyrogram.types.Chat,
                  user: pyrogram.types.User) -> None:
-        # Ban only for 1 minute, so they can join again after shortly
+        # Ban only for 1 minute, so they can join again with an invite link if necessary
+        # (otherwise they cannot join anymore, unless manually added to the group)
         self.client.kick_chat_member(chat.id, user.id, int(time.time() + BanHelperConst.KICK_TIME_SEC))
 
     # Unban user

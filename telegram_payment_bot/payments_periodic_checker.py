@@ -61,7 +61,7 @@ class PaymentsPeriodicChecker:
         check_period_min = self.config.GetValue(ConfigTypes.PAYMENT_CHECK_PERIOD_MIN)
         if check_period_min >= PaymentsPeriodicCheckerConst.MIN_PERIOD_MINUTE:
             self.logger.GetLogger().info("Background task started (period: %d min)" % check_period_min)
-            self.scheduler.add_job(self.__PaymentsCheckTask, "interval", seconds=60 * check_period_min)
+            self.scheduler.add_job(self.__PaymentsCheckTask, "interval", minutes=check_period_min)
         else:
             self.logger.GetLogger().info("Background task disabled (invalid period)")
 
