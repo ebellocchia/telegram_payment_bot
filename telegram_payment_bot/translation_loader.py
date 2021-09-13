@@ -24,14 +24,15 @@
 import os
 from xml.etree import ElementTree
 from typing import Optional
+from telegram_payment_bot.logger import Logger
 
 
 #
 # Classes
 #
 
-# Translation loader class
-class TranslationLoader:
+# Constants for translation loader class
+class TranslationLoaderConst:
     # Default language folder
     DEF_LANG_FOLDER = "lang"
     # Default file name
@@ -39,22 +40,32 @@ class TranslationLoader:
     # XML tag for sentences
     SENTENCE_XML_TAG = "sentence"
 
+
+# Translation loader class
+class TranslationLoader:
     # Constructor
-    def __init__(self) -> None:
+    def __init__(self,
+                 logger: Logger) -> None:
+        self.logger = logger
         self.sentences = {}
 
     # Load translation file
     def Load(self,
              file_name: Optional[str] = None) -> None:
-        file_name = (os.path.join(os.path.dirname(__file__), self.DEF_LANG_FOLDER, self.DEF_FILE_NAME)
+        file_name = (os.path.join(os.path.dirname(__file__), TranslationLoaderConst.DEF_LANG_FOLDER, TranslationLoaderConst.DEF_FILE_NAME)
                      if file_name is None
                      else file_name)
 
         tree = ElementTree.parse(file_name)
         root = tree.getroot()
         for child in root:
-            if child.tag == self.SENTENCE_XML_TAG:
-                self.sentences[child.attrib["id"]] = child.text.replace("\\n", "\n")
+            if child.tag == TranslationLoaderConst.SENTENCE_XML_TAG:
+                sentence_id = child.attrib["id"]
+                self.sentences[sentence_id] = child.text.replace("\\n", "\n")
+
+                self.logger.GetLogger().debug("Loaded sentence '%s': %s" % (sentence_id, self.sentences[sentence_id]))
+
+        self.logger.GetLogger().info("Language file '%s' successfully loaded" % file_name)
 
     # Get sentence
     def GetSentence(self,
