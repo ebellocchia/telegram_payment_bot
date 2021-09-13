@@ -42,7 +42,6 @@ class CommandParametersList(WrappedList):
     def GetAsBool(self,
                   idx: int,
                   def_val: Optional[bool] = None) -> bool:
-
         return self.__GetGenericParam(Utils.StrToBool, idx, def_val)
 
     # Get parameter as int
