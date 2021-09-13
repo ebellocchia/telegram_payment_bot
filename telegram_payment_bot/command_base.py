@@ -47,10 +47,10 @@ class CommandBase(ABC):
                  config: Config,
                  logger: Logger,
                  translator: TranslationLoader) -> None:
+        self.client = client
         self.config = config
         self.logger = logger
         self.translator = translator
-        self.client = client
         self.message = None
         # Helper classes
         self.cmd_data = None
