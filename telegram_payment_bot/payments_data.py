@@ -74,8 +74,14 @@ class PaymentsDict(WrappedDict):
     def AddPayment(self,
                    email: str,
                    username: str,
-                   expiration: datetime) -> None:
-        self.AddSingle(username.lower(), SinglePayment(email, username, expiration))
+                   expiration: datetime) -> bool:
+        added = False
+
+        if not self.IsUsernameExistent(username):
+            self.AddSingle(username.lower(), SinglePayment(email, username, expiration))
+            added = True
+
+        return added
 
     # Get by username
     def GetByUsername(self,
@@ -84,6 +90,11 @@ class PaymentsDict(WrappedDict):
             return self.dict_elements[username.lower()]
         except KeyError:
             return None
+
+    # Get if username is existent
+    def IsUsernameExistent(self,
+                           username: str) -> bool:
+        return self.GetByUsername(username) is not None
 
     # Get if the payment associated to the username is expired
     def IsExpiredByUsername(self,

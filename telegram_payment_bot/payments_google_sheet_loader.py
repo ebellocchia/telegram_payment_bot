@@ -83,36 +83,43 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
         username_col_idx = self.config.GetValue(ConfigTypes.PAYMENT_USERNAME_COL)
         expiration_col_idx = self.config.GetValue(ConfigTypes.PAYMENT_EXPIRATION_COL)
 
-        # Read each row, skipping the first one (i.e. header)
-        row_cnt = 0
+        # Read each row
         rows = gs_reader.GetRange("A1:C10000")
-        for row in rows:
+        for i, row in enumerate(rows):
             # Skip header (first row)
-            if row_cnt > 0:
-                # Get cell values
+            if i > 0:
                 try:
+                    # Get cell values
                     email = row[email_col_idx].strip()
                     username = row[username_col_idx].strip()
                     expiration = row[expiration_col_idx].strip()
 
                     # Skip empty usernames
                     if username != "":
-                        # Convert date to datetime object
-                        try:
-                            expiration_datetime = datetime.strptime(expiration, "%d/%m/%Y")
-                        except ValueError:
-                            expiration_datetime = datetime.strptime(expiration, "%Y-%m-%d")
-
-                        # Add data
-                        payments.AddPayment(email, username, expiration_datetime)
-                        # Log
-                        self.logger.GetLogger().debug("%3d - Row %3d | %s | %s | %s" % (
-                            payments.Count(), row_cnt, email, username, expiration_datetime.date()))
+                        self.__AddPayment(i, payments, email, username, expiration)
 
                 except IndexError:
                     self.logger.GetLogger().warning("Row index %d is not valid (some fields are missing), skipping it..." % row_cnt)
 
-            # Go to next row
-            row_cnt += 1
-
         return payments
+
+    # Add payment
+    def __AddPayment(self,
+                     row_idx: int,
+                     payments: PaymentsDict,
+                     email: str,
+                     username: str,
+                     expiration: str) -> None:
+        # Convert date to datetime object
+        try:
+            expiration_datetime = datetime.strptime(expiration, "%d/%m/%Y")
+        except ValueError:
+            expiration_datetime = datetime.strptime(expiration, "%Y-%m-%d")
+
+        # Add data
+        if payments.AddPayment(email, username, expiration_datetime):
+            self.logger.GetLogger().debug("%3d - Row %3d | %s | %s | %s" % (
+                payments.Count(), row_idx, email, username, expiration_datetime.date()))
+        else:
+            self.logger.GetLogger().warning("Username %s is present more than one time at row %d, skipped" % (
+                username, row_idx))

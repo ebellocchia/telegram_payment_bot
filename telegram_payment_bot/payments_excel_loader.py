@@ -23,7 +23,7 @@
 #
 import xlrd
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 from telegram_payment_bot.config import ConfigTypes
 from telegram_payment_bot.payments_loader_base import PaymentsLoaderBase
 from telegram_payment_bot.payments_data import SinglePayment, PaymentsDict
@@ -88,7 +88,7 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
         username_col_idx = self.config.GetValue(ConfigTypes.PAYMENT_USERNAME_COL)
         expiration_col_idx = self.config.GetValue(ConfigTypes.PAYMENT_EXPIRATION_COL)
 
-        # Read each row, skipping the first one (i.e. header)
+        # Read each row
         for i in range(sheet.nrows):
             # Skip header (first row)
             if i > 0:
@@ -99,19 +99,30 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
 
                 # Skip empty usernames
                 if username != "":
-                    # In Excel, a date can be a date object or a string
-                    try:
-                        expiration_datetime = xlrd.xldate_as_datetime(expiration, 0)
-                    except TypeError:
-                        try:
-                            expiration_datetime = datetime.strptime(expiration.strip(), "%d/%m/%Y")
-                        except ValueError:
-                            expiration_datetime = datetime.strptime(expiration.strip(), "%Y-%m-%d")
-
-                    # Add data
-                    payments.AddPayment(email, username, expiration_datetime)
-                    # Log
-                    self.logger.GetLogger().debug("%3d - Row %3d | %s | %s | %s" % (
-                        payments.Count(), i, email, username, expiration_datetime.date()))
+                    self.__AddPayment(i, payments, email, username, expiration)
 
         return payments
+
+    # Add payment
+    def __AddPayment(self,
+                     row_idx: int,
+                     payments: PaymentsDict,
+                     email: str,
+                     username: str,
+                     expiration: Union[float, int, str]) -> None:
+        # In Excel, a date can be a number or a string
+        try:
+            expiration_datetime = xlrd.xldate_as_datetime(expiration, 0)
+        except TypeError:
+            try:
+                expiration_datetime = datetime.strptime(expiration.strip(), "%d/%m/%Y")
+            except ValueError:
+                expiration_datetime = datetime.strptime(expiration.strip(), "%Y-%m-%d")
+
+        # Add data
+        if payments.AddPayment(email, username, expiration_datetime):
+            self.logger.GetLogger().debug("%3d - Row %3d | %s | %s | %s" % (
+                payments.Count(), row_idx, email, username, expiration_datetime.date()))
+        else:
+            self.logger.GetLogger().warning("Username %s is present more than one time at row %d, skipped" % (
+                username, row_idx))
