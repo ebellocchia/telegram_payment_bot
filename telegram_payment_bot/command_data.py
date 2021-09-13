@@ -22,7 +22,7 @@
 # Imports
 #
 import pyrogram
-from typing import Optional, Union
+from typing import Any, Callable, Optional, Union
 from telegram_payment_bot.utils import Utils
 from telegram_payment_bot.wrapped_list import WrappedList
 
@@ -42,37 +42,20 @@ class CommandParametersList(WrappedList):
     def GetAsBool(self,
                   idx: int,
                   def_val: Optional[bool] = None) -> bool:
-        try:
-            return Utils.StrToBool(self.list_elements[idx])
-        except (ValueError, IndexError):
-            if def_val is not None:
-                return def_val
-            else:
-                raise CommandParameterError("Invalid command parameter #%d" % idx)
+
+        return self.__GetGenericParam(Utils.StrToBool, idx, def_val)
 
     # Get parameter as int
     def GetAsInt(self,
                  idx: int,
                  def_val: Optional[int] = None) -> int:
-        try:
-            return int(self.list_elements[idx])
-        except (ValueError, IndexError):
-            if def_val is not None:
-                return def_val
-            else:
-                raise CommandParameterError("Invalid command parameter #%d" % idx)
+        return self.__GetGenericParam(Utils.StrToInt, idx, def_val)
 
     # Get parameter as string
     def GetAsString(self,
                     idx: int,
                     def_val: Optional[str] = None) -> str:
-        try:
-            return str(self.list_elements[idx])
-        except (ValueError, IndexError):
-            if def_val is not None:
-                return def_val
-            else:
-                raise CommandParameterError("Invalid command parameter #%d" % idx)
+        return self.__GetGenericParam(str, idx, def_val)
 
     # Check if last parameter is the specified value
     def IsLast(self,
@@ -86,6 +69,19 @@ class CommandParametersList(WrappedList):
     def IsValue(self,
                 value: Union[int, str]) -> bool:
         return value in self.list_elements
+
+    # Get generic parameter
+    def __GetGenericParam(self,
+                          conv_fct: Callable[[str], Any],
+                          idx: int,
+                          def_val: Optional[Any]) -> Any:
+        try:
+            return conv_fct(self.list_elements[idx])
+        except (ValueError, IndexError):
+            if def_val is not None:
+                return def_val
+            else:
+                raise CommandParameterError("Invalid command parameter #%d" % idx)
 
 
 # Command data
