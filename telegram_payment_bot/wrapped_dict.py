@@ -21,7 +21,7 @@
 #
 # Imports
 #
-from typing import Any, Dict
+from typing import Any, Dict, Iterator
 from abc import ABC
 
 
@@ -67,5 +67,5 @@ class WrappedDict(ABC):
         return self.dict_elements
 
     # Get iterator
-    def __iter__(self) -> iter:
-        return iter(self.dict_elements)
+    def __iter__(self) -> Iterator[Any]:
+       yield from self.dict_elements

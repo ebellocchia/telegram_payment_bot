@@ -21,7 +21,7 @@
 #
 # Imports
 #
-from typing import Any, List
+from typing import Any, Iterator, List
 from abc import ABC
 
 
@@ -66,5 +66,5 @@ class WrappedList(ABC):
         return self.list_elements
 
     # Get iterator
-    def __iter__(self) -> iter:
-        return iter(self.list_elements)
+    def __iter__(self) -> Iterator[Any]:
+        yield from self.list_elements
