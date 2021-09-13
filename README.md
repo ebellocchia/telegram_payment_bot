@@ -62,6 +62,7 @@ The list of all possible fields that can be set is shown below.
 |payment_email_col|Index of the table column containing the email used for paying (default: 0)|
 |payment_username_col|Index of the table column containing the username (default: 1)|
 |payment_expiration_col|Index of the table column containing the payment expiration date (default: 2)|
+|payment_date_format|Date format in payment data (default: %d/%m/%Y)|
 |**[email]**|Configuration for email that reminds users to pay|
 |email_enabled|Email enable flag. If False, all the next fields can be skipped.|
 |email_from|Email sender|
@@ -147,7 +148,7 @@ For more information: [create project](https://developers.google.com/workspace/g
 In both cases (Google Sheet or Excel file), the file shall contain the following columns starting from the second row (the first row is used as header):
 - Email address used for paying (for convenience, since an email address is usually required in payment platforms)
 - Telegram username
-- Expiration date of the payment in the format dd/mm/yyyy or yyyy-mm-dd
+- Expiration date of the payment in the format specified by *payment_date_format*
 
 The indexes of these columns are set in the configuration file. It is possible to add other columns beside these if necessary, they are simply ignored by the bot.
 
