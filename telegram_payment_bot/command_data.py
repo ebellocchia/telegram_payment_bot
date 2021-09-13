@@ -22,7 +22,7 @@
 # Imports
 #
 import pyrogram
-from typing import Union
+from typing import Optional, Union
 from telegram_payment_bot.utils import Utils
 from telegram_payment_bot.wrapped_list import WrappedList
 
@@ -31,31 +31,48 @@ from telegram_payment_bot.wrapped_list import WrappedList
 # Classes
 #
 
+# Command parameter error class
+class CommandParameterError(Exception):
+    pass
+
+
 # Command parameters list class
 class CommandParametersList(WrappedList):
     # Get parameter as bool
     def GetAsBool(self,
-                  idx: int) -> bool:
+                  idx: int,
+                  def_val: Optional[bool] = None) -> bool:
         try:
             return Utils.StrToBool(self.list_elements[idx])
         except (ValueError, IndexError):
-            return False
+            if def_val is not None:
+                return def_val
+            else:
+                raise CommandParameterError("Invalid command parameter #%d" % idx)
 
     # Get parameter as int
     def GetAsInt(self,
-                 idx: int) -> int:
+                 idx: int,
+                 def_val: Optional[int] = None) -> int:
         try:
             return int(self.list_elements[idx])
         except (ValueError, IndexError):
-            return 0
+            if def_val is not None:
+                return def_val
+            else:
+                raise CommandParameterError("Invalid command parameter #%d" % idx)
 
     # Get parameter as string
     def GetAsString(self,
-                    idx: int) -> str:
+                    idx: int,
+                    def_val: Optional[str] = None) -> str:
         try:
             return str(self.list_elements[idx])
         except (ValueError, IndexError):
-            return ""
+            if def_val is not None:
+                return def_val
+            else:
+                raise CommandParameterError("Invalid command parameter #%d" % idx)
 
     # Check if last parameter is the specified value
     def IsLast(self,
