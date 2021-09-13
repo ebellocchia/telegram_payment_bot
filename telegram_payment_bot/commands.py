@@ -83,16 +83,15 @@ class SetTestModeCmd(CommandBase):
             flag = self.cmd_data.Params().GetAsBool(0)
         except CommandParameterError:
             self._SendMessage(self.translator.GetSentence("SET_TEST_MODE_PARAM_ERR_CMD"))
-            return
-
-        # Set value
-        self.config.SetValue(ConfigTypes.APP_TEST_MODE, flag)
-
-        # Send message
-        if self.config.GetValue(ConfigTypes.APP_TEST_MODE):
-            self._SendMessage(self.translator.GetSentence("SET_TEST_MODE_EN_CMD"))
         else:
-            self._SendMessage(self.translator.GetSentence("SET_TEST_MODE_DIS_CMD"))
+            # Set test mode
+            self.config.SetValue(ConfigTypes.APP_TEST_MODE, flag)
+
+            # Send message
+            if self.config.GetValue(ConfigTypes.APP_TEST_MODE):
+                self._SendMessage(self.translator.GetSentence("SET_TEST_MODE_EN_CMD"))
+            else:
+                self._SendMessage(self.translator.GetSentence("SET_TEST_MODE_DIS_CMD"))
 
 
 #
