@@ -106,6 +106,11 @@ Users removed from the group are just kicked and not banned, so they can re-join
 When users are removed from the group (either because they had no username or they didn't pay), a new invite link is generated and sent to all authorized users in a private chat.\
 This automatically revokes the old invite link and prevents those users to join again using it.
 
+When checking for payments, a user is removed by group if:
+- He has no Telegram username
+- His Telegram username is not found in the payments data
+- His payment is expired
+
 ## Periodical Checks
 
 In addition to the commands, it's possible to run periodical checks.\
@@ -137,17 +142,12 @@ In case a Google Sheet is used:
 
 For more information: [create project](https://developers.google.com/workspace/guides/create-project), [create credentials](https://developers.google.com/workspace/guides/create-credentials)
 
-In both cases, starting from the second row (the first row is used as header), the file shall contain the following columns:
+In both cases (Google Sheet or Excel file), the file shall contain the following columns starting from the second row (the first row is used as header):
 - Email address used for paying (for convenience, since an email address is usually required in payment platforms)
 - Telegram username
 - Expiration date of the payment in the format dd/mm/yyyy or yyyy-mm-dd
 
 The indexes of these columns are set in the configuration file. It is possible to add other columns beside these if necessary, they are simply ignored by the bot.
-
-When checking for payments, a user is removed by group if:
-- He has no Telegram username
-- His Telegram username is not found in the payment file
-- His payment is expired
 
 ## Test Mode
 
