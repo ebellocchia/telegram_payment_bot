@@ -315,10 +315,12 @@ class ConfigLoader:
         config_parser.read(self.config_file)
 
         # Load configuration
+        print("Loaded configuration:")
         for loader_class in ConfigLoaderConst.LOADER_CLASSES:
             loader = loader_class(self.config, config_parser)
             loader.Load()
             loader.Print()
+        print("")
 
     # Get configuration
     def GetConfig(self) -> Config:
