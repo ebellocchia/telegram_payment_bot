@@ -187,6 +187,7 @@ class PaymentConfigLoader(ConfigLoaderBase):
         self._SetValueWithDefault(ConfigTypes.PAYMENT_EMAIL_COL, "payment", "payment_email_col", 0, Utils.StrToInt)
         self._SetValueWithDefault(ConfigTypes.PAYMENT_USERNAME_COL, "payment", "payment_username_col", 1, Utils.StrToInt)
         self._SetValueWithDefault(ConfigTypes.PAYMENT_EXPIRATION_COL, "payment", "payment_expiration_col", 2, Utils.StrToInt)
+        self._SetValueWithDefault(ConfigTypes.PAYMENT_DATE_FORMAT, "payment", "payment_date_format", "%d/%m/%Y")
         # Check indexes
         self.__CheckColumnIndexes()
 
@@ -209,6 +210,7 @@ class PaymentConfigLoader(ConfigLoaderBase):
         print(" - Payment email column: %s" % self.config.GetValue(ConfigTypes.PAYMENT_EMAIL_COL))
         print(" - Payment username column: %s" % self.config.GetValue(ConfigTypes.PAYMENT_USERNAME_COL))
         print(" - Payment expiration column: %s" % self.config.GetValue(ConfigTypes.PAYMENT_EXPIRATION_COL))
+        print(" - Payment date format: %s" % self.config.GetValue(ConfigTypes.PAYMENT_DATE_FORMAT))
 
     # Check column indexes
     def __CheckColumnIndexes(self):
