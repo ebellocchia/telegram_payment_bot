@@ -86,7 +86,7 @@ class PaymentBot:
 
     # Initialize translation
     def __InitTranslations(self) -> None:
-        self.translator = TranslationLoader()
+        self.translator = TranslationLoader(self.logger)
         self.translator.Load(self.config.GetValue(ConfigTypes.APP_LANG_FILE))
 
     # Initialize client
@@ -116,6 +116,14 @@ class PaymentBot:
         self.client.add_handler(MessageHandler(
             lambda client, message: self.__DispatchCommand(client, message, CommandTypes.ALIVE_CMD),
             filters.command(["alive"])))
+        # Set test mode command
+        self.client.add_handler(MessageHandler(
+            lambda client, message: self.__DispatchCommand(client, message, CommandTypes.SET_TEST_MODE_CMD),
+            filters.command(["set_test_mode"])))
+        # Check test mode command
+        self.client.add_handler(MessageHandler(
+            lambda client, message: self.__DispatchCommand(client, message, CommandTypes.IS_TEST_MODE_CMD),
+            filters.command(["is_test_mode"])))
         # Auth_users command
         self.client.add_handler(MessageHandler(
             lambda client, message: self.__DispatchCommand(client, message, CommandTypes.AUTH_USERS_CMD),

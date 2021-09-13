@@ -24,6 +24,7 @@
 from typing import Callable, Type
 from telegram_payment_bot.chat_members import ChatMembersGetter
 from telegram_payment_bot.command_base import CommandBase
+from telegram_payment_bot.command_data import CommandParameterError
 from telegram_payment_bot.config import ConfigTypes
 from telegram_payment_bot.members_kicker import MembersKicker
 from telegram_payment_bot.payments_checker import PaymentsChecker
@@ -43,7 +44,8 @@ def GroupChatOnly(exec_cmd_fct: Callable[[Type[CommandBase]], None]) -> Callable
         # Check if private chat
         if self._IsChatPrivate():
             self._SendMessage(self.translator.GetSentence("GROUP_ONLY_ERR"))
-        exec_cmd_fct(self)
+        else:
+            exec_cmd_fct(self)
 
     return decorated
 
@@ -68,6 +70,41 @@ class AliveCmd(CommandBase):
     # Execute command
     def _ExecuteCommand(self) -> None:
         self._SendMessage(self.translator.GetSentence("ALIVE_CMD"))
+
+
+#
+# Command for setting test mode
+#
+class SetTestModeCmd(CommandBase):
+    # Execute command
+    def _ExecuteCommand(self) -> None:
+        try:
+            # Get parameters
+            flag = self.cmd_data.Params().GetAsBool(0)
+        except CommandParameterError:
+            self._SendMessage(self.translator.GetSentence("SET_TEST_MODE_PARAM_ERR_CMD"))
+            return
+
+        # Set value
+        self.config.SetValue(ConfigTypes.APP_TEST_MODE, flag)
+
+        # Send message
+        if self.config.GetValue(ConfigTypes.APP_TEST_MODE):
+            self._SendMessage(self.translator.GetSentence("SET_TEST_MODE_EN_CMD"))
+        else:
+            self._SendMessage(self.translator.GetSentence("SET_TEST_MODE_DIS_CMD"))
+
+
+#
+# Command for checking if test mode
+#
+class IsTestModeCmd(CommandBase):
+    # Execute command
+    def _ExecuteCommand(self) -> None:
+        if self.config.GetValue(ConfigTypes.APP_TEST_MODE):
+            self._SendMessage(self.translator.GetSentence("IS_TEST_MODE_EN_CMD"))
+        else:
+            self._SendMessage(self.translator.GetSentence("IS_TEST_MODE_DIS_CMD"))
 
 
 #
@@ -129,7 +166,7 @@ class CheckNoUsernameCmd(CommandBase):
         # Build message
         if chat_members.Any():
             # Get parameter
-            left_hours = self.cmd_data.Params().GetAsInt(0)
+            left_hours = self.cmd_data.Params().GetAsInt(0, 0)
 
             msg = (self.translator.GetSentence("CHECK_NO_USERNAME_P1_CMD") %
                    (ChatHelper.GetTitle(self.cmd_data.Chat()),
@@ -201,7 +238,7 @@ class EmailNoPaymentCmd(CommandBase):
             msg = self.translator.GetSentence("EMAIL_NO_PAYMENT_DISABLED_CMD")
         else:
             # Get parameter
-            days_left = self.cmd_data.Params().GetAsInt(0)
+            days_left = self.cmd_data.Params().GetAsInt(0, 0)
             # Get expired payments
             expired_payments = PaymentsEmailer(self.client,
                                                self.config,
@@ -233,8 +270,8 @@ class CheckNoPaymentCmd(CommandBase):
     @GroupChatOnly
     def _ExecuteCommand(self) -> None:
         # Get parameters
-        days_left = self.cmd_data.Params().GetAsInt(0)
-        last_day = self.cmd_data.Params().GetAsInt(1)
+        days_left = self.cmd_data.Params().GetAsInt(0, 0)
+        last_day = self.cmd_data.Params().GetAsInt(1, 0)
         # Get expired members
         expired_members = PaymentsChecker(self.client,
                                           self.config,

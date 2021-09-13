@@ -18,6 +18,8 @@ Here is the list of supported commands.
 **Generic**
 /help : show this message
 /alive : show if bot is active
+/set_test_mode [true/false]: enable/disable test mode
+/is_test_mode: show if test mode is enabled
 /auth_users : show the list of users authorized to use the bot
 /chat_info : show the chat information - **Only group**
 /users_list : show the list of all users in group - **Only group**
@@ -47,6 +49,21 @@ The link has been sent privately to authorized users.</sentence>
     <!-- Alive command message -->
     <sentence id="ALIVE_CMD">**STATUS**
 The bot is alive.</sentence>
+    <!-- Set test mode command enabled message -->
+    <sentence id="SET_TEST_MODE_EN_CMD">**TEST MODE**
+Test mode enabled.</sentence>
+    <!-- Set test mode command disabled message -->
+    <sentence id="SET_TEST_MODE_DIS_CMD">**TEST MODE**
+Test mode disabled.</sentence>
+    <!-- Set test mode command parameter error message -->
+    <sentence id="SET_TEST_MODE_PARAM_ERR_CMD">**TEST MODE**
+Invalid parameter.</sentence>
+    <!-- Is test mode command enabled message -->
+    <sentence id="IS_TEST_MODE_EN_CMD">**TEST MODE**
+Test mode is currently enabled.</sentence>
+    <!-- Is test mode command disabled message -->
+    <sentence id="IS_TEST_MODE_DIS_CMD">**TEST MODE**
+Test mode is currently disabled.</sentence>
     <!-- Authorized users command message -->
     <sentence id="AUTH_USERS_CMD">**AUTHORIZED USERS**
 Users authorized to use the bot:
