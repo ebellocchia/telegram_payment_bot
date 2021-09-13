@@ -59,7 +59,7 @@ class MembersKicker:
             for member in no_payment_members:
                 self.ban_helper.KickUser(chat, member.user)
         else:
-            self.logger.GetLogger().info("Test mode ON: no member kicked")
+            self.logger.GetLogger().info("Test mode ON: no member will be kicked")
 
         return no_payment_members
 
@@ -74,7 +74,7 @@ class MembersKicker:
             if payment_expired:
                 self.ban_helper.KickUser(chat, user)
         else:
-            self.logger.GetLogger().info("Test mode ON: no member kicked")
+            self.logger.GetLogger().info("Test mode ON: no member will be kicked")
 
         return payment_expired
 
@@ -89,7 +89,7 @@ class MembersKicker:
             for member in no_username_members:
                 self.ban_helper.KickUser(chat, member.user)
         else:
-            self.logger.GetLogger().info("Test mode ON: no member kicked")
+            self.logger.GetLogger().info("Test mode ON: no member will be kicked")
 
         return no_username_members
 
@@ -103,6 +103,6 @@ class MembersKicker:
             if no_username:
                 self.ban_helper.KickUser(chat, user)
         else:
-            self.logger.GetLogger().info("Test mode ON: no member kicked")
+            self.logger.GetLogger().info("Test mode ON: no member will be kicked")
 
         return no_username
