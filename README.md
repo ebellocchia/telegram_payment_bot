@@ -62,7 +62,7 @@ The list of all possible fields that can be set is shown below.
 |payment_email_col|Index of the table column containing the email used for paying (default: 0)|
 |payment_username_col|Index of the table column containing the username (default: 1)|
 |payment_expiration_col|Index of the table column containing the payment expiration date (default: 2)|
-|payment_date_format|Date format in payment data (default: %d/%m/%Y)|
+|payment_date_format|Date format in payments data (default: %d/%m/%Y)|
 |**[email]**|Configuration for email that reminds users to pay|
 |email_enabled|Email enable flag. If False, all the next fields can be skipped.|
 |email_from|Email sender|
