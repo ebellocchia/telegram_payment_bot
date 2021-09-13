@@ -1,8 +1,9 @@
 # Telegram Payments Bot
 
 Telegram bot for handling payments in groups based on *pyrogram* library.\
-The payment can be loaded either from an *xls*/*xlsx* file or from a Google Sheet (in this way, it can be shared with other admins).\
-It is possible to extend this in order to load payment data from other sources (e.g. a remote database) by inheriting and implementing the *PaymentsLoaderBase* class, but I didn't need to do it.
+Payments data can be loaded either from an *xls*/*xlsx* file or from a Google Sheet (in this way, it can be shared with other admins).\
+It is also possible to extend this to load payments data from other sources (e.g. a remote database) by inheriting and implementing the *PaymentsLoaderBase* class, but I didn't need to do it so far.\
+Payments data can be updated either manually by the admins or, better, automatically (e.g. by the website where the payment is made, via a webhook). It depends on the infrastructure you have.
 
 ## Setup
 
@@ -103,24 +104,38 @@ Add *quiet* or *q* as last parameter to send the bot response in a private chat 
 
 Users removed from the group are just kicked and not banned, so they can re-join later via invite links if necessary.\
 When users are removed from the group (either because they had no username or they didn't pay), a new invite link is generated and sent to all authorized users in a private chat.\
-This automatically revokes the old invite link and prevents those users to join again.
+This automatically revokes the old invite link and prevents those users to join again using it.
 
 ## Periodical Checks
 
 In addition to the commands, it's possible to run periodical checks.\
 These checks are:
-- Remove a user that hasn't paid as soon as he joins the group.
+- Remove a user that hasn't paid as soon as he joins the group
 - Remove users that hasn't paid periodically
+
+Both checks can be disabled if needed using the *payment_check_on_join* and *payment_check_period_min* fields.
+
+## Run the Bot
+
+If you just need to run bot once in a while (e.g. once a week), you can do it manually using the *check_no_payment* and *remove_no_payment* commands. In this case, it's sufficient to run the bot locally on the PC when needed.\
+If you prefer to let the bot run automatically and check for payment periodically, it'll be better to run it 24h/24h on a VPS.
 
 ## Payment File
 
-The payment file can be either a *xls*/*xlsx* file (*xlrd* library is used to read it) or a Google Sheet.\
+The payment file can be either a *xls*/*xlsx* file (*xlrd* library is used) or a Google Sheet.\
 In case a Google Sheet is used:
-1. You should create a project for the bot on Google Cloud Console, create the credentials and download the *json* file for OAuth 2.0 client ID. Google Sheet APIs shall be enabled as well. For more information: [create project](https://developers.google.com/workspace/guides/create-project), [create credentials](https://developers.google.com/workspace/guides/create-credentials)
-2. Rename the *json* file to the name specified in the configuration file and place it in the *app* folder
-2. The first time you'll load the Google Sheet, you'll be asked to login into your Google account and allow the bot to access the sheet. After this, a *pickle* file will be automatically created.
-3. This *pickle* files allows the bot to access the sheet next times, without the need to allow it
-4. If you move the bot to another device, just keep the *json* and *pickle* files to grant the bot access to the sheet without repeating the whole procedure
+1. Create a project on [Google Cloud Console](https://console.cloud.google.com)
+2. Go to *APIs & Services*, then *Credentials* and select *Configure Consent Screen*
+3. Create a new app and publish it, it doesn't need to be verified (but you can verify it, of course)
+4. Go back to the *Credentials* page and create the credentials for OAuth client ID by selecting *Create Credentials*
+5. Select *Desktop app*, choose a name and download the *json* file with the credentials
+6. Go to the *Library* page, search for Google Sheet and enable Google Sheet APIs
+7. Rename the *json* file to the name specified in the configuration file (*payment_google_cred*) and place it in the *app* folder
+8. The first time the bot loads your Google Sheet, you'll be asked to login into your Google account and allow the bot to access the sheet. After this, a *pickle* file with the name you configured (*payment_google_pickle*) will be automatically created.
+9. This *pickle* file allows the bot to access the sheet next times, so you don't need to allow it again
+10. If you move the bot to another PC or server, just keep the *json* and *pickle* files to grant the bot access to the sheet without repeating the whole procedure
+
+For more information: [create project](https://developers.google.com/workspace/guides/create-project), [create credentials](https://developers.google.com/workspace/guides/create-credentials)
 
 In both cases, starting from the second row (the first row is used as header), the file shall contain the following columns:
 - Email address used for paying (for convenience, since an email address is usually required in payment platforms)
