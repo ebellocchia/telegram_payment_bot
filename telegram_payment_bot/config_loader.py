@@ -34,7 +34,6 @@ from telegram_payment_bot.utils import Utils
 # Classes
 #
 
-
 # Configuration type converter class
 class ConfigTypeConverter:
     # String to payment type
