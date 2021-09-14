@@ -23,10 +23,10 @@
 #
 import xlrd
 from datetime import datetime
-from typing import Optional, Union
+from typing import Optional, Tuple, Union
 from telegram_payment_bot.config import ConfigTypes
 from telegram_payment_bot.payments_loader_base import PaymentsLoaderBase
-from telegram_payment_bot.payments_data import SinglePayment, PaymentsData
+from telegram_payment_bot.payments_data import PaymentErrorTypes, SinglePayment, PaymentsData, PaymentsDataErrors
 
 
 #
@@ -43,6 +43,19 @@ class PaymentsExcelLoaderConst:
 class PaymentsExcelLoader(PaymentsLoaderBase):
     # Load all payments
     def LoadAll(self) -> PaymentsData:
+        return self.__LoadAndCheckAll()[0]
+
+    # Load single payment by username
+    def LoadSingleByUsername(self,
+                             username: str) -> Optional[SinglePayment]:
+        return self.LoadAll().GetByUsername(username)
+
+    # Check for errors
+    def CheckForErrors(self) -> PaymentsDataErrors:
+        return self.__LoadAndCheckAll()[1]
+
+    # Load and check all payments
+    def __LoadAndCheckAll(self) -> Tuple[PaymentsData, PaymentsDataErrors]:
         # Get payment file
         payment_file = self.config.GetValue(ConfigTypes.PAYMENT_EXCEL_FILE)
 
@@ -53,35 +66,24 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
             # Get sheet
             sheet = self.__GetSheet(payment_file)
             # Load sheet
-            payments = self.__LoadSheet(sheet)
+            payments_data, payments_data_err = self.__LoadSheet(sheet)
 
             # Log
             self.logger.GetLogger().info("File \"%s\" successfully loaded, number of rows: %d" %
-                                         (payment_file, payments.Count()))
+                                         (payment_file, payments_data.Count()))
 
-            return payments
+            return payments_data, payments_data_err
 
         # Catch everything and log exception
         except Exception:
             self.logger.GetLogger().exception("An error occurred while loading file \"%s\"" % payment_file)
             raise
 
-    # Load single payment by username
-    def LoadSingleByUsername(self,
-                             username: str) -> Optional[SinglePayment]:
-        return self.LoadAll().GetByUsername(username)
-
-    # Get sheet
-    @staticmethod
-    def __GetSheet(payment_file: str) -> xlrd.sheet.Sheet:
-        # Open file
-        wb = xlrd.open_workbook(payment_file)
-        return wb.sheet_by_index(PaymentsExcelLoaderConst.SHEET_IDX)
-
     # Load sheet
     def __LoadSheet(self,
-                    sheet: xlrd.sheet.Sheet) -> PaymentsData:
-        payments = PaymentsData()
+                    sheet: xlrd.sheet.Sheet) -> Tuple[PaymentsData, PaymentsDataErrors]:
+        payments_data = PaymentsData()
+        payments_data_err = PaymentsDataErrors()
 
         # Get column indexes
         email_col_idx = self.config.GetValue(ConfigTypes.PAYMENT_EMAIL_COL)
@@ -99,14 +101,15 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
 
                 # Skip empty usernames
                 if username != "":
-                    self.__AddPayment(i, payments, email, username, expiration)
+                    self.__AddPayment(i, payments_data, payments_data_err, email, username, expiration)
 
-        return payments
+        return payments_data, payments_data_err
 
     # Add payment
     def __AddPayment(self,
                      row_idx: int,
-                     payments: PaymentsData,
+                     payments_data: PaymentsData,
+                     payments_data_err: PaymentsDataErrors,
                      email: str,
                      username: str,
                      expiration: Union[float, int, str]) -> None:
@@ -120,12 +123,28 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
             except ValueError:
                 self.logger.GetLogger().warning("Expiration date for username @%s at row %d is not valid (%s), skipped" % (
                     username, row_idx, expiration))
+                # Add error
+                payments_data_err.AddPaymentError(PaymentErrorTypes.INVALID_DATE_ERR,
+                                                  row_idx + 1,
+                                                  username,
+                                                  expiration)
                 return
 
         # Add data
-        if payments.AddPayment(email, username, expiration_datetime):
+        if payments_data.AddPayment(email, username, expiration_datetime):
             self.logger.GetLogger().debug("%3d - Row %3d | %s | %s | %s" % (
-                payments.Count(), row_idx, email, username, expiration_datetime.date()))
+                payments_data.Count(), row_idx, email, username, expiration_datetime.date()))
         else:
-            self.logger.GetLogger().warning("Username %s is present more than one time at row %d, skipped" % (
+            self.logger.GetLogger().warning("Username @%s is present more than one time at row %d, skipped" % (
                 username, row_idx))
+            # Add error
+            payments_data_err.AddPaymentError(PaymentErrorTypes.DUPLICATED_USERNAME_ERR,
+                                              row_idx + 1,
+                                              username)
+
+    # Get sheet
+    @staticmethod
+    def __GetSheet(payment_file: str) -> xlrd.sheet.Sheet:
+        # Open file
+        wb = xlrd.open_workbook(payment_file)
+        return wb.sheet_by_index(PaymentsExcelLoaderConst.SHEET_IDX)

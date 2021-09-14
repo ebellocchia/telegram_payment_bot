@@ -22,9 +22,22 @@
 # Imports
 #
 from __future__ import annotations
+from enum import Enum, auto, unique
 from typing import Optional
 from datetime import datetime
 from telegram_payment_bot.wrapped_dict import WrappedDict
+from telegram_payment_bot.wrapped_list import WrappedList
+
+
+#
+# Enumerations
+#
+
+# Payment error types
+@unique
+class PaymentErrorTypes(Enum):
+    DUPLICATED_USERNAME_ERR = auto(),
+    INVALID_DATE_ERR = auto(),
 
 
 #
@@ -37,10 +50,10 @@ class SinglePayment:
     def __init__(self,
                  email: str,
                  username: str,
-                 expiration: datetime):
+                 expiration_date: datetime):
         self.email = email
         self.username = username
-        self.expiration = expiration
+        self.expiration_date = expiration_date
 
     # Get email
     def Email(self) -> str:
@@ -50,17 +63,17 @@ class SinglePayment:
     def Username(self) -> str:
         return self.username
 
-    # Get expiration
-    def Expiration(self) -> datetime:
-        return self.expiration
+    # Get expiration date
+    def ExpirationDate(self) -> datetime:
+        return self.expiration_date
 
     # Get days left until expiration
     def DaysLeft(self) -> int:
-        return (self.expiration - datetime.now()).days
+        return (self.expiration_date - datetime.now()).days
 
     # Get if expired
     def IsExpired(self) -> bool:
-        return self.expiration.date() < datetime.now().date()
+        return self.expiration_date.date() < datetime.now().date()
 
     # Get if expiring in the specified number of days
     def IsExpiringInDays(self,
@@ -69,7 +82,48 @@ class SinglePayment:
 
     # Convert to string
     def ToString(self) -> str:
-        return "- %s (@%s): %s\n" % (self.email, self.username, self.expiration.date().strftime("%d/%m/%Y"))
+        return "- %s (@%s): %s\n" % (self.email, self.username, self.expiration_date.date().strftime("%d/%m/%Y"))
+
+
+# Payment error class
+class PaymentError:
+    # Constructor
+    def __init__(self,
+                 err_type: PaymentErrorTypes,
+                 row: int,
+                 username: str,
+                 expiration_data: Optional[str]):
+        self.err_type = err_type
+        self.row = row
+        self.username = username
+        self.expiration_date = expiration_data
+
+    # Get type
+    def Type(self) -> PaymentErrorTypes:
+        return self.err_type
+
+    # Get row
+    def Row(self) -> int:
+        return self.row
+
+    # Get username
+    def Username(self) -> str:
+        return self.username
+
+    # Get expiration date
+    def ExpirationDate(self) -> Optional[str]:
+        return self.expiration_date
+
+
+# Payments data error class
+class PaymentsDataErrors(WrappedList):
+    # Add payment error
+    def AddPaymentError(self,
+                        err_type: PaymentErrorTypes,
+                        row: int,
+                        username: str,
+                        expiration: Optional[str] = None) -> None:
+        self.AddSingle(PaymentError(err_type, row, username, expiration))
 
 
 # Payments data class

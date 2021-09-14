@@ -22,12 +22,12 @@
 # Imports
 #
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Tuple
 from telegram_payment_bot.config import ConfigTypes
 from telegram_payment_bot.google_sheet_service import GoogleSheetService
 from telegram_payment_bot.google_sheet_reader import GoogleSheetReader
 from telegram_payment_bot.payments_loader_base import PaymentsLoaderBase
-from telegram_payment_bot.payments_data import SinglePayment, PaymentsData
+from telegram_payment_bot.payments_data import PaymentErrorTypes, SinglePayment, PaymentsData, PaymentsDataErrors
 
 
 #
@@ -38,6 +38,19 @@ from telegram_payment_bot.payments_data import SinglePayment, PaymentsData
 class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
     # Load all payments
     def LoadAll(self) -> PaymentsData:
+        return self.__LoadAndCheckAll()[0]
+
+    # Load single payment by username
+    def LoadSingleByUsername(self,
+                             username: str) -> Optional[SinglePayment]:
+        return self.LoadAll().GetByUsername(username)
+
+    # Check for errors
+    def CheckForErrors(self) -> PaymentsDataErrors:
+        return self.__LoadAndCheckAll()[1]
+
+    # Load and check all payments
+    def __LoadAndCheckAll(self) -> Tuple[PaymentsData, PaymentsDataErrors]:
         # Get payment sheet ID
         sheet_id = self.config.GetValue(ConfigTypes.PAYMENT_GOOGLE_SHEET_ID)
         cred_file = self.config.GetValue(ConfigTypes.PAYMENT_GOOGLE_CRED)
@@ -55,28 +68,24 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
             # Create reader
             gs_reader = GoogleSheetReader(gs_service, sheet_id)
             # Load sheet
-            payments = self.__LoadSheet(gs_reader)
+            payments_data, payments_data_err = self.__LoadSheet(gs_reader)
 
             # Log
             self.logger.GetLogger().info("Google Sheet ID \"%s\" successfully loaded, number of rows: %d" %
-                                         (sheet_id, payments.Count()))
+                                         (sheet_id, payments_data.Count()))
 
-            return payments
+            return payments_data, payments_data_err
 
         # Catch everything and log exception
         except Exception:
             self.logger.GetLogger().exception("An error occurred while loading Google Sheet ID \"%s\"" % sheet_id)
             raise
 
-    # Load single payment by username
-    def LoadSingleByUsername(self,
-                             username: str) -> Optional[SinglePayment]:
-        return self.LoadAll().GetByUsername(username)
-
     # Load sheet
     def __LoadSheet(self,
-                    gs_reader: GoogleSheetReader) -> PaymentsData:
-        payments = PaymentsData()
+                    gs_reader: GoogleSheetReader) -> Tuple[PaymentsData, PaymentsDataErrors]:
+        payments_data = PaymentsData()
+        payments_data_err = PaymentsDataErrors()
 
         # Get column indexes
         email_col_idx = self.config.GetValue(ConfigTypes.PAYMENT_EMAIL_COL)
@@ -98,14 +107,15 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
                 else:
                     # Skip empty usernames
                     if username != "":
-                        self.__AddPayment(i, payments, email, username, expiration)
+                        self.__AddPayment(i, payments_data, payments_data_err, email, username, expiration)
 
-        return payments
+        return payments_data, payments_data_err
 
     # Add payment
     def __AddPayment(self,
                      row_idx: int,
                      payments: PaymentsData,
+                     payments_data_err: PaymentsDataErrors,
                      email: str,
                      username: str,
                      expiration: str) -> None:
@@ -116,6 +126,11 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
         except ValueError:
             self.logger.GetLogger().warning("Expiration date for username @%s at row %d is not valid (%s), skipped" % (
                 username, row_idx, expiration))
+            # Add error
+            payments_data_err.AddPaymentError(PaymentErrorTypes.INVALID_DATE_ERR,
+                                              row_idx + 1,
+                                              username,
+                                              expiration)
             return
 
         # Add data
@@ -123,5 +138,9 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
             self.logger.GetLogger().debug("%3d - Row %3d | %s | %s | %s" % (
                 payments.Count(), row_idx, email, username, expiration_datetime.date()))
         else:
-            self.logger.GetLogger().warning("Username %s is present more than one time at row %d, skipped" % (
+            self.logger.GetLogger().warning("Username @%s is present more than one time at row %d, skipped" % (
                 username, row_idx))
+            # Add error
+            payments_data_err.AddPaymentError(PaymentErrorTypes.DUPLICATED_USERNAME_ERR,
+                                              row_idx + 1,
+                                              username)
