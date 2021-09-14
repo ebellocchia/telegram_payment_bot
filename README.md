@@ -96,6 +96,7 @@ List of supported commands:
 - **/check_no_username [<HOURS_LEFT>]**: show the list of chat members without a username (can be run only in group)
     - *HOURS_LEFT*: hours left to set the username before being removed (only for printing the message). Hours are automatically converted to days if greater than 47. If zero, it'll print "as soon as possible".
 - **/remove_no_username**: remove all the chat members without a username (can be run only in group)
+- **/check_payments_data** : check payments data for errors (e.g. invalid dates, duplicated usernames) and show them
 - **/email_no_payment [<DAYS_LEFT>]**: send a reminder email to chat members whose payment is expiring in the specified number of days
     - *DAYS_LEFT*: number of days within which the payment expires. Zero means expiring today.
 - **/check_no_payment [<DAYS_LEFT>] [<LAST_DAY>]**: show the list of chat members whose payment is expiring in the specified number of days (can be run only in group)
