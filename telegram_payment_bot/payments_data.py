@@ -67,6 +67,10 @@ class SinglePayment:
                          days: int) -> bool:
         return self.DaysLeft() < days
 
+    # Convert to string
+    def ToString(self) -> str:
+        return "- %s (@%s): %s\n" % (self.email, self.username, self.expiration.date().strftime("%d/%m/%Y"))
+
 
 # Payments data class
 class PaymentsData(WrappedDict):
@@ -140,5 +144,5 @@ class PaymentsData(WrappedDict):
     def ToString(self) -> str:
         return "".join(
             ["- %s (@%s): %s\n" %
-             (payment.Email(), payment.Username(), payment.Expiration().date().strftime("%d/%m/%Y"))
+             payment.ToString()
              for (_, payment) in self.dict_elements.items()])
