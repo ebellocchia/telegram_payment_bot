@@ -32,9 +32,7 @@ from telegram_payment_bot.translation_loader import TranslationLoader
 # Classes
 #
 
-#
 # Message dispatcher class
-#
 class MessageDispatcher:
     # Constructor
     def __init__(self,
