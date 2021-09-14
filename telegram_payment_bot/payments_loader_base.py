@@ -25,7 +25,7 @@ from abc import ABC, abstractmethod
 from typing import Optional
 from telegram_payment_bot.config import Config
 from telegram_payment_bot.logger import Logger
-from telegram_payment_bot.payments_data import SinglePayment, PaymentsDict
+from telegram_payment_bot.payments_data import SinglePayment, PaymentsData
 
 
 #
@@ -43,7 +43,7 @@ class PaymentsLoaderBase(ABC):
 
     # Load all payments
     @abstractmethod
-    def LoadAll(self) -> PaymentsDict:
+    def LoadAll(self) -> PaymentsData:
         pass
 
     # Load single payment by username

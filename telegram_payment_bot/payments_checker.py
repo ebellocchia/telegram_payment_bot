@@ -27,7 +27,7 @@ from telegram_payment_bot.config import Config
 from telegram_payment_bot.logger import Logger
 from telegram_payment_bot.chat_members import ChatMembersList, ChatMembersGetter
 from telegram_payment_bot.payments_loader_factory import PaymentsLoaderFactory
-from telegram_payment_bot.payments_data import SinglePayment, PaymentsDict
+from telegram_payment_bot.payments_data import SinglePayment, PaymentsData
 
 
 #
@@ -110,12 +110,12 @@ class PaymentsChecker:
         )
 
     # Get all emails with expired payment
-    def GetAllEmailsWithExpiredPayment(self) -> PaymentsDict:
+    def GetAllEmailsWithExpiredPayment(self) -> PaymentsData:
         return self.__GetAllPayments().FilterExpired()
 
     # Get all emails with expiring payment in the specified number of days
     def GetAllEmailsWithExpiringPayment(self,
-                                        days: int) -> PaymentsDict:
+                                        days: int) -> PaymentsData:
         return self.__GetAllPayments().FilterExpiringInDays(days)
 
     # Get if single member is expired
@@ -133,7 +133,7 @@ class PaymentsChecker:
         return single_payment.IsExpired() if single_payment is not None else True
 
     # Get all payments
-    def __GetAllPayments(self) -> PaymentsDict:
+    def __GetAllPayments(self) -> PaymentsData:
         # Load only the first time
         if self.payments_cache is None:
             self.payments_cache = self.payments_loader.LoadAll()

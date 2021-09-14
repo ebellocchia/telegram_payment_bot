@@ -68,8 +68,8 @@ class SinglePayment:
         return self.DaysLeft() < days
 
 
-# Payments dict class
-class PaymentsDict(WrappedDict):
+# Payments data class
+class PaymentsData(WrappedDict):
     # Add payment
     def AddPayment(self,
                    email: str,
@@ -114,24 +114,24 @@ class PaymentsDict(WrappedDict):
         return payment.IsExpiringInDays(days) if payment is not None else True
 
     # Filter expired payments
-    def FilterExpired(self) -> PaymentsDict:
+    def FilterExpired(self) -> PaymentsData:
         expired_payments = {username: payment for (username, payment)
                             in self.dict_elements.items()
                             if payment.IsExpired()}
 
-        payments = PaymentsDict()
+        payments = PaymentsData()
         payments.AddMultiple(expired_payments)
 
         return payments
 
     # Filter expiring payments in the specified number of days
     def FilterExpiringInDays(self,
-                             days: int) -> PaymentsDict:
+                             days: int) -> PaymentsData:
         expiring_payments = {username: payment for (username, payment)
                              in self.dict_elements.items()
                              if payment.IsExpiringInDays(days)}
 
-        payments = PaymentsDict()
+        payments = PaymentsData()
         payments.AddMultiple(expiring_payments)
 
         return payments

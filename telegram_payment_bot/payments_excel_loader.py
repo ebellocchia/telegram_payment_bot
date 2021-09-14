@@ -26,7 +26,7 @@ from datetime import datetime
 from typing import Optional, Union
 from telegram_payment_bot.config import ConfigTypes
 from telegram_payment_bot.payments_loader_base import PaymentsLoaderBase
-from telegram_payment_bot.payments_data import SinglePayment, PaymentsDict
+from telegram_payment_bot.payments_data import SinglePayment, PaymentsData
 
 
 #
@@ -42,7 +42,7 @@ class PaymentsExcelLoaderConst:
 # Payments Excel loader class
 class PaymentsExcelLoader(PaymentsLoaderBase):
     # Load all payments
-    def LoadAll(self) -> PaymentsDict:
+    def LoadAll(self) -> PaymentsData:
         # Get payment file
         payment_file = self.config.GetValue(ConfigTypes.PAYMENT_EXCEL_FILE)
 
@@ -80,8 +80,8 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
 
     # Load sheet
     def __LoadSheet(self,
-                    sheet: xlrd.sheet.Sheet) -> PaymentsDict:
-        payments = PaymentsDict()
+                    sheet: xlrd.sheet.Sheet) -> PaymentsData:
+        payments = PaymentsData()
 
         # Get column indexes
         email_col_idx = self.config.GetValue(ConfigTypes.PAYMENT_EMAIL_COL)
@@ -106,7 +106,7 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
     # Add payment
     def __AddPayment(self,
                      row_idx: int,
-                     payments: PaymentsDict,
+                     payments: PaymentsData,
                      email: str,
                      username: str,
                      expiration: Union[float, int, str]) -> None:

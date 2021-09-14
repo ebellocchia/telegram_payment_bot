@@ -27,7 +27,7 @@ from telegram_payment_bot.config import ConfigTypes
 from telegram_payment_bot.google_sheet_service import GoogleSheetService
 from telegram_payment_bot.google_sheet_reader import GoogleSheetReader
 from telegram_payment_bot.payments_loader_base import PaymentsLoaderBase
-from telegram_payment_bot.payments_data import SinglePayment, PaymentsDict
+from telegram_payment_bot.payments_data import SinglePayment, PaymentsData
 
 
 #
@@ -37,7 +37,7 @@ from telegram_payment_bot.payments_data import SinglePayment, PaymentsDict
 # Payments Google Sheet loader class
 class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
     # Load all payments
-    def LoadAll(self) -> PaymentsDict:
+    def LoadAll(self) -> PaymentsData:
         # Get payment sheet ID
         sheet_id = self.config.GetValue(ConfigTypes.PAYMENT_GOOGLE_SHEET_ID)
         cred_file = self.config.GetValue(ConfigTypes.PAYMENT_GOOGLE_CRED)
@@ -75,8 +75,8 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
 
     # Load sheet
     def __LoadSheet(self,
-                    gs_reader: GoogleSheetReader) -> PaymentsDict:
-        payments = PaymentsDict()
+                    gs_reader: GoogleSheetReader) -> PaymentsData:
+        payments = PaymentsData()
 
         # Get column indexes
         email_col_idx = self.config.GetValue(ConfigTypes.PAYMENT_EMAIL_COL)
@@ -105,7 +105,7 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
     # Add payment
     def __AddPayment(self,
                      row_idx: int,
-                     payments: PaymentsDict,
+                     payments: PaymentsData,
                      email: str,
                      username: str,
                      expiration: str) -> None:
