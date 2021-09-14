@@ -76,7 +76,7 @@ class PaymentsEmailer:
 
     # Send emails to expired payments
     def __SendEmails(self,
-                     expired_payments: PaymentsData):
+                     expired_payments: PaymentsData) -> None:
         # Email members if any
         if expired_payments.Any():
             # Connect
