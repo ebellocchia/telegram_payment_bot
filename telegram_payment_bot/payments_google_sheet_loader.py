@@ -93,7 +93,8 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
         expiration_col_idx = self.config.GetValue(ConfigTypes.PAYMENT_EXPIRATION_COL)
 
         # Read each row
-        rows = gs_reader.GetRange("A1:C10000")
+        last_col = chr(ord('A') + max(email_col_idx, username_col_idx, expiration_col_idx))
+        rows = gs_reader.GetRange("A1:" + last_col + "10000")
         for i, row in enumerate(rows):
             # Skip header (first row)
             if i > 0:
