@@ -21,7 +21,7 @@
 #
 # Imports
 #
-from typing import Callable, Type
+from typing import Any, Callable, Type
 from telegram_payment_bot.chat_members import ChatMembersGetter
 from telegram_payment_bot.command_base import CommandBase
 from telegram_payment_bot.command_data import CommandParameterError
@@ -41,7 +41,7 @@ from telegram_payment_bot.username_checker import UsernameChecker
 #
 
 # Decorator for group-only commands
-def GroupChatOnly(exec_cmd_fct: Callable[[Type[CommandBase]], None]) -> Callable[[Type[CommandBase]], None]:
+def GroupChatOnly(exec_cmd_fct: Callable[[Any], None]) -> Callable[[Any], None]:
     def decorated(self):
         # Check if private chat
         if self._IsChatPrivate():
