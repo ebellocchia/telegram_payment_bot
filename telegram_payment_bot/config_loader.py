@@ -128,8 +128,7 @@ class AppConfigLoader(ConfigLoaderBase):
         print(" - App test mode: %s" % self.config.GetValue(ConfigTypes.APP_TEST_MODE))
 
         lang_file = self.config.GetValue(ConfigTypes.APP_LANG_FILE)
-        if lang_file is not None:
-            print(" - App language file: %s" % lang_file)
+        print(" - App language file: %s" % (lang_file if lang_file is not None else "default"))
 
 
 # User config loader
@@ -159,8 +158,10 @@ class SupportConfigLoader(ConfigLoaderBase):
 # Payment config loader
 class PaymentConfigLoader(ConfigLoaderBase):
     # Default values
-    DEF_CREDENTIALS = "credentials.json"
-    DEF_PICKLE = "token.pickle"
+    DEF_CREDENTIALS: str = "credentials.json"
+    DEF_PICKLE: str = "token.pickle"
+    # Maximum column index value
+    MAX_COL_IDX: int = 25
 
     # Load configuration
     def Load(self) -> None:
@@ -170,7 +171,7 @@ class PaymentConfigLoader(ConfigLoaderBase):
         self._SetValue(ConfigTypes.PAYMENT_CHECK_CHAT_IDS,
                        "payment",
                        "payment_check_chat_ids",
-                       lambda val: [int(chat_id) for chat_id in val.split(",")] if val != "" else [])
+                       lambda val: [Utils.StrToInt(chat_id) for chat_id in val.split(",")] if val != "" else [])
 
         self._SetValue(ConfigTypes.PAYMENT_TYPE, "payment", "payment_type", ConfigTypeConverter.StrToPaymentType)
 
@@ -218,10 +219,16 @@ class PaymentConfigLoader(ConfigLoaderBase):
         username_col_idx = self.config.GetValue(ConfigTypes.PAYMENT_USERNAME_COL)
         expiration_col_idx = self.config.GetValue(ConfigTypes.PAYMENT_EXPIRATION_COL)
 
+        col_indexes = [email_col_idx, username_col_idx, expiration_col_idx]
+
         if (email_col_idx == username_col_idx or
                 email_col_idx == expiration_col_idx or
                 username_col_idx == expiration_col_idx):
             raise ValueError("Invalid payment column indexes, they shall be all different")
+        elif any(idx < 0 for idx in col_indexes):
+            raise ValueError("Column indexes shall be greater than zero")
+        elif any(idx > self.MAX_COL_IDX for idx in col_indexes):
+            raise ValueError("Column indexes shall be lower than %d" % self.MAX_COL_IDX)
 
 
 # Email config loader
