@@ -30,6 +30,7 @@ Qui trovi la lista dei comandi supportati.
 /remove_no_username : rimuove gli utenti senza username - **Solo Gruppo**
 
 **Controllo Pagamenti**
+/check_payments_data : mostra se i dati di pagamento contengono degli errori
 /email_no_payment [DAYS_LEFT]: invia una email agli utenti il cui pagamento sta per scadere
 /check_no_payment [DAYS_LEFT] [LAST_DAY]: mostra gli utenti il cui pagamento sta per scadere - **Solo Gruppo**
 /remove_no_payment : rimuove gli utenti il cui pagamento sta per scadere - **Solo Gruppo**
@@ -105,6 +106,19 @@ I membri senza username stanno per essere rimossi.</sentence>
     <!-- Remove no username command message (part 3) -->
     <sentence id="REMOVE_NO_USERNAME_P3_CMD">\nLista membri:
 %s</sentence>
+    <!-- Check username command message (part 1) -->
+    <sentence id="CHECK_PAYMENTS_DATA_P1_CMD">**CONTROLLO DATI PAGAMENTO**
+I dati di pagamento stanno per essere controllati.</sentence>
+    <!-- Check username command message (part 2) -->
+    <sentence id="CHECK_PAYMENTS_DATA_P2_CMD">Operazione completata. Errori trovati: **%d**</sentence>
+    <!-- Check username command message (part 3) -->
+    <sentence id="CHECK_PAYMENTS_DATA_P3_CMD">
+- Lo username @%s è presente più di una volta alla riga %d</sentence>
+    <!-- Check username command message (part 4) -->
+    <sentence id="CHECK_PAYMENTS_DATA_P4_CMD">
+- La data di scadenza per lo username @%s alla riga %d non è valida (%s)</sentence>
+    <!-- Check username command message (part 5) -->
+    <sentence id="CHECK_PAYMENTS_DATA_P5_CMD">I dati di pagamento sono corretti, nessun errore trovato.</sentence>
     <!-- Email no payment command message (disabled) -->
     <sentence id="EMAIL_NO_PAYMENT_DISABLED_CMD">**CONTROLLO PAGAMENTI**
 Le email sono al momento disabilitate.</sentence>

@@ -30,7 +30,9 @@ from telegram_payment_bot.members_kicker import MembersKicker
 from telegram_payment_bot.payments_checker import PaymentsChecker
 from telegram_payment_bot.special_users_list import AuthorizedUsersList
 from telegram_payment_bot.helpers import ChatHelper, UserHelper
+from telegram_payment_bot.payments_data import PaymentErrorTypes
 from telegram_payment_bot.payments_emailer import PaymentsEmailer
+from telegram_payment_bot.payments_loader_factory import PaymentsLoaderFactory
 from telegram_payment_bot.username_checker import UsernameChecker
 
 
@@ -225,6 +227,36 @@ class RemoveNoUsernameCmd(CommandBase):
         # Generate new invite link if necessary
         if kicked_members.Any():
             self._NewInviteLink()
+
+
+#
+# Command for checking payments data for errors
+#
+class CheckPaymentsDataCmd(CommandBase):
+    # Execute command
+    def _ExecuteCommand(self) -> None:
+        self._SendMessage(self.translator.GetSentence("CHECK_PAYMENTS_DATA_P1_CMD"))
+
+        # Check payments data
+        payments_loader = PaymentsLoaderFactory(self.config, self.logger).CreateLoader()
+        payments_data_err = payments_loader.CheckForErrors()
+
+        # Check results
+        if payments_data_err.Any():
+            msg = self.translator.GetSentence("CHECK_PAYMENTS_DATA_P2_CMD") % payments_data_err.Count()
+
+            for payment_err in payments_data_err:
+                if payment_err.Type() == PaymentErrorTypes.DUPLICATED_USERNAME_ERR:
+                    msg += self.translator.GetSentence("CHECK_PAYMENTS_DATA_P3_CMD") % (
+                        payment_err.Username(), payment_err.Row())
+                elif payment_err.Type() == PaymentErrorTypes.INVALID_DATE_ERR:
+                    msg += self.translator.GetSentence("CHECK_PAYMENTS_DATA_P4_CMD") % (
+                        payment_err.Username(), payment_err.Row(), payment_err.ExpirationDate())
+        else:
+            msg = self.translator.GetSentence("CHECK_PAYMENTS_DATA_P5_CMD")
+
+        # Send message
+        self._SendMessage(msg)
 
 
 #

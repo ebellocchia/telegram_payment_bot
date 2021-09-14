@@ -30,6 +30,7 @@ Here is the list of supported commands.
 /remove_no_username : remove users with no username - **Only group**
 
 **Payments Check**
+/check_payments_data : show if payments data contains some errors
 /email_no_payment [DAYS_LEFT]: send a reminder email to users whose payments is about to expire
 /check_no_payment [DAYS_LEFT] [LAST_DAY]: show users whose payments is about to expire - **Only group**
 /remove_no_payment : remove users whose payment is expired - **Only group**
@@ -89,9 +90,9 @@ To set it: **Settings -> Edit Profile -> username**</sentence>
     <!-- Check username command message (part 2) -->
     <sentence id="CHECK_NO_USERNAME_P2_CMD">\n\n**The username shall be sent via email to %s or to @%s**.</sentence>
     <!-- Check username command message (part 3) -->
-    <sentence id="CHECK_USERNAME_P3_CMD">\n\n**The username shall be sent via email to %s**.</sentence>
+    <sentence id="CHECK_NO_USERNAME_P3_CMD">\n\n**The username shall be sent via email to %s**.</sentence>
     <!-- Check username command message (part 4) -->
-    <sentence id="CHECK_USERNAME_P4_CMD">\n\n**The username shall be sent to @%s**.</sentence>
+    <sentence id="CHECK_NO_USERNAME_P4_CMD">\n\n**The username shall be sent to @%s**.</sentence>
     <!-- Check username command message (part 5) -->
     <sentence id="CHECK_NO_USERNAME_P5_CMD">**USERNAME CHECK**
 Chat group: **%s**
@@ -105,17 +106,31 @@ The members without username are going to be removed.</sentence>
     <!-- Remove no username command message (part 3) -->
     <sentence id="REMOVE_NO_USERNAME_P3_CMD">\nMembers list:
 %s</sentence>
+
+    <!-- Check username command message (part 1) -->
+    <sentence id="CHECK_PAYMENTS_DATA_P1_CMD">**CHECK PAYMENTS DATA**
+Payments data is going to be checked.</sentence>
+    <!-- Check username command message (part 2) -->
+    <sentence id="CHECK_PAYMENTS_DATA_P2_CMD">Operation completed. Found errors: %d</sentence>
+    <!-- Check username command message (part 3) -->
+    <sentence id="CHECK_PAYMENTS_DATA_P3_CMD">
+- Username @%s is present more than one time at row %d</sentence>
+    <!-- Check username command message (part 4) -->
+    <sentence id="CHECK_PAYMENTS_DATA_P4_CMD">
+- Expiration date for username @%s at row %d is not valid (%s)</sentence>
+    <!-- Check username command message (part 5) -->
+    <sentence id="CHECK_PAYMENTS_DATA_P5_CMD">Payments data is correct, no error found.</sentence>
     <!-- Email no payment command message (disabled) -->
-    <sentence id="EMAIL_NO_PAYMENT_DISABLED_CMD">**PAYMENTS CHECK**
+    <sentence id="EMAIL_NO_PAYMENT_DISABLED_CMD">**PAYMENTS REMINDER**
 Email is currently disabled.</sentence>
     <!-- Email no payment command message (part 1) -->
-    <sentence id="EMAIL_NO_PAYMENT_P1_CMD">**PAYMENTS CHECK**
+    <sentence id="EMAIL_NO_PAYMENT_P1_CMD">**PAYMENTS REMINDER**
 Members whose payment is about to expire %s: **%d**
 Members list:
 %s
 A reminder email has been sent to all members.</sentence>
     <!-- Email no payment command message (part 2) -->
-    <sentence id="EMAIL_NO_PAYMENT_P2_CMD">**PAYMENTS CHECK**
+    <sentence id="EMAIL_NO_PAYMENT_P2_CMD">**PAYMENTS REMINDER**
 All members paid, no email sent.</sentence>
     <!-- Check no payment command message (part 1) -->
     <sentence id="CHECK_NO_PAYMENT_P1_CMD">**PAYMENTS CHECK**

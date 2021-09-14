@@ -150,6 +150,10 @@ class PaymentBot:
             filters.command(["remove_no_username"])))
         # Email_no_payment command
         self.client.add_handler(MessageHandler(
+            lambda client, message: self.__DispatchCommand(client, message, CommandTypes.CHECK_PAYMENTS_DATA_CMD),
+            filters.command(["check_payments_data"])))
+        # Email_no_payment command
+        self.client.add_handler(MessageHandler(
             lambda client, message: self.__DispatchCommand(client, message, CommandTypes.EMAIL_NO_PAYMENT_CMD),
             filters.command(["email_no_payment"])))
         # Check_no_payment command
