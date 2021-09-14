@@ -68,4 +68,4 @@ class WrappedDict(ABC):
 
     # Get iterator
     def __iter__(self) -> Iterator[Any]:
-       yield from self.dict_elements
+        yield from self.dict_elements
