@@ -66,7 +66,7 @@ class PaymentBot:
     # Run bot
     def Run(self) -> None:
         # Print
-        self.logger.GetLogger().info("Payment Telegram Bot started!\n")
+        self.logger.GetLogger().info("Telegram Payment Bot started!\n")
         # Run periodic checker
         self.payments_periodic_checker.Start()
         # Run client
