@@ -36,13 +36,11 @@ class ChatHelper:
     def GetTitle(chat: pyrogram.types.Chat) -> str:
         return chat.title if chat.title is not None else ""
 
-
-# Message helper class
-class MessageHelper:
     # Get if private chat
     @staticmethod
-    def IsPrivateChat(message):
-        return message.chat.id == message.from_user.id
+    def IsPrivateChat(chat: pyrogram.types.Chat,
+                      user: pyrogram.types.User):
+        return chat.id == user.id
 
 
 # User helper class

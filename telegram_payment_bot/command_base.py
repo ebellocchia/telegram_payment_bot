@@ -28,7 +28,7 @@ from typing import Any
 from telegram_payment_bot.command_data import CommandData
 from telegram_payment_bot.config import Config
 from telegram_payment_bot.logger import Logger
-from telegram_payment_bot.helpers import MessageHelper
+from telegram_payment_bot.helpers import ChatHelper
 from telegram_payment_bot.message_sender import MessageSender
 from telegram_payment_bot.special_users_list import AuthorizedUsersList
 from telegram_payment_bot.helpers import ChatHelper, UserHelper
@@ -104,7 +104,7 @@ class CommandBase(ABC):
 
     # Get if chat is private
     def _IsPrivateChat(self) -> bool:
-        return MessageHelper.IsPrivateChat(self.message)
+        return ChatHelper.IsPrivateChat(self.cmd_data.Chat(), self.cmd_data.User())
 
     # Get if quiet mode
     def _IsQuietMode(self) -> bool:
