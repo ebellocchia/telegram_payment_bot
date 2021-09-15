@@ -37,6 +37,14 @@ class ChatHelper:
         return chat.title if chat.title is not None else ""
 
 
+# Message helper class
+class MessageHelper:
+    # Get if private chat
+    @staticmethod
+    def IsPrivateChat(message):
+        return message.chat.id == message.from_user.id
+
+
 # User helper class
 class UserHelper:
     # Get user name or ID
