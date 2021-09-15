@@ -65,7 +65,6 @@ class TranslationLoader:
             self.logger.GetLogger().info("Loading default language file...")
             self.__LoadFile(def_file_path)
 
-
     # Get sentence
     def GetSentence(self,
                     sentence_id: str) -> str:
