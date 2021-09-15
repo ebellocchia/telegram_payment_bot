@@ -59,11 +59,6 @@ class CommandTypes(Enum):
 # Classes
 #
 
-# Command dispatcher error class
-class CommandDispatcherError(Exception):
-    pass
-
-
 # Comstant for command dispatcher class
 class CommandDispatcherConst:
     # Command to class map
