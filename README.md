@@ -47,13 +47,13 @@ The list of all possible fields that can be set is shown below.
 |**[users]**|Configuration for users|
 |authorized_users|List of Telegram usernames that are authorized to use the bot, comma separated|
 |**[support]**|Configuration for support|
-|support_email|Email for getting support or send payments receipts (can be left emtpy if none)|
-|support_telegram|Telegram username for getting support or send payments receipts (can be left emtpy if none)|
+|support_email|Email for getting support or send payments receipts (default: empty)|
+|support_telegram|Telegram username for getting support or send payments receipts (default: empty)|
 |**[payment]**|Configuration for payment|
-|payment_website|Website for payment (can be left emtpy if none)|
-|payment_check_on_join|Flag to check the payment of new members as soon as they join the group|
-|payment_check_period_min|Period in minutes for periodical check. 1 is the minimum value (any value less than 1 will disable the periodical check).|
-|payment_check_chat_ids|IDs of groups to be periodical checked, comma separated (can be left empty). This assumes that all groups are linked to the same payments.|
+|payment_website|Website for payment (default: empty)|
+|payment_check_on_join|Flag to check the payment of new members as soon as they join the group (default: true)|
+|payment_check_period_min|Period in minutes for periodical check. 1 is the minimum value (any value less than 1 will disable the periodical check, default: -1).|
+|payment_check_chat_ids|IDs of groups to be periodical checked, comma separated (default: empty). This assumes that all groups are linked to the same payments.|
 |payment_type|Input for payment data: *EXCEL_FILE* for using xls/xlsx file, *GOOGLE_SHEET* for using a Google Sheet|
 |payment_excel_file|Name of the Excel file used for payment data, valid only if *payment_type* is *EXCEL_FILE*|
 |payment_google_sheet_id|ID of the Google Sheet used for payment data, valid only if *payment_type* is *GOOGLE_SHEET*|
@@ -64,7 +64,7 @@ The list of all possible fields that can be set is shown below.
 |payment_expiration_col|Index of the table column containing the payment expiration date (default: 2, maximum: 25)|
 |payment_date_format|Date format in payments data (default: %d/%m/%Y)|
 |**[email]**|Configuration for email that reminds users to pay|
-|email_enabled|Email enable flag. If False, all the next fields can be skipped.|
+|email_enabled|Email enable flag (default: false). If False, all the next fields will be skipped.|
 |email_from|Email sender|
 |email_reply_to|Email reply-to|
 |email_host|Host for sending email|
@@ -74,9 +74,9 @@ The list of all possible fields that can be set is shown below.
 |email_alt_body|File containing email alternate body (text)|
 |email_html_body|File containing email HTML body|
 |**[logging]**|Configuration for logging|
-|log_level|Log level, same of python logging (*DEBUG*, *INFO*, *WARNING*, *ERROR*, *CRITICAL*)|
-|log_console_enabled|True to enable logging to console, False otherwise|
-|log_file_enabled|True to enable logging to file, False otherwise|
+|log_level|Log level, same of python logging (*DEBUG*, *INFO*, *WARNING*, *ERROR*, *CRITICAL*). Default: *INFO*.|
+|log_console_enabled|True to enable logging to console, False otherwise (default: true)|
+|log_file_enabled|True to enable logging to file, False otherwise (default: false). If False, all the next fields will be skipped.|
 |log_file_name|Log file name|
 |log_file_append|True to append to log file, False to start from a new file each time|
 |log_file_max_bytes|Maximum size in bytes for a log file. When reached, a new log file is created up to *log_file_backup_cnt*.|
