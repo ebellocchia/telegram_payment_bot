@@ -69,6 +69,7 @@ class ConfigTypeConverter:
         idx = list(ConfigTypeConverter.STR_TO_LOG_LEVEL.values()).index(log_level)
         return list(ConfigTypeConverter.STR_TO_LOG_LEVEL.keys())[idx]
 
+
 # Configuration loader base class
 class ConfigLoaderBase(ABC):
     # Constructor
@@ -174,10 +175,10 @@ class PaymentConfigLoader(ConfigLoaderBase):
         self._SetValueWithDefault(ConfigTypes.PAYMENT_CHECK_ON_JOIN, "payment", "payment_check_on_join", True, Utils.StrToBool)
         self._SetValueWithDefault(ConfigTypes.PAYMENT_CHECK_PERIOD_MIN, "payment", "payment_check_period_min", -1, Utils.StrToInt)
         self._SetValueWithDefault(ConfigTypes.PAYMENT_CHECK_CHAT_IDS,
-                       "payment",
-                       "payment_check_chat_ids",
-                       [],
-                       lambda val: [Utils.StrToInt(chat_id) for chat_id in val.split(",")] if val != "" else [])
+                                  "payment",
+                                  "payment_check_chat_ids",
+                                  [],
+                                  lambda val: [Utils.StrToInt(chat_id) for chat_id in val.split(",")] if val != "" else [])
 
         self._SetValue(ConfigTypes.PAYMENT_TYPE, "payment", "payment_type", ConfigTypeConverter.StrToPaymentType)
 
