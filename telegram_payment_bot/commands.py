@@ -21,7 +21,7 @@
 #
 # Imports
 #
-from typing import Any, Callable, Type
+from typing import Any, Callable
 from telegram_payment_bot.chat_members import ChatMembersGetter
 from telegram_payment_bot.command_base import CommandBase
 from telegram_payment_bot.command_data import CommandParameterError
@@ -44,7 +44,7 @@ from telegram_payment_bot.username_checker import UsernameChecker
 def GroupChatOnly(exec_cmd_fct: Callable[[Any], None]) -> Callable[[Any], None]:
     def decorated(self):
         # Check if private chat
-        if self._IsChatPrivate():
+        if self._IsPrivateChat():
             self._SendMessage(self.translator.GetSentence("GROUP_ONLY_ERR"))
         else:
             exec_cmd_fct(self)
@@ -61,7 +61,8 @@ def GroupChatOnly(exec_cmd_fct: Callable[[Any], None]) -> Callable[[Any], None]:
 #
 class HelpCmd(CommandBase):
     # Execute command
-    def _ExecuteCommand(self) -> None:
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
         self._SendMessage(self.translator.GetSentence("HELP_CMD") % UserHelper.GetName(self.cmd_data.User()))
 
 
@@ -70,7 +71,8 @@ class HelpCmd(CommandBase):
 #
 class AliveCmd(CommandBase):
     # Execute command
-    def _ExecuteCommand(self) -> None:
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
         self._SendMessage(self.translator.GetSentence("ALIVE_CMD"))
 
 
@@ -79,7 +81,8 @@ class AliveCmd(CommandBase):
 #
 class SetTestModeCmd(CommandBase):
     # Execute command
-    def _ExecuteCommand(self) -> None:
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
         try:
             # Get parameters
             flag = self.cmd_data.Params().GetAsBool(0)
@@ -101,7 +104,8 @@ class SetTestModeCmd(CommandBase):
 #
 class IsTestModeCmd(CommandBase):
     # Execute command
-    def _ExecuteCommand(self) -> None:
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
         if self.config.GetValue(ConfigTypes.APP_TEST_MODE):
             self._SendMessage(self.translator.GetSentence("IS_TEST_MODE_EN_CMD"))
         else:
@@ -113,7 +117,8 @@ class IsTestModeCmd(CommandBase):
 #
 class AuthUsersCmd(CommandBase):
     # Execute command
-    def _ExecuteCommand(self) -> None:
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
         self._SendMessage(self.translator.GetSentence("AUTH_USERS_CMD") % AuthorizedUsersList(self.config).ToString())
 
 
@@ -123,7 +128,8 @@ class AuthUsersCmd(CommandBase):
 class ChatInfoCmd(CommandBase):
     # Execute command
     @GroupChatOnly
-    def _ExecuteCommand(self) -> None:
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
         self._SendMessage(self.translator.GetSentence("CHAT_INFO_CMD") %
                           (ChatHelper.GetTitle(self.cmd_data.Chat()),
                           self.cmd_data.Chat().type,
@@ -136,7 +142,8 @@ class ChatInfoCmd(CommandBase):
 class UsersListCmd(CommandBase):
     # Execute command
     @GroupChatOnly
-    def _ExecuteCommand(self) -> None:
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
         # Get chat members
         chat_members = ChatMembersGetter(self.client, self.config).GetAll(self.cmd_data.Chat())
         # Send message
@@ -150,7 +157,8 @@ class UsersListCmd(CommandBase):
 class InviteLinkCmd(CommandBase):
     # Execute command
     @GroupChatOnly
-    def _ExecuteCommand(self) -> None:
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
         self._NewInviteLink()
 
 
@@ -160,7 +168,8 @@ class InviteLinkCmd(CommandBase):
 class CheckNoUsernameCmd(CommandBase):
     # Execute command
     @GroupChatOnly
-    def _ExecuteCommand(self) -> None:
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
         # Get chat members
         chat_members = UsernameChecker(self.client, self.config).GetAllWithNoUsername(self.cmd_data.Chat())
 
@@ -207,7 +216,8 @@ class CheckNoUsernameCmd(CommandBase):
 class RemoveNoUsernameCmd(CommandBase):
     # Execute command
     @GroupChatOnly
-    def _ExecuteCommand(self) -> None:
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
         # Notice before removing
         self._SendMessage(self.translator.GetSentence("REMOVE_NO_USERNAME_P1_CMD") %
                           ChatHelper.GetTitle(self.cmd_data.Chat()))
@@ -234,7 +244,8 @@ class RemoveNoUsernameCmd(CommandBase):
 #
 class CheckPaymentsDataCmd(CommandBase):
     # Execute command
-    def _ExecuteCommand(self) -> None:
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
         self._SendMessage(self.translator.GetSentence("CHECK_PAYMENTS_DATA_P1_CMD"))
 
         # Check payments data
@@ -264,7 +275,8 @@ class CheckPaymentsDataCmd(CommandBase):
 #
 class EmailNoPaymentCmd(CommandBase):
     # Execute command
-    def _ExecuteCommand(self) -> None:
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
         if not self.config.GetValue(ConfigTypes.EMAIL_ENABLED):
             msg = self.translator.GetSentence("EMAIL_NO_PAYMENT_DISABLED_CMD")
         else:
@@ -299,7 +311,8 @@ class EmailNoPaymentCmd(CommandBase):
 class CheckNoPaymentCmd(CommandBase):
     # Execute command
     @GroupChatOnly
-    def _ExecuteCommand(self) -> None:
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
         # Get parameters
         days_left = self.cmd_data.Params().GetAsInt(0, 0)
         last_day = self.cmd_data.Params().GetAsInt(1, 0)
@@ -355,7 +368,8 @@ class CheckNoPaymentCmd(CommandBase):
 class RemoveNoPaymentCmd(CommandBase):
     # Execute command
     @GroupChatOnly
-    def _ExecuteCommand(self) -> None:
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
         # Notice before removing
         self._SendMessage(self.translator.GetSentence("REMOVE_NO_PAYMENT_P1_CMD") %
                           ChatHelper.GetTitle(self.cmd_data.Chat()))

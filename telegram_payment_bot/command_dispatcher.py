@@ -23,7 +23,7 @@
 #
 import pyrogram
 from enum import Enum, auto, unique
-from typing import Dict, Type
+from typing import Any, Dict, Type
 from telegram_payment_bot.command_base import CommandBase
 from telegram_payment_bot.commands import *
 from telegram_payment_bot.config import Config
@@ -101,7 +101,8 @@ class CommandDispatcher:
     def Dispatch(self,
                  client: pyrogram.Client,
                  message: pyrogram.types.Message,
-                 cmd_type: CommandTypes) -> None:
+                 cmd_type: CommandTypes,
+                 **kwargs: Any) -> None:
         if not isinstance(cmd_type, CommandTypes):
             raise TypeError("Command type is not an enumerative of CommandTypes")
 
@@ -112,4 +113,4 @@ class CommandDispatcher:
                                                                            self.logger,
                                                                            self.translator)
             cmd_class.SetMessage(message)
-            cmd_class.Execute()
+            cmd_class.Execute(**kwargs)

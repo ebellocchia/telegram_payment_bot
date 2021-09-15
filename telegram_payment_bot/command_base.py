@@ -24,9 +24,11 @@
 import pyrogram
 from abc import ABC, abstractmethod
 from pyrogram.errors import RPCError
+from typing import Any
 from telegram_payment_bot.command_data import CommandData
 from telegram_payment_bot.config import Config
 from telegram_payment_bot.logger import Logger
+from telegram_payment_bot.helpers import MessageHelper
 from telegram_payment_bot.message_sender import MessageSender
 from telegram_payment_bot.special_users_list import AuthorizedUsersList
 from telegram_payment_bot.helpers import ChatHelper, UserHelper
@@ -63,7 +65,8 @@ class CommandBase(ABC):
         self.cmd_data = CommandData(message)
 
     # Execute command
-    def Execute(self) -> None:
+    def Execute(self,
+                **kwargs: Any) -> None:
         # Log command
         self.__LogCommand()
 
@@ -71,12 +74,12 @@ class CommandBase(ABC):
         if self._IsUserAuthorized():
             # Try to execute command
             try:
-                self._ExecuteCommand()
+                self._ExecuteCommand(**kwargs)
             except RPCError:
                 self._SendMessage(self.translator.GetSentence("GENERIC_ERR"))
                 self.logger.GetLogger().exception("An error occurred while executing command %s" % self.cmd_data.Name())
         else:
-            if self._IsChatPrivate():
+            if self._IsPrivateChat():
                 self._SendMessage(self.translator.GetSentence("AUTH_ONLY_ERR"))
 
             self.logger.GetLogger().warning("User %s tried to execute the command but it's not authorized" %
@@ -100,8 +103,8 @@ class CommandBase(ABC):
         return AuthorizedUsersList(self.config).IsUserPresent(self.cmd_data.User())
 
     # Get if chat is private
-    def _IsChatPrivate(self) -> bool:
-        return self.cmd_data.User().id == self.cmd_data.Chat().id
+    def _IsPrivateChat(self) -> bool:
+        return MessageHelper.IsPrivateChat(self.message)
 
     # Get if quiet mode
     def _IsQuietMode(self) -> bool:
@@ -125,5 +128,6 @@ class CommandBase(ABC):
 
     # Execute command - Abstract method
     @abstractmethod
-    def _ExecuteCommand(self) -> None:
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
         pass
