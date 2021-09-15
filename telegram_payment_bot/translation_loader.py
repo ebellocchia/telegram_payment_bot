@@ -52,12 +52,33 @@ class TranslationLoader:
     # Load translation file
     def Load(self,
              file_name: Optional[str] = None) -> None:
-        file_name = (os.path.join(os.path.dirname(__file__), TranslationLoaderConst.DEF_LANG_FOLDER, TranslationLoaderConst.DEF_FILE_NAME)
-                     if file_name is None
-                     else file_name)
+        def_file_path = os.path.join(os.path.dirname(__file__), TranslationLoaderConst.DEF_LANG_FOLDER, TranslationLoaderConst.DEF_FILE_NAME)
 
+        if file_name is not None:
+            try:
+                self.logger.GetLogger().info("Loading language file '%s'..." % file_name)
+                self.__LoadFile(file_name)
+            except FileNotFoundError:
+                self.logger.GetLogger().error("Language file '%s' not found, loading default language..." % file_name)
+                self.__LoadFile(def_file_path)
+        else:
+            self.logger.GetLogger().info("Loading default language file...")
+            self.__LoadFile(def_file_path)
+
+
+    # Get sentence
+    def GetSentence(self,
+                    sentence_id: str) -> str:
+        return self.sentences[sentence_id]
+
+    # Load file
+    def __LoadFile(self,
+                   file_name: str) -> None:
+        # Parse xml
         tree = ElementTree.parse(file_name)
         root = tree.getroot()
+
+        # Load all sentences
         for child in root:
             if child.tag == TranslationLoaderConst.SENTENCE_XML_TAG:
                 sentence_id = child.attrib["id"]
@@ -65,9 +86,5 @@ class TranslationLoader:
 
                 self.logger.GetLogger().debug("Loaded sentence '%s': %s" % (sentence_id, self.sentences[sentence_id]))
 
-        self.logger.GetLogger().info("Language file '%s' successfully loaded" % file_name)
+        self.logger.GetLogger().info("Language file successfully loaded, number of sentences: %d" % len(self.sentences))
 
-    # Get sentence
-    def GetSentence(self,
-                    sentence_id: str) -> str:
-        return self.sentences[sentence_id]
