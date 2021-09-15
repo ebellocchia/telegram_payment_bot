@@ -63,6 +63,11 @@ class ConfigTypeConverter:
                 if log_level in ConfigTypeConverter.STR_TO_LOG_LEVEL
                 else logging.INFO)
 
+    # Convert log level to string
+    @staticmethod
+    def LogLevelToStr(log_level: int) -> str:
+        idx = list(ConfigTypeConverter.STR_TO_LOG_LEVEL.values()).index(log_level)
+        return list(ConfigTypeConverter.STR_TO_LOG_LEVEL.keys())[idx]
 
 # Configuration loader base class
 class ConfigLoaderBase(ABC):
@@ -146,8 +151,8 @@ class UserConfigLoader(ConfigLoaderBase):
 class SupportConfigLoader(ConfigLoaderBase):
     # Load configuration
     def Load(self) -> None:
-        self._SetValue(ConfigTypes.SUPPORT_EMAIL, "support", "support_email")
-        self._SetValue(ConfigTypes.SUPPORT_TELEGRAM, "support", "support_telegram")
+        self._SetValueWithDefault(ConfigTypes.SUPPORT_EMAIL, "support", "support_email", "")
+        self._SetValueWithDefault(ConfigTypes.SUPPORT_TELEGRAM, "support", "support_telegram", "")
 
     # Print configuration
     def Print(self) -> None:
@@ -165,12 +170,13 @@ class PaymentConfigLoader(ConfigLoaderBase):
 
     # Load configuration
     def Load(self) -> None:
-        self._SetValue(ConfigTypes.PAYMENT_WEBSITE, "payment", "payment_website")
-        self._SetValue(ConfigTypes.PAYMENT_CHECK_ON_JOIN, "payment", "payment_check_on_join", Utils.StrToBool)
-        self._SetValue(ConfigTypes.PAYMENT_CHECK_PERIOD_MIN, "payment", "payment_check_period_min", Utils.StrToInt)
-        self._SetValue(ConfigTypes.PAYMENT_CHECK_CHAT_IDS,
+        self._SetValueWithDefault(ConfigTypes.PAYMENT_WEBSITE, "payment", "payment_website", "")
+        self._SetValueWithDefault(ConfigTypes.PAYMENT_CHECK_ON_JOIN, "payment", "payment_check_on_join", True, Utils.StrToBool)
+        self._SetValueWithDefault(ConfigTypes.PAYMENT_CHECK_PERIOD_MIN, "payment", "payment_check_period_min", -1, Utils.StrToInt)
+        self._SetValueWithDefault(ConfigTypes.PAYMENT_CHECK_CHAT_IDS,
                        "payment",
                        "payment_check_chat_ids",
+                       [],
                        lambda val: [Utils.StrToInt(chat_id) for chat_id in val.split(",")] if val != "" else [])
 
         self._SetValue(ConfigTypes.PAYMENT_TYPE, "payment", "payment_type", ConfigTypeConverter.StrToPaymentType)
@@ -235,7 +241,7 @@ class PaymentConfigLoader(ConfigLoaderBase):
 class EmailConfigLoader(ConfigLoaderBase):
     # Load configuration
     def Load(self) -> None:
-        self._SetValue(ConfigTypes.EMAIL_ENABLED, "email", "email_enabled", Utils.StrToBool)
+        self._SetValueWithDefault(ConfigTypes.EMAIL_ENABLED, "email", "email_enabled", False, Utils.StrToBool)
 
         if self.config.GetValue(ConfigTypes.EMAIL_ENABLED):
             self._SetValue(ConfigTypes.EMAIL_FROM, "email", "email_from")
@@ -275,23 +281,27 @@ class EmailConfigLoader(ConfigLoaderBase):
 class LoggingConfigLoader(ConfigLoaderBase):
     # Load configuration
     def Load(self) -> None:
-        self._SetValue(ConfigTypes.LOG_LEVEL, "logging", "log_level", ConfigTypeConverter.StrToLogLevel)
-        self._SetValue(ConfigTypes.LOG_CONSOLE_ENABLED,  "logging", "log_console_enabled", Utils.StrToBool)
-        self._SetValue(ConfigTypes.LOG_FILE_ENABLED,  "logging", "log_file_enabled", Utils.StrToBool)
-        self._SetValue(ConfigTypes.LOG_FILE_NAME, "logging", "log_file_name")
-        self._SetValue(ConfigTypes.LOG_FILE_APPEND, "logging", "log_file_append", Utils.StrToBool)
-        self._SetValue(ConfigTypes.LOG_FILE_MAX_BYTES, "logging", "log_file_max_bytes", Utils.StrToInt)
-        self._SetValue(ConfigTypes.LOG_FILE_BACKUP_CNT, "logging", "log_file_backup_cnt", Utils.StrToInt)
+        self._SetValueWithDefault(ConfigTypes.LOG_LEVEL, "logging", "log_level", logging.INFO, ConfigTypeConverter.StrToLogLevel)
+        self._SetValueWithDefault(ConfigTypes.LOG_CONSOLE_ENABLED,  "logging", "log_console_enabled", True, Utils.StrToBool)
+        self._SetValueWithDefault(ConfigTypes.LOG_FILE_ENABLED,  "logging", "log_file_enabled", False, Utils.StrToBool)
+
+        if self.config.GetValue(ConfigTypes.LOG_FILE_ENABLED):
+            self._SetValue(ConfigTypes.LOG_FILE_NAME, "logging", "log_file_name")
+            self._SetValue(ConfigTypes.LOG_FILE_APPEND, "logging", "log_file_append", Utils.StrToBool)
+            self._SetValue(ConfigTypes.LOG_FILE_MAX_BYTES, "logging", "log_file_max_bytes", Utils.StrToInt)
+            self._SetValue(ConfigTypes.LOG_FILE_BACKUP_CNT, "logging", "log_file_backup_cnt", Utils.StrToInt)
 
     # Print configuration
     def Print(self) -> None:
-        print(" - Log level: %s" % self.config.GetValue(ConfigTypes.LOG_LEVEL))
+        print(" - Log level: %s" % ConfigTypeConverter.LogLevelToStr(self.config.GetValue(ConfigTypes.LOG_LEVEL)))
         print(" - Log console enabled: %s" % self.config.GetValue(ConfigTypes.LOG_CONSOLE_ENABLED))
         print(" - Log file enabled: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_ENABLED))
-        print(" - Log file name: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_NAME))
-        print(" - Log file append: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_APPEND))
-        print(" - Log file max bytes: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_MAX_BYTES))
-        print(" - Log file backup count: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_BACKUP_CNT))
+
+        if self.config.GetValue(ConfigTypes.LOG_FILE_ENABLED):
+            print(" - Log file name: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_NAME))
+            print(" - Log file append: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_APPEND))
+            print(" - Log file max bytes: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_MAX_BYTES))
+            print(" - Log file backup count: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_BACKUP_CNT))
 
 
 # Constant for configuration loader class
