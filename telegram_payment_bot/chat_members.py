@@ -105,11 +105,3 @@ class ChatMembersGetter:
             lambda member: member.user.username is not None and
                            member.user.username in self.config.GetValue(ConfigTypes.AUTHORIZED_USERS)
         )
-
-    # Get if member is admin
-    def IsMemberAdmin(self,
-                      chat: pyrogram.types.Chat,
-                      user: pyrogram.types.User) -> bool:
-        admin_members = self.GetAdmins(chat)
-
-        return any([user.id == member.user.id for member in admin_members])
