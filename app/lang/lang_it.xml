@@ -10,7 +10,7 @@ Non sei autorizzato a utilizzare il comando.</sentence>
     <sentence id="GROUP_ONLY_ERR">**ERRORE**
 Questo comando può essere eseguito solo nel gruppo.</sentence>
     <!-- Help command message -->
-    <sentence id="HELP_CMD">**HELP**
+    <sentence id="HELP_CMD">**MENU DI AIUTO**
 Ciao %s,
 benvenuto nel Telegram Payment Bot.
 Qui trovi la lista dei comandi supportati.
