@@ -24,6 +24,7 @@
 import pyrogram
 from pyrogram import Client, filters
 from pyrogram.handlers import MessageHandler
+from typing import Any
 from telegram_payment_bot.command_dispatcher import CommandDispatcher, CommandTypes
 from telegram_payment_bot.config import ConfigTypes
 from telegram_payment_bot.config_loader import ConfigLoader
@@ -175,9 +176,10 @@ class PaymentBot:
     def __DispatchCommand(self,
                           client: pyrogram.Client,
                           message: pyrogram.types.Message,
-                          cmd_type: CommandTypes) -> None:
+                          cmd_type: CommandTypes,
+                          **kwargs: Any) -> None:
         cmd_dispatcher = CommandDispatcher(self.config, self.logger, self.translator)
-        cmd_dispatcher.Dispatch(client, message, cmd_type)
+        cmd_dispatcher.Dispatch(client, message, cmd_type, **kwargs)
 
     # Handle message
     def __HandleMessage(self,
