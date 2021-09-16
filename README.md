@@ -87,7 +87,7 @@ The list of all possible fields that can be set is shown below.
 List of supported commands:
 - **/help**: show help message
 - **/alive**: show if bot is active
-- **/set_test_mode [true/false]**: enable/disable test mode (overwrite *app_is_test_mode* configuration field)
+- **/set_test_mode true/false**: enable/disable test mode (overwrite *app_is_test_mode* configuration field)
 - **/is_test_mode**: show if test mode is enabled
 - **/auth_users**: show the list of authorized users that can use the bot
 - **/chat_info**: show the chat information (can be run only in group)
