@@ -18,7 +18,7 @@ Here is the list of supported commands.
 **Generic**
 /help : show this message
 /alive : show if bot is active
-/set_test_mode [true/false]: enable/disable test mode
+/set_test_mode true/false : enable/disable test mode
 /is_test_mode : show if test mode is enabled
 /auth_users : show the list of users authorized to use the bot
 /chat_info : show the chat information - **Only group**

@@ -18,7 +18,7 @@ Qui trovi la lista dei comandi supportati.
 **Generici**
 /help : mostra questo messaggio
 /alive : mostra se il bot è attivo
-/set_test_mode [true/false]: attiva/disattiva la modalità di test
+/set_test_mode true/false : attiva/disattiva la modalità di test
 /is_test_mode: mostra se la modalità di test è attiva
 /auth_users : mostra la lista degli utenti autorizzati a usare il bot
 /chat_info : mostra le informazioni sulla chat - **Solo Gruppo**
