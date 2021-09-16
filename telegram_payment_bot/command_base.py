@@ -28,7 +28,6 @@ from typing import Any
 from telegram_payment_bot.command_data import CommandData
 from telegram_payment_bot.config import Config
 from telegram_payment_bot.logger import Logger
-from telegram_payment_bot.helpers import ChatHelper
 from telegram_payment_bot.message_sender import MessageSender
 from telegram_payment_bot.special_users_list import AuthorizedUsersList
 from telegram_payment_bot.helpers import ChatHelper, UserHelper
