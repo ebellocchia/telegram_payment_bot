@@ -14,11 +14,17 @@ To get them, create an app using the following website: [https://my.telegram.org
 
 ### Installation
 
-Just run pip in this folder as follows:
+The package requires Python 3, it is not compatible with Python 2.\
+To install it:
+- Using *setuptools*:
 
-    python setup.py install
+        python setup.py install
 
-To run the bot, move to the *app* folder and run the *bot.py* script:
+- Using *pip*:
+
+        pip install telegram_payment_bot
+
+To run the bot, edit the configuration file by specifying the API ID/hash and bot token. Then, move to the *app* folder and run the *bot.py* script:
 
     cd app
     python bot.py
@@ -28,6 +34,8 @@ To specify a different configuration file:
 
     python bot.py -c another_conf.ini
     python bot.py --config another_conf.ini
+
+Of course, the *app* folder can be moved elsewhere if needed.
 
 ## Configuration
 
