@@ -97,6 +97,8 @@ class ConfigBaseConst:
         ConfigTypes.LOG_CONSOLE_ENABLED: True,
         ConfigTypes.LOG_FILE_ENABLED: False,
     }
+    # Maximum column index
+    MAX_COL_IDX: int = 25
 
 
 # Configuration loader base class
@@ -201,9 +203,6 @@ class SupportConfigLoader(ConfigLoaderBase):
 
 # Payment config loader
 class PaymentConfigLoader(ConfigLoaderBase):
-    # Maximum column index value
-    MAX_COL_IDX: int = 25
-
     # Load configuration
     def Load(self) -> None:
         self._SetValueWithDefault(ConfigTypes.PAYMENT_WEBSITE,
@@ -301,8 +300,8 @@ class PaymentConfigLoader(ConfigLoaderBase):
             raise ValueError("Invalid payment column indexes, they shall be all different")
         elif any(idx < 0 for idx in col_indexes):
             raise ValueError("Column indexes shall be greater than zero")
-        elif any(idx > self.MAX_COL_IDX for idx in col_indexes):
-            raise ValueError("Column indexes shall be lower than %d" % self.MAX_COL_IDX)
+        elif any(idx > ConfigBaseConst.MAX_COL_IDX for idx in col_indexes):
+            raise ValueError("Column indexes shall be lower than %d" % ConfigBaseConst.MAX_COL_IDX)
 
 
 # Email config loader
