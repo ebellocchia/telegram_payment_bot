@@ -86,4 +86,3 @@ class TranslationLoader:
                 self.logger.GetLogger().debug("Loaded sentence '%s': %s" % (sentence_id, self.sentences[sentence_id]))
 
         self.logger.GetLogger().info("Language file successfully loaded, number of sentences: %d" % len(self.sentences))
-
