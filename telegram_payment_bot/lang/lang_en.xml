@@ -36,6 +36,7 @@ Here is the list of supported commands.
 /remove_no_payment : remove users whose payment is expired - **Only group**
 
 Commands that can be executed only in chat group are specified in bold text.
+Parameters in square brakets are optional.
 
 **NOTE:** it's possible to add "quiet" o "q" as last parameter to get the result in a private chat, to avoid flooding the chat group</sentence>
     <!-- Invite link command message (sent to authorized users) -->
