@@ -36,8 +36,15 @@ from telegram_payment_bot.translation_loader import TranslationLoader
 
 # Constants for payments periodic checker class
 class PaymentsPeriodicCheckerConst:
+    # Minimum period in minutes
     MIN_PERIOD_MINUTE: int = 1
+    # Job ID
+    JOB_ID: str = "payment_check"
 
+    # Scheduler states
+    STATE_STOPPED = 0
+    STATE_RUNNING = 1
+    STATE_PAUSED = 2
 
 # Payments periodic checker class
 class PaymentsPeriodicChecker:
@@ -51,38 +58,73 @@ class PaymentsPeriodicChecker:
         self.config = config
         self.logger = logger
         self.translator = translator
+        self.members_kicker = MembersKicker(self.client, self.config, self.logger)
         self.message_sender = MessageSender(client, config, logger)
-        self.scheduler = None
+        self.scheduler = BackgroundScheduler()
 
     # Initialize
     def Init(self) -> None:
-        self.scheduler = BackgroundScheduler()
+        if self.__IsJobPresent():
+            self.logger.GetLogger().error("Payment check task has been already initialized")
+            return
 
         check_period_min = self.config.GetValue(ConfigTypes.PAYMENT_CHECK_PERIOD_MIN)
         if check_period_min >= PaymentsPeriodicCheckerConst.MIN_PERIOD_MINUTE:
-            self.logger.GetLogger().info("Background task started (period: %d min)" % check_period_min)
-            self.scheduler.add_job(self.__PaymentsCheckTask, "interval", minutes=check_period_min)
+            self.logger.GetLogger().info("Payment check task initialized (period: %d min)" % check_period_min)
+            self.scheduler.add_job(self.__PaymentsCheckTask,
+                                   "interval",
+                                   minutes=check_period_min,
+                                   id=PaymentsPeriodicCheckerConst.JOB_ID)
+            self.scheduler.start(paused=True)
         else:
-            self.logger.GetLogger().info("Background task disabled (invalid period)")
+            self.logger.GetLogger().info("Payment check task disabled (invalid period)")
 
     # Start
     def Start(self) -> None:
-        self.scheduler.start()
+        if not self.__IsJobPresent():
+            self.logger.GetLogger().error("Payment check task not initialized, unable to start it")
+            return
+
+        if self.IsRunning():
+            self.logger.GetLogger().error("Payment check task already running")
+            return
+
+        self.logger.GetLogger().info("Payment check task started")
+        self.scheduler.resume()
+
+    # Stop
+    def Stop(self) -> None:
+        if not self.__IsJobPresent():
+            self.logger.GetLogger().error("Payment check task not initialized, unable to stop it")
+            return
+
+        if not self.IsRunning():
+            self.logger.GetLogger().error("Payment check task not running")
+            return
+
+        # Just pause it without removing the job
+        self.logger.GetLogger().info("Payment check task stopped")
+        self.scheduler.pause()
+
+    # Get if running
+    def IsRunning(self) -> bool:
+        return self.scheduler.state == PaymentsPeriodicCheckerConst.STATE_RUNNING
+
+    # Get if job is present
+    def __IsJobPresent(self) -> bool:
+        return self.scheduler.get_job(PaymentsPeriodicCheckerConst.JOB_ID) is not None
 
     # Payment check task
     def __PaymentsCheckTask(self) -> None:
         # Log
         self.logger.GetLogger().info("Periodic payments check started")
 
-        # Create members kicker
-        members_kicker = MembersKicker(self.client, self.config, self.logger)
-
         # Kick members for each chat
         for chat_id in self.config.GetValue(ConfigTypes.PAYMENT_CHECK_CHAT_IDS):
             # Kick members
             self.logger.GetLogger().info("Checking payments for chat ID %d..." % chat_id)
             curr_chat = pyrogram.types.Chat(id=chat_id, type="supergroup")
-            kicked_members = members_kicker.KickAllWithExpiredPayment(curr_chat)
+            kicked_members = self.members_kicker.KickAllWithExpiredPayment(curr_chat)
 
             # Log kicked members
             self.logger.GetLogger().info("Kicked members for chat ID %d: %d" % (chat_id, kicked_members.Count()))
