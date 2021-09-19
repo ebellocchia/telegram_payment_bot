@@ -47,13 +47,14 @@ class Logger:
                  config: Config) -> None:
         self.config = config
         self.logger = logging.getLogger(LoggerConst.LOGGER_NAME)
+        self.__Init()
 
     # Get logger
     def GetLogger(self) -> logging.Logger:
         return self.logger
 
     # Initialize
-    def Init(self) -> None:
+    def __Init(self) -> None:
         # Configure loggers
         self.__ConfigureRootLogger()
         self.__ConfigureConsoleLogger()

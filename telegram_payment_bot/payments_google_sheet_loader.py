@@ -64,7 +64,7 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
 
             # Create service
             gs_service = GoogleSheetService()
-            gs_service.Init(cred_file, pickle_file)
+            gs_service.LogIn(cred_file, pickle_file)
             # Create reader
             gs_reader = GoogleSheetReader(gs_service, sheet_id)
             # Load sheet

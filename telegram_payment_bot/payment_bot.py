@@ -41,24 +41,25 @@ from telegram_payment_bot.translation_loader import TranslationLoader
 # Payment bot class
 class PaymentBot:
     # Constructor
-    def __init__(self) -> None:
-        self.config = None
-        self.logger = None
-        self.client = None
-        self.payments_checker_task = None
-
-    # Initialize
-    def Init(self,
-             config_file: str) -> None:
+    def __init__(self,
+                 config_file: str) -> None:
         # Load configuration
-        self.__LoadConfiguration(config_file)
-        # Initialize logger and translations
-        self.__InitLogging()
-        self.__InitTranslations()
+        config_loader = ConfigLoader(config_file)
+        config_loader.Load()
+        self.config = config_loader.GetConfig()
+        # Initialize logger
+        self.logger = Logger(self.config)
+        # Initialize translations
+        self.translator = TranslationLoader(self.logger)
+        self.translator.Load(self.config.GetValue(ConfigTypes.APP_LANG_FILE))
         # Initialize client
-        self.__InitClient(config_file)
+        self.client = Client(self.config.GetValue(ConfigTypes.SESSION_NAME),
+                             config_file=config_file)
         # Initialize payment checker
-        self.__InitPaymentCheckertTask()
+        self.payments_checker_task = PaymentsCheckerTask(self.client,
+                                                         self.config,
+                                                         self.logger,
+                                                         self.translator)
         # Setup handlers
         self.__SetupHandlers()
         # Log
@@ -72,36 +73,6 @@ class PaymentBot:
         self.payments_checker_task.Start()
         # Run client
         self.client.run()
-
-    # Load configuration
-    def __LoadConfiguration(self,
-                            config_file: str) -> None:
-        config_loader = ConfigLoader(config_file)
-        config_loader.Load()
-        self.config = config_loader.GetConfig()
-
-    # Initialize logging
-    def __InitLogging(self) -> None:
-        self.logger = Logger(self.config)
-        self.logger.Init()
-
-    # Initialize translation
-    def __InitTranslations(self) -> None:
-        self.translator = TranslationLoader(self.logger)
-        self.translator.Load(self.config.GetValue(ConfigTypes.APP_LANG_FILE))
-
-    # Initialize client
-    def __InitClient(self,
-                     config_file: str) -> None:
-        self.client = Client(self.config.GetValue(ConfigTypes.SESSION_NAME), config_file=config_file)
-
-    # Initialize payment checker task
-    def __InitPaymentCheckertTask(self) -> None:
-        self.payments_checker_task = PaymentsCheckerTask(self.client,
-                                                         self.config,
-                                                         self.logger,
-                                                         self.translator)
-        #self.payments_checker_task.Init()
 
     # Setup handlers
     def __SetupHandlers(self) -> None:

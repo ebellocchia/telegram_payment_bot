@@ -58,28 +58,12 @@ class PaymentsCheckerTask:
         self.logger = logger
         self.payment_checker_job = PaymentsCheckerJob(client, config, logger, translator)
         self.scheduler = BackgroundScheduler()
-
-    # Initialize
-    def Init(self) -> None:
-        if self.__IsJobPresent():
-            self.logger.GetLogger().error("Payment check task has already been initialized")
-            return
-
-        check_period_min = self.config.GetValue(ConfigTypes.PAYMENT_CHECK_PERIOD_MIN)
-        if check_period_min >= PaymentsCheckerTaskConst.MIN_PERIOD_MINUTE:
-            self.logger.GetLogger().info("Payment check task initialized (period: %d min)" % check_period_min)
-            self.scheduler.add_job(lambda: self.payment_checker_job.CheckPayments(),
-                                   "interval",
-                                   minutes=check_period_min,
-                                   id=PaymentsCheckerTaskConst.JOB_ID)
-            self.scheduler.start(paused=True)
-        else:
-            self.logger.GetLogger().info("Payment check task disabled (invalid period)")
+        self.__Init()
 
     # Start
     def Start(self) -> None:
         if not self.__IsJobPresent():
-            self.logger.GetLogger().error("Payment check task not initialized, unable to start it")
+            self.logger.GetLogger().error("Payment check task disabled, unable to start it")
             return
 
         if self.IsRunning():
@@ -92,7 +76,7 @@ class PaymentsCheckerTask:
     # Stop
     def Stop(self) -> None:
         if not self.__IsJobPresent():
-            self.logger.GetLogger().error("Payment check task not initialized, unable to stop it")
+            self.logger.GetLogger().error("Payment check task disabled, unable to stop it")
             return
 
         if not self.IsRunning():
@@ -106,6 +90,19 @@ class PaymentsCheckerTask:
     # Get if running
     def IsRunning(self) -> bool:
         return self.scheduler.state == PaymentsCheckerTaskConst.STATE_RUNNING
+
+    # Initialize
+    def __Init(self) -> None:
+        check_period_min = self.config.GetValue(ConfigTypes.PAYMENT_CHECK_PERIOD_MIN)
+        if check_period_min >= PaymentsCheckerTaskConst.MIN_PERIOD_MINUTE:
+            self.logger.GetLogger().info("Payment check task initialized (period: %d min)" % check_period_min)
+            self.scheduler.add_job(lambda: self.payment_checker_job.CheckPayments(),
+                                   "interval",
+                                   minutes=check_period_min,
+                                   id=PaymentsCheckerTaskConst.JOB_ID)
+            self.scheduler.start(paused=True)
+        else:
+            self.logger.GetLogger().info("Payment check task disabled (invalid period)")
 
     # Get if job is present
     def __IsJobPresent(self) -> bool:

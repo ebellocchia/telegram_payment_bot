@@ -115,6 +115,5 @@ if __name__ == "__main__":
     args_parser.Parse(sys.argv)
 
     # Create and run bot
-    payment_bot = PaymentBot()
-    payment_bot.Init(args_parser.GetArgs().GetConfigFile())
+    payment_bot = PaymentBot(args_parser.GetArgs().GetConfigFile())
     payment_bot.Run()

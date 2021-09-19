@@ -45,10 +45,10 @@ class GoogleSheetService:
     def __init__(self) -> None:
         self.service = None
 
-    # Initialize
-    def Init(self,
-             credentials_file: str,
-             token_file: str) -> None:
+    # Log in
+    def LogIn(self,
+              credentials_file: str,
+              token_file: str) -> None:
         creds = None
 
         # From Google example: https://developers.google.com/sheets/api/quickstart/python
