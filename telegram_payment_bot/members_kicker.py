@@ -22,17 +22,24 @@
 # Imports
 #
 import pyrogram
+import time
 from telegram_payment_bot.ban_helper import BanHelper
 from telegram_payment_bot.config import ConfigTypes, Config
 from telegram_payment_bot.logger import Logger
 from telegram_payment_bot.chat_members import ChatMembersList
-from telegram_payment_bot.payments_checker import PaymentsChecker
-from telegram_payment_bot.username_checker import UsernameChecker
+from telegram_payment_bot.members_payment_getter import MembersPaymentGetter
+from telegram_payment_bot.members_username_getter import MembersUsernameGetter
 
 
 #
 # Classes
 #
+
+# Constants for members kicker class
+class MembersKickerConst:
+    # Sleep time
+    SLEEP_TIME_SEC: float = 0.01
+
 
 # Members kicker class
 class MembersKicker:
@@ -44,20 +51,21 @@ class MembersKicker:
         self.client = client
         self.config = config
         self.logger = logger
-        self.ban_helper = BanHelper(self.client)
-        self.payment_checker = PaymentsChecker(self.client, self.config, self.logger)
-        self.username_checker = UsernameChecker(self.client, self.config)
+        self.ban_helper = BanHelper(client)
+        self.members_payment_getter = MembersPaymentGetter(client, config, logger)
+        self.members_username_getter = MembersUsernameGetter(client, config)
 
     # Kick all members with expired payment
     def KickAllWithExpiredPayment(self,
                                   chat: pyrogram.types.Chat) -> ChatMembersList:
         # Get expired members
-        no_payment_members = self.payment_checker.GetAllMembersWithExpiredPayment(chat)
+        no_payment_members = self.members_payment_getter.GetAllMembersWithExpiredPayment(chat)
 
         # Kick members if any (only if not test mode)
         if not self.config.GetValue(ConfigTypes.APP_TEST_MODE):
             for member in no_payment_members:
                 self.ban_helper.KickUser(chat, member.user)
+                time.sleep(MembersKickerConst.SLEEP_TIME_SEC)
         else:
             self.logger.GetLogger().info("Test mode ON: no member will be kicked")
 
@@ -68,7 +76,7 @@ class MembersKicker:
                                    chat: pyrogram.types.Chat,
                                    user: pyrogram.types.User) -> bool:
         # Get expired members
-        payment_expired = self.payment_checker.IsSingleMemberExpired(chat, user)
+        payment_expired = self.members_payment_getter.IsSingleMemberExpired(chat, user)
 
         if not self.config.GetValue(ConfigTypes.APP_TEST_MODE):
             if payment_expired:
@@ -82,12 +90,13 @@ class MembersKicker:
     def KickAllWithNoUsername(self,
                               chat: pyrogram.types.Chat) -> ChatMembersList:
         # Get expired members
-        no_username_members = self.username_checker.GetAllWithNoUsername(chat)
+        no_username_members = self.members_username_getter.GetAllWithNoUsername(chat)
 
         # Kick members if any (only if not test mode)
         if not self.config.GetValue(ConfigTypes.APP_TEST_MODE):
             for member in no_username_members:
                 self.ban_helper.KickUser(chat, member.user)
+                time.sleep(MembersKickerConst.SLEEP_TIME_SEC)
         else:
             self.logger.GetLogger().info("Test mode ON: no member will be kicked")
 

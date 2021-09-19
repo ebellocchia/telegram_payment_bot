@@ -30,8 +30,8 @@ from telegram_payment_bot.chat_members import ChatMembersList, ChatMembersGetter
 # Classes
 #
 
-# Username checker class
-class UsernameChecker:
+# Members username getter class
+class MembersUsernameGetter:
     # Constructor
     def __init__(self,
                  client: pyrogram.Client,

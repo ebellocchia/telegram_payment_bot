@@ -41,7 +41,6 @@ class GoogleSheetServiceConst:
 
 # Google sheet service class
 class GoogleSheetService:
-
     # Constructor
     def __init__(self) -> None:
         self.service = None

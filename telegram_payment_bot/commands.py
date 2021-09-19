@@ -27,13 +27,13 @@ from telegram_payment_bot.command_base import CommandBase
 from telegram_payment_bot.command_data import CommandParameterError
 from telegram_payment_bot.config import ConfigTypes
 from telegram_payment_bot.members_kicker import MembersKicker
-from telegram_payment_bot.payments_checker import PaymentsChecker
+from telegram_payment_bot.members_payment_getter import MembersPaymentGetter
 from telegram_payment_bot.special_users_list import AuthorizedUsersList
 from telegram_payment_bot.helpers import ChatHelper, UserHelper
 from telegram_payment_bot.payments_data import PaymentErrorTypes
 from telegram_payment_bot.payments_emailer import PaymentsEmailer
 from telegram_payment_bot.payments_loader_factory import PaymentsLoaderFactory
-from telegram_payment_bot.username_checker import UsernameChecker
+from telegram_payment_bot.members_username_getter import MembersUsernameGetter
 
 
 #
@@ -171,7 +171,7 @@ class CheckNoUsernameCmd(CommandBase):
     def _ExecuteCommand(self,
                         **kwargs: Any) -> None:
         # Get chat members
-        chat_members = UsernameChecker(self.client, self.config).GetAllWithNoUsername(self.cmd_data.Chat())
+        chat_members = MembersUsernameGetter(self.client, self.config).GetAllWithNoUsername(self.cmd_data.Chat())
 
         # Build message
         if chat_members.Any():
@@ -317,9 +317,9 @@ class CheckNoPaymentCmd(CommandBase):
         days_left = self.cmd_data.Params().GetAsInt(0, 0)
         last_day = self.cmd_data.Params().GetAsInt(1, 0)
         # Get expired members
-        expired_members = PaymentsChecker(self.client,
-                                          self.config,
-                                          self.logger).GetAllMembersWithExpiringPayment(self.cmd_data.Chat(), days_left)
+        expired_members = MembersPaymentGetter(self.client,
+                                               self.config,
+                                               self.logger).GetAllMembersWithExpiringPayment(self.cmd_data.Chat(), days_left)
 
         # Build message
         if expired_members.Any():

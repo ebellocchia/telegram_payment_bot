@@ -53,19 +53,17 @@ class CommandBase(ABC):
         self.logger = logger
         self.translator = translator
         self.message = None
-        # Helper classes
         self.cmd_data = None
         self.message_sender = MessageSender(client, config, logger)
 
-    # Set message
-    def SetMessage(self,
-                   message: pyrogram.types.Message) -> None:
+    # Execute command
+    def Execute(self,
+                message: pyrogram.types.Message,
+                **kwargs: Any) -> None:
+        # Set members
         self.message = message
         self.cmd_data = CommandData(message)
 
-    # Execute command
-    def Execute(self,
-                **kwargs: Any) -> None:
         # Log command
         self.__LogCommand()
 

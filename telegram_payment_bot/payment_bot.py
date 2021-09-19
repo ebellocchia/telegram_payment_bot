@@ -30,7 +30,7 @@ from telegram_payment_bot.config import ConfigTypes
 from telegram_payment_bot.config_loader import ConfigLoader
 from telegram_payment_bot.logger import Logger
 from telegram_payment_bot.message_dispatcher import MessageDispatcher
-from telegram_payment_bot.payments_periodic_checker import PaymentsPeriodicChecker
+from telegram_payment_bot.payments_checker_task import PaymentsCheckerTask
 from telegram_payment_bot.translation_loader import TranslationLoader
 
 
@@ -45,7 +45,7 @@ class PaymentBot:
         self.config = None
         self.logger = None
         self.client = None
-        self.payments_periodic_checker = None
+        self.payments_checker_task = None
 
     # Initialize
     def Init(self,
@@ -58,7 +58,7 @@ class PaymentBot:
         # Initialize client
         self.__InitClient(config_file)
         # Initialize payment checker
-        self.__InitPaymentChecker()
+        self.__InitPaymentCheckertTask()
         # Setup handlers
         self.__SetupHandlers()
         # Log
@@ -69,16 +69,16 @@ class PaymentBot:
         # Print
         self.logger.GetLogger().info("Telegram Payment Bot started!\n")
         # Run periodic checker
-        self.payments_periodic_checker.Start()
+        self.payments_checker_task.Start()
         # Run client
         self.client.run()
 
     # Load configuration
     def __LoadConfiguration(self,
                             config_file: str) -> None:
-        config_ldr = ConfigLoader(config_file)
-        config_ldr.Load()
-        self.config = config_ldr.GetConfig()
+        config_loader = ConfigLoader(config_file)
+        config_loader.Load()
+        self.config = config_loader.GetConfig()
 
     # Initialize logging
     def __InitLogging(self) -> None:
@@ -95,13 +95,13 @@ class PaymentBot:
                      config_file: str) -> None:
         self.client = Client(self.config.GetValue(ConfigTypes.SESSION_NAME), config_file=config_file)
 
-    # Initialize payment checker
-    def __InitPaymentChecker(self) -> None:
-        self.payments_periodic_checker = PaymentsPeriodicChecker(self.client,
-                                                                 self.config,
-                                                                 self.logger,
-                                                                 self.translator)
-        self.payments_periodic_checker.Init()
+    # Initialize payment checker task
+    def __InitPaymentCheckertTask(self) -> None:
+        self.payments_checker_task = PaymentsCheckerTask(self.client,
+                                                         self.config,
+                                                         self.logger,
+                                                         self.translator)
+        #self.payments_checker_task.Init()
 
     # Setup handlers
     def __SetupHandlers(self) -> None:

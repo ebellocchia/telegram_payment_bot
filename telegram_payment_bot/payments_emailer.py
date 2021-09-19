@@ -25,7 +25,7 @@ import pyrogram
 import time
 from telegram_payment_bot.config import ConfigTypes, Config
 from telegram_payment_bot.logger import Logger
-from telegram_payment_bot.payments_checker import PaymentsChecker
+from telegram_payment_bot.members_payment_getter import MembersPaymentGetter
 from telegram_payment_bot.subscription_emailer import SubscriptionEmailer
 from telegram_payment_bot.payments_data import PaymentsData
 
@@ -50,13 +50,13 @@ class PaymentsEmailer:
         self.client = client
         self.config = config
         self.logger = logger
-        self.emailer = SubscriptionEmailer(self.config)
-        self.payment_checker = PaymentsChecker(self.client, self.config, self.logger)
+        self.emailer = SubscriptionEmailer(config)
+        self.members_payment_getter = MembersPaymentGetter(client, config, logger)
 
     # Email all users with expired payment
     def EmailAllWithExpiredPayment(self) -> PaymentsData:
         # Get expired members
-        expired_payments = self.payment_checker.GetAllEmailsWithExpiredPayment()
+        expired_payments = self.members_payment_getter.GetAllEmailsWithExpiredPayment()
 
         # Send emails
         self.__SendEmails(expired_payments)
@@ -67,7 +67,7 @@ class PaymentsEmailer:
     def EmailAllWithExpiringPayment(self,
                                     days: int) -> PaymentsData:
         # Get expired members
-        expired_payments = self.payment_checker.GetAllEmailsWithExpiringPayment(days)
+        expired_payments = self.members_payment_getter.GetAllEmailsWithExpiringPayment(days)
 
         # Send emails
         self.__SendEmails(expired_payments)

@@ -34,8 +34,8 @@ from telegram_payment_bot.payments_data import SinglePayment, PaymentsData
 # Classes
 #
 
-# Payments checker class
-class PaymentsChecker:
+# Members payment getter class
+class MembersPaymentGetter:
     # Constructor
     def __init__(self,
                  client: pyrogram.Client,
@@ -44,7 +44,7 @@ class PaymentsChecker:
         self.client = client
         self.config = config
         self.logger = logger
-        self.payments_loader = PaymentsLoaderFactory(self.config, self.logger).CreateLoader()
+        self.payments_loader = PaymentsLoaderFactory(config, logger).CreateLoader()
         self.payments_cache = None
         self.single_payment_cache = None
 

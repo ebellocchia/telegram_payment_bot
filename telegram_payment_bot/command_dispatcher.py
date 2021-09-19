@@ -107,5 +107,4 @@ class CommandDispatcher:
                                                                            self.config,
                                                                            self.logger,
                                                                            self.translator)
-            cmd_class.SetMessage(message)
-            cmd_class.Execute(**kwargs)
+            cmd_class.Execute(message, **kwargs)

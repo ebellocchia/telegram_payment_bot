@@ -83,7 +83,7 @@ class ConfigBaseConst:
         ConfigTypes.PAYMENT_WEBSITE: "",
         ConfigTypes.PAYMENT_CHECK_ON_JOIN: True,
         ConfigTypes.PAYMENT_CHECK_PERIOD_MIN: -1,
-        ConfigTypes.PAYMENT_CHECK_CHAT_IDS:[],
+        ConfigTypes.PAYMENT_CHECK_CHAT_IDS: [],
         ConfigTypes.PAYMENT_GOOGLE_CRED: "credentials.json",
         ConfigTypes.PAYMENT_GOOGLE_PICKLE: "token.pickle",
         ConfigTypes.PAYMENT_EMAIL_COL: 0,
