@@ -41,10 +41,10 @@ class PaymentsCheckerJob:
                  config: Config,
                  logger: Logger,
                  translator: TranslationLoader) -> None:
+        self.client = client
         self.config = config
         self.logger = logger
         self.translator = translator
-        self.members_kicker = MembersKicker(client, config, logger)
         self.message_sender = MessageSender(client, config, logger)
 
     # Check payments
@@ -53,11 +53,13 @@ class PaymentsCheckerJob:
         self.logger.GetLogger().info("Periodic payments check started")
 
         # Kick members for each chat
+        members_kicker = MembersKicker(self.client, self.config, self.logger)
+
         for chat_id in self.config.GetValue(ConfigTypes.PAYMENT_CHECK_CHAT_IDS):
             # Kick members
             self.logger.GetLogger().info("Checking payments for chat ID %d..." % chat_id)
             curr_chat = pyrogram.types.Chat(id=chat_id, type="supergroup")
-            kicked_members = self.members_kicker.KickAllWithExpiredPayment(curr_chat)
+            kicked_members = members_kicker.KickAllWithExpiredPayment(curr_chat)
 
             # Log kicked members
             self.logger.GetLogger().info("Kicked members for chat ID %d: %d" % (chat_id, kicked_members.Count()))
