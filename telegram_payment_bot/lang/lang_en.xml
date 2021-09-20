@@ -51,6 +51,7 @@ The link has been sent privately to authorized users.</sentence>
     <!-- Alive command message -->
     <sentence id="ALIVE_CMD">**STATUS**
 The bot is alive.</sentence>
+
     <!-- Set test mode command enabled message -->
     <sentence id="SET_TEST_MODE_EN_CMD">**TEST MODE**
 Test mode enabled.</sentence>
@@ -60,12 +61,14 @@ Test mode disabled.</sentence>
     <!-- Set test mode command parameter error message -->
     <sentence id="SET_TEST_MODE_PARAM_ERR_CMD">**TEST MODE**
 Invalid parameter.</sentence>
+
     <!-- Is test mode command enabled message -->
     <sentence id="IS_TEST_MODE_EN_CMD">**TEST MODE**
 Test mode is currently enabled.</sentence>
     <!-- Is test mode command disabled message -->
     <sentence id="IS_TEST_MODE_DIS_CMD">**TEST MODE**
 Test mode is currently disabled.</sentence>
+
     <!-- Authorized users command message -->
     <sentence id="AUTH_USERS_CMD">**AUTHORIZED USERS**
 Users authorized to use the bot:
@@ -80,6 +83,7 @@ ID: %d</sentence>
 Chat group: **%s**
 Users list:
 %s</sentence>
+
     <!-- Check username command message (part 1) -->
     <sentence id="CHECK_NO_USERNAME_P1_CMD">**USERNAME CHECK**
 Chat group: **%s**
@@ -98,6 +102,7 @@ To set it: **Settings -> Edit Profile -> username**</sentence>
     <sentence id="CHECK_NO_USERNAME_P5_CMD">**USERNAME CHECK**
 Chat group: **%s**
 All members has the username set.</sentence>
+
     <!-- Remove no username command message (part 1) -->
     <sentence id="REMOVE_NO_USERNAME_P1_CMD">**USERNAME CHECK**
 Chat group: **%s**
@@ -122,6 +127,7 @@ Payments data is going to be checked.</sentence>
     <!-- Check username command message (part 5) -->
     <sentence id="CHECK_PAYMENTS_DATA_P5_CMD">Payments data is correct, no error found.</sentence>
     <!-- Email no payment command message (disabled) -->
+
     <sentence id="EMAIL_NO_PAYMENT_DISABLED_CMD">**PAYMENTS REMINDER**
 Email is currently disabled.</sentence>
     <!-- Email no payment command message (part 1) -->
@@ -133,6 +139,7 @@ A reminder email has been sent to all members.</sentence>
     <!-- Email no payment command message (part 2) -->
     <sentence id="EMAIL_NO_PAYMENT_P2_CMD">**PAYMENTS REMINDER**
 All members paid, no email sent.</sentence>
+
     <!-- Check no payment command message (part 1) -->
     <sentence id="CHECK_NO_PAYMENT_P1_CMD">**PAYMENTS CHECK**
 Chat group: **%s**
@@ -152,6 +159,7 @@ Please pay within %s or you'll be removed from the group.</sentence>
     <sentence id="CHECK_NO_PAYMENT_P6_CMD">**PAYMENTS CHECK**
 Chat group: **%s**
 All members paid.</sentence>
+
     <!-- Remove no payment command message (part 1) -->
     <sentence id="REMOVE_NO_PAYMENT_P1_CMD">**PAYMENTS CHECK**
 Chat group: **%s**
@@ -161,6 +169,7 @@ Members whose payment is about to expire are going to be removed.</sentence>
     <!-- Remove no payment command message (part 3) -->
     <sentence id="REMOVE_NO_PAYMENT_P3_CMD">\nMembers list:
 %s</sentence>
+
     <!-- Misc -->
     <sentence id="WITHIN_HOURS_MSG">within %d hours</sentence>
     <sentence id="WITHIN_DAYS_MSG">within %d days</sentence>

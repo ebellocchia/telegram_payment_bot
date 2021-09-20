@@ -51,6 +51,7 @@ Il link è stato inviato in privato agli utenti autorizzati.</sentence>
     <!-- Alive command message -->
     <sentence id="ALIVE_CMD">**STATO**
 Il bot è attivo.</sentence>
+
     <!-- Set test mode command enabled message -->
     <sentence id="SET_TEST_MODE_EN_CMD">**MODALITÀ TEST**
 Modalità di test attivata.</sentence>
@@ -60,12 +61,14 @@ Modalità di test disattivata.</sentence>
     <!-- Set test mode command parameter error message -->
     <sentence id="SET_TEST_MODE_PARAM_ERR_CMD">**MODALITÀ TEST**
 Parametro non valido.</sentence>
+
     <!-- Is test mode command enabled message -->
     <sentence id="IS_TEST_MODE_EN_CMD">**MODALITÀ TEST**
 La modalità di test è attualmente attiva.</sentence>
     <!-- Is test mode command disabled message -->
     <sentence id="IS_TEST_MODE_DIS_CMD">**MODALITÀ TEST**
 La modalità di test è attualmente disattiva.</sentence>
+
     <!-- Authorized users command message -->
     <sentence id="AUTH_USERS_CMD">**UTENTI AUTORIZZATI**
 Utenti autorizzati a utilizzare il bot:
@@ -80,6 +83,7 @@ ID: %d</sentence>
 Gruppo: **%s**
 Lista membri:
 %s</sentence>
+
     <!-- Check username command message (part 1) -->
     <sentence id="CHECK_NO_USERNAME_P1_CMD">**CONTROLLO USERNAME**
 Gruppo: **%s**
@@ -98,6 +102,7 @@ Per impostarlo: **Impostazioni -> Modifica profilo -> username**</sentence>
     <sentence id="CHECK_NO_USERNAME_P5_CMD">**CONTROLLO USERNAME**
 Gruppo: **%s**
 Tutti i membri hanno impostato lo username.</sentence>
+
     <!-- Remove no username command message (part 1) -->
     <sentence id="REMOVE_NO_USERNAME_P1_CMD">**CONTROLLO USERNAME**
 Gruppo: **%s**
@@ -107,6 +112,7 @@ I membri senza username stanno per essere rimossi.</sentence>
     <!-- Remove no username command message (part 3) -->
     <sentence id="REMOVE_NO_USERNAME_P3_CMD">\nLista membri:
 %s</sentence>
+
     <!-- Check username command message (part 1) -->
     <sentence id="CHECK_PAYMENTS_DATA_P1_CMD">**CONTROLLO DATI PAGAMENTO**
 I dati di pagamento stanno per essere controllati.</sentence>
@@ -120,6 +126,7 @@ I dati di pagamento stanno per essere controllati.</sentence>
 - La data di scadenza per lo username @%s alla riga %d non è valida (%s)</sentence>
     <!-- Check username command message (part 5) -->
     <sentence id="CHECK_PAYMENTS_DATA_P5_CMD">I dati di pagamento sono corretti, nessun errore trovato.</sentence>
+
     <!-- Email no payment command message (disabled) -->
     <sentence id="EMAIL_NO_PAYMENT_DISABLED_CMD">**CONTROLLO PAGAMENTI**
 Le email sono al momento disabilitate.</sentence>
@@ -132,6 +139,7 @@ Una email è stata inviata a tutti i membri.</sentence>
     <!-- Email no payment command message (part 2) -->
     <sentence id="EMAIL_NO_PAYMENT_P2_CMD">**CONTROLLO PAGAMENTI**
 Tutti i membri hanno pagato, nessuna email inviata.</sentence>
+
     <!-- Check no payment command message (part 1) -->
     <sentence id="CHECK_NO_PAYMENT_P1_CMD">**CONTROLLO PAGAMENTI**
 Gruppo: **%s**
@@ -151,6 +159,7 @@ Siete pregati di pagare entro %s o verrete rimossi dal gruppo.</sentence>
     <sentence id="CHECK_NO_PAYMENT_P6_CMD">**CONTROLLO PAGAMENTI**
 Gruppo: **%s**
 Tutti i membri hanno rinnovato il pagamento.</sentence>
+
     <!-- Remove no payment command message (part 1) -->
     <sentence id="REMOVE_NO_PAYMENT_P1_CMD">**CONTROLLO PAGAMENTI**
 Gruppo: **%s**
@@ -160,6 +169,7 @@ I membri il cui pagamento sta per scadere stanno per essere rimossi.</sentence>
     <!-- Remove no payment command message (part 3) -->
     <sentence id="REMOVE_NO_PAYMENT_P3_CMD">\nLista membri:
 %s</sentence>
+
     <!-- Misc -->
     <sentence id="WITHIN_HOURS_MSG">entro %d ore</sentence>
     <sentence id="WITHIN_DAYS_MSG">entro %d giorni</sentence>
