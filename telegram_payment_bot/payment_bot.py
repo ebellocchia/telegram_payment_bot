@@ -60,6 +60,9 @@ class PaymentBot:
                                                          self.config,
                                                          self.logger,
                                                          self.translator)
+        # Initialize helper classes
+        self.cmd_dispatcher = CommandDispatcher(self.config, self.logger, self.translator)
+        self.msg_dispatcher = MessageDispatcher(self.config, self.logger, self.translator)
         # Setup handlers
         self.__SetupHandlers()
         # Log
@@ -149,12 +152,10 @@ class PaymentBot:
                           message: pyrogram.types.Message,
                           cmd_type: CommandTypes,
                           **kwargs: Any) -> None:
-        cmd_dispatcher = CommandDispatcher(self.config, self.logger, self.translator)
-        cmd_dispatcher.Dispatch(client, message, cmd_type, **kwargs)
+        self.cmd_dispatcher.Dispatch(client, message, cmd_type, **kwargs)
 
     # Handle message
     def __HandleMessage(self,
                         client: pyrogram.Client,
                         message: pyrogram.types.Message) -> None:
-        msg_dispatcher = MessageDispatcher(self.config, self.logger, self.translator)
-        msg_dispatcher.Dispatch(client, message)
+        self.msg_dispatcher.Dispatch(client, message)

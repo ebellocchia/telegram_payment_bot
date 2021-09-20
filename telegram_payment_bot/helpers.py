@@ -34,7 +34,7 @@ class ChatHelper:
     # Get title
     @staticmethod
     def GetTitle(chat: pyrogram.types.Chat) -> str:
-        return chat.title if chat.title is not None else ""
+        return chat.title if chat.title is not None else str(chat.id)
 
     # Get if private chat
     @staticmethod
