@@ -95,7 +95,7 @@ class ChatMembersGetter:
     def GetAdmins(self,
                   chat: pyrogram.types.Chat) -> ChatMembersList:
         return self.FilterMembers(chat,
-                                  lambda member: member.status == "admin" or member.status == "creator")
+                                  lambda member: member.status == "administrator" or member.status == "creator")
 
     # Get authorized users
     def GetAuthorizedUsers(self,
