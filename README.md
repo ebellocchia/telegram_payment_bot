@@ -72,7 +72,7 @@ The list of all possible fields that can be set is shown below.
 |payment_expiration_col|Index of the table column containing the payment expiration date (default: 2, maximum: 25)|
 |payment_date_format|Date format in payments data (default: %d/%m/%Y)|
 |**[email]**|Configuration for email that reminds users to pay|
-|email_enabled|Email enable flag (default: false). If False, all the next fields will be skipped.|
+|email_enabled|Email enable flag (default: false). If false, all the next fields will be skipped.|
 |email_from|Email sender|
 |email_reply_to|Email reply-to|
 |email_host|Host for sending email|
@@ -83,10 +83,10 @@ The list of all possible fields that can be set is shown below.
 |email_html_body|File containing email HTML body|
 |**[logging]**|Configuration for logging|
 |log_level|Log level, same of python logging (*DEBUG*, *INFO*, *WARNING*, *ERROR*, *CRITICAL*). Default: *INFO*.|
-|log_console_enabled|True to enable logging to console, False otherwise (default: true)|
-|log_file_enabled|True to enable logging to file, False otherwise (default: false). If False, all the next fields will be skipped.|
+|log_console_enabled|True to enable logging to console, false otherwise (default: true)|
+|log_file_enabled|True to enable logging to file, false otherwise (default: false). If false, all the next fields will be skipped.|
 |log_file_name|Log file name|
-|log_file_append|True to append to log file, False to start from a new file each time|
+|log_file_append|True to append to log file, false to start from a new file each time|
 |log_file_max_bytes|Maximum size in bytes for a log file. When reached, a new log file is created up to *log_file_backup_cnt*.|
 |log_file_backup_cnt|Maximum number of log files|
 
