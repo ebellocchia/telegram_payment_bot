@@ -64,10 +64,10 @@ Parametro non valido.</sentence>
 
     <!-- Is test mode command enabled message -->
     <sentence id="IS_TEST_MODE_EN_CMD">**MODALITÀ TEST**
-La modalità di test è attualmente attiva.</sentence>
+La modalità di test è attualmente attivata.</sentence>
     <!-- Is test mode command disabled message -->
     <sentence id="IS_TEST_MODE_DIS_CMD">**MODALITÀ TEST**
-La modalità di test è attualmente disattiva.</sentence>
+La modalità di test è attualmente disattivata.</sentence>
 
     <!-- Authorized users command message -->
     <sentence id="AUTH_USERS_CMD">**UTENTI AUTORIZZATI**
