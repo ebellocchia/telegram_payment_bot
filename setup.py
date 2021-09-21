@@ -29,7 +29,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/ebellocchia/telegram_payment_bot",
-    download_url="https://github.com/ebellocchia/bip_utils/archive/v%s.tar.gz" % version,
+    download_url="https://github.com/ebellocchia/telegram_payment_bot/archive/v%s.tar.gz" % version,
     license="MIT",
     install_requires = ["google-api-python-client", "google-auth-httplib2", "google-auth-oauthlib", "pyrogram", "tgcrypto", "xlrd", "apscheduler"],
     packages=setuptools.find_packages(exclude=[]),
