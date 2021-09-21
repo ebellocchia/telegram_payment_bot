@@ -104,7 +104,9 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
                     username = row[username_col_idx].strip()
                     expiration = row[expiration_col_idx].strip()
                 except IndexError:
-                    self.logger.GetLogger().warning("Row index %d is not valid (some fields are missing), skipping it..." % i)
+                    self.logger.GetLogger().warning(
+                        "Row index %d is not valid (some fields are missing), skipping it..." % i
+                    )
                 else:
                     # Skip empty usernames
                     if username != "":

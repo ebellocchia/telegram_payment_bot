@@ -121,8 +121,10 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
                 expiration_datetime = datetime.strptime(expiration.strip(),
                                                         self.config.GetValue(ConfigTypes.PAYMENT_DATE_FORMAT))
             except ValueError:
-                self.logger.GetLogger().warning("Expiration date for username @%s at row %d is not valid (%s), skipped" % (
-                    username, row_idx, expiration))
+                self.logger.GetLogger().warning(
+                    "Expiration date for username @%s at row %d is not valid (%s), skipped" % (
+                        username, row_idx, expiration)
+                )
                 # Add error
                 payments_data_err.AddPaymentError(PaymentErrorTypes.INVALID_DATE_ERR,
                                                   row_idx + 1,
