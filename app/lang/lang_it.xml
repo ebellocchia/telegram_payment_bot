@@ -149,8 +149,7 @@ Tutti i membri hanno pagato, nessuna email inviata.</sentence>
 Gruppo: **{chat_title}**
 I membri il cui pagamento sta per scadere stanno per essere controllati.</sentence>
     <!-- Check no payment command message (completed) -->
-    <sentence id="CHECK_NO_PAYMENT_COMPLETED_CMD">**CONTROLLO PAGAMENTI**
-Gruppo: **{chat_title}**
+    <sentence id="CHECK_NO_PAYMENT_COMPLETED_CMD">Operazione completata.
 Membri il cui pagamento sta per cadere {days_left}: **{members_count}**
 Lista membri:
 {members_list}

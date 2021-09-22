@@ -41,13 +41,14 @@ from telegram_payment_bot.members_username_getter import MembersUsernameGetter
 #
 
 # Decorator for group-only commands
-def GroupChatOnly(exec_cmd_fct: Callable[[Any], None]) -> Callable[[Any], None]:
-    def decorated(self):
+def GroupChatOnly(exec_cmd_fct: Callable[[...], None]) -> Callable[[...], None]:
+    def decorated(self,
+                  **kwargs: Any):
         # Check if private chat
         if self._IsPrivateChat():
             self._SendMessage(self.translator.GetSentence("GROUP_ONLY_ERR"))
         else:
-            exec_cmd_fct(self)
+            exec_cmd_fct(self, **kwargs)
 
     return decorated
 
@@ -380,8 +381,7 @@ class CheckNoPaymentCmd(CommandBase):
 
             # Build message
             msg = (self.translator.GetSentence("CHECK_NO_PAYMENT_COMPLETED_CMD",
-                                               {"chat_title": ChatHelper.GetTitle(self.cmd_data.Chat()),
-                                                "days_left": days_left_str,
+                                               {"days_left": days_left_str,
                                                 "members_count": expired_members.Count(),
                                                 "members_list": expired_members.ToString(),
                                                 "last_day": last_day_str})
