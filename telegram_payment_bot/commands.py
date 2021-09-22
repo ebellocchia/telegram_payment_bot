@@ -42,7 +42,7 @@ from telegram_payment_bot.smtp_emailer import SmtpEmailerError
 #
 
 # Decorator for group-only commands
-def GroupChatOnly(exec_cmd_fct: Callable[[...], None]) -> Callable[[...], None]:
+def GroupChatOnly(exec_cmd_fct: Callable[..., None]) -> Callable[..., None]:
     def decorated(self,
                   **kwargs: Any):
         # Check if private chat
