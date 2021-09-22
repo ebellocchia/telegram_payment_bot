@@ -77,6 +77,11 @@ class PaymentsEmailer:
     # Send emails to expired payments
     def __SendEmails(self,
                      expired_payments: PaymentsData) -> None:
+        # Do not send emails if test mode
+        if self.config.GetValue(ConfigTypes.APP_TEST_MODE):
+            self.logger.GetLogger().info("Test mode ON: no email was sent")
+            return
+
         # Email members if any
         if expired_payments.Any():
             # Connect
@@ -88,18 +93,14 @@ class PaymentsEmailer:
                 if payment.Email() != "":
                     # Prepare and send message
                     self.emailer.PrepareMsg(payment.Email())
-                    # Send email only if not test mode
-                    if not self.config.GetValue(ConfigTypes.APP_TEST_MODE):
-                        self.emailer.Send()
-                        self.logger.GetLogger().info("Email successfully sent to: %s (@%s)" %
-                                                     (payment.Email(), payment.Username()))
-                    else:
-                        self.logger.GetLogger().info("Test mode ON: no email sent to %s (@%s)" %
-                                                     (payment.Email(), payment.Username()))
+                    # Send email
+                    self.emailer.Send()
+                    self.logger.GetLogger().info("Email successfully sent to: %s (@%s)" %
+                                                 (payment.Email(), payment.Username()))
                     # Sleep
                     time.sleep(PaymentsEmailerConst.SEND_EMAIL_SLEEP_TIME_SEC)
                 else:
-                    self.logger.GetLogger().warning("No email set for user @%s" % payment.Username())
+                    self.logger.GetLogger().warning("No email set for user @%s, skipped" % payment.Username())
 
             # Disconnect
             self.emailer.Disconnect()
