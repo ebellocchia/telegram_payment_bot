@@ -28,12 +28,13 @@ from telegram_payment_bot.command_data import CommandParameterError
 from telegram_payment_bot.config import ConfigTypes
 from telegram_payment_bot.members_kicker import MembersKicker
 from telegram_payment_bot.members_payment_getter import MembersPaymentGetter
+from telegram_payment_bot.members_username_getter import MembersUsernameGetter
 from telegram_payment_bot.special_users_list import AuthorizedUsersList
 from telegram_payment_bot.helpers import ChatHelper, UserHelper
 from telegram_payment_bot.payments_data import PaymentErrorTypes
 from telegram_payment_bot.payments_emailer import PaymentsEmailer
 from telegram_payment_bot.payments_loader_factory import PaymentsLoaderFactory
-from telegram_payment_bot.members_username_getter import MembersUsernameGetter
+from telegram_payment_bot.smtp_emailer import SmtpEmailerError
 
 
 #
@@ -190,12 +191,11 @@ class CheckNoUsernameCmd(CommandBase):
             # Get parameter
             left_hours = self.cmd_data.Params().GetAsInt(0, 0)
 
-            msg = (self.translator.GetSentence("CHECK_NO_USERNAME_NOTICE_CMD",
-                                               {"chat_title": ChatHelper.GetTitle(self.cmd_data.Chat()),
-                                                "members_count": chat_members.Count(),
-                                                "members_list": chat_members.ToString(),
-                                                "hours_left": self.__HoursToStr(left_hours)})
-                   )
+            msg = self.translator.GetSentence("CHECK_NO_USERNAME_NOTICE_CMD",
+                                              {"chat_title": ChatHelper.GetTitle(self.cmd_data.Chat()),
+                                               "members_count": chat_members.Count(),
+                                               "members_list": chat_members.ToString(),
+                                               "hours_left": self.__HoursToStr(left_hours)})
 
             # Add contact information if any
             support_email = self.config.GetValue(ConfigTypes.SUPPORT_EMAIL)
@@ -317,27 +317,30 @@ class EmailNoPaymentCmd(CommandBase):
                                             {"chat_title": ChatHelper.GetTitle(self.cmd_data.Chat())})
             )
 
-            # Get expired payments
-            expired_payments = PaymentsEmailer(self.client,
-                                               self.config,
-                                               self.logger).EmailAllWithExpiringPayment(days_left)
+            try:
+                # Get expired payments
+                expired_payments = PaymentsEmailer(self.client,
+                                                   self.config,
+                                                   self.logger).EmailAllWithExpiringPayment(days_left)
 
-            # Build message
-            if expired_payments.Any():
-                # Build strings for easier reading
-                days_left_str = (self.translator.GetSentence("IN_DAYS_MSG", {"days": days_left})
-                                 if days_left > 1 else
-                                 (self.translator.GetSentence("TOMORROW_MSG")
-                                  if days_left == 1 else
-                                  self.translator.GetSentence("TODAY_MSG")))
+                # Build message
+                if expired_payments.Any():
+                    # Build strings for easier reading
+                    days_left_str = (self.translator.GetSentence("IN_DAYS_MSG", {"days": days_left})
+                                     if days_left > 1 else
+                                     (self.translator.GetSentence("TOMORROW_MSG")
+                                      if days_left == 1 else
+                                      self.translator.GetSentence("TODAY_MSG")))
 
-                msg = (self.translator.GetSentence("EMAIL_NO_PAYMENT_COMPLETED_CMD",
-                                                   {"days_left": days_left_str,
-                                                    "members_count": expired_payments.Count(),
-                                                    "members_list": expired_payments.ToString()})
-                       )
-            else:
-                msg = self.translator.GetSentence("EMAIL_NO_PAYMENT_ALL_OK_CMD")
+                    msg = self.translator.GetSentence("EMAIL_NO_PAYMENT_COMPLETED_CMD",
+                                                      {"days_left": days_left_str,
+                                                       "members_count": expired_payments.Count(),
+                                                       "members_list": expired_payments.ToString()})
+                else:
+                    msg = self.translator.GetSentence("EMAIL_NO_PAYMENT_ALL_OK_CMD")
+            except SmtpEmailerError:
+                self.logger.GetLogger().exception("Error while sending email to no payment members")
+                msg = self.translator.GetSentence("EMAIL_NO_PAYMENT_ERR_CMD")
 
         # Send message
         self._SendMessage(msg)
@@ -380,12 +383,11 @@ class CheckNoPaymentCmd(CommandBase):
                             else self.translator.GetSentence("FEW_DAYS_MSG"))
 
             # Build message
-            msg = (self.translator.GetSentence("CHECK_NO_PAYMENT_COMPLETED_CMD",
-                                               {"days_left": days_left_str,
-                                                "members_count": expired_members.Count(),
-                                                "members_list": expired_members.ToString(),
-                                                "last_day": last_day_str})
-                   )
+            msg = self.translator.GetSentence("CHECK_NO_PAYMENT_COMPLETED_CMD",
+                                              {"days_left": days_left_str,
+                                               "members_count": expired_members.Count(),
+                                               "members_list": expired_members.ToString(),
+                                               "last_day": last_day_str})
 
             # Add website if any
             website = self.config.GetValue(ConfigTypes.PAYMENT_WEBSITE)

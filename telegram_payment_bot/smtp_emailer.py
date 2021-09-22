@@ -164,17 +164,23 @@ class SmtpEmailer:
 
     # Connect
     def Connect(self) -> None:
-        self.smtp = smtplib.SMTP(self.host)
-        if self.user != "":
-            self.smtp.login(self.user, self.password)
+        try:
+            self.smtp = smtplib.SMTP(self.host)
+            if self.user != "":
+                self.smtp.login(self.user, self.password)
+        except smtplib.SMTPException as ex:
+            raise SmtpEmailerError("Error while connecting") from ex
 
     # Disconnect
     def Disconnect(self) -> None:
         if self.smtp is None:
             raise SmtpEmailerError("Disconnect called before connecting")
 
-        self.smtp.quit()
-        self.smtp = None
+        try:
+            self.smtp.quit()
+            self.smtp = None
+        except smtplib.SMTPException as ex:
+            raise SmtpEmailerError("Error while disconnecting") from ex
 
     # Send email
     def Send(self) -> None:
@@ -183,7 +189,10 @@ class SmtpEmailer:
         if self.smtp is None:
             raise SmtpEmailerError("Send called before connecting")
 
-        self.smtp.sendmail(self.sender, self.recipient, self.msg.as_string())
+        try:
+            self.smtp.sendmail(self.sender, self.recipient, self.msg.as_string())
+        except smtplib.SMTPException as ex:
+            raise SmtpEmailerError("Error while sending email") from ex
 
     # Quick send email
     def QuickSend(self) -> None:

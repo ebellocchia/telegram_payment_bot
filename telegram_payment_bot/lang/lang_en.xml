@@ -131,7 +131,7 @@ Payments data is going to be checked.</sentence>
     <sentence id="EMAIL_NO_PAYMENT_DISABLED_CMD">**PAYMENTS REMINDER**
 Email is currently disabled.</sentence>
     <!-- Email no payment command message (notice) -->
-    <sentence id="EMAIL_NO_PAYMENT_NOTICE_CMD">**PAYMENTS CHECK**
+    <sentence id="EMAIL_NO_PAYMENT_NOTICE_CMD">**PAYMENTS REMINDER**
 Group: **{chat_title}**
 Members whose payment is about to expire are going to be notified via email.</sentence>
     <!-- Email no payment command message (completed) -->
@@ -141,8 +141,9 @@ Members list:
 {members_list}
 A reminder email has been sent to all members.</sentence>
     <!-- Email no payment command message (all ok) -->
-    <sentence id="EMAIL_NO_PAYMENT_ALL_OK_CMD">**PAYMENTS REMINDER**
-All members paid, no email sent.</sentence>
+    <sentence id="EMAIL_NO_PAYMENT_ALL_OK_CMD">All members paid, no email sent.</sentence>
+    <!-- Email no payment command message (error) -->
+    <sentence id="EMAIL_NO_PAYMENT_ERR_CMD">Some errors occurred while sending email.</sentence>
 
     <!-- Check no payment command message (notice) -->
     <sentence id="CHECK_NO_PAYMENT_NOTICE_CMD">**PAYMENTS CHECK**
@@ -163,9 +164,7 @@ Please pay within {last_day} or you'll be removed from the group.</sentence>
     <!-- Check no payment command message (only telegram) -->
     <sentence id="CHECK_NO_PAYMENT_ONLY_TG_CMD">\n\nIf you are on the list but you paid, please contact @{support_telegram} **specifying your Telegram username**.</sentence>
     <!-- Check no payment command message (all ok) -->
-    <sentence id="CHECK_NO_PAYMENT_ALL_OK_CMD">**PAYMENTS CHECK**
-Group: **{chat_title}**
-All members paid.</sentence>
+    <sentence id="CHECK_NO_PAYMENT_ALL_OK_CMD">All members paid.</sentence>
 
     <!-- Remove no payment command message (notice) -->
     <sentence id="REMOVE_NO_PAYMENT_NOTICE_CMD">**PAYMENTS CHECK**

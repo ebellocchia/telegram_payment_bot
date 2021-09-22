@@ -128,21 +128,22 @@ I dati di pagamento stanno per essere controllati.</sentence>
     <sentence id="CHECK_PAYMENTS_DATA_ALL_OK_CMD">I dati di pagamento sono corretti, nessun errore trovato.</sentence>
 
     <!-- Email no payment command message (disabled) -->
-    <sentence id="EMAIL_NO_PAYMENT_DISABLED_CMD">**CONTROLLO PAGAMENTI**
+    <sentence id="EMAIL_NO_PAYMENT_DISABLED_CMD">**AVVISO PAGAMENTI**
 Le email sono al momento disabilitate.</sentence>
     <!-- Email no payment command message (notice) -->
-    <sentence id="EMAIL_NO_PAYMENT_NOTICE_CMD">**CONTROLLO PAGAMENTI**
+    <sentence id="EMAIL_NO_PAYMENT_NOTICE_CMD">**AVVISO PAGAMENTI**
 Gruppo: **{chat_title}**
 I membri il cui pagamento sta per scadere stanno per essere avvisati via email.</sentence>
     <!-- Email no payment command message (completed) -->
-    <sentence id="EMAIL_NO_PAYMENT_COMPLETED_CMD">**CONTROLLO PAGAMENTI**
+    <sentence id="EMAIL_NO_PAYMENT_COMPLETED_CMD">**AVVISO PAGAMENTI**
 Membri il cui pagamento sta per cadere {days_left}: **{members_count}**
 Lista membri:
 {members_list}
 Una email è stata inviata a tutti i membri.</sentence>
     <!-- Email no payment command message (all ok) -->
-    <sentence id="EMAIL_NO_PAYMENT_ALL_OK_CMD">**CONTROLLO PAGAMENTI**
-Tutti i membri hanno pagato, nessuna email inviata.</sentence>
+    <sentence id="EMAIL_NO_PAYMENT_ALL_OK_CMD">Tutti i membri hanno pagato, nessuna email inviata.</sentence>
+    <!-- Email no payment command message (error) -->
+    <sentence id="EMAIL_NO_PAYMENT_ERR_CMD">Si sono verificati degli errori durante l'invio delle email.</sentence>
 
     <!-- Check no payment command message (notice) -->
     <sentence id="CHECK_NO_PAYMENT_NOTICE_CMD">**CONTROLLO PAGAMENTI**
@@ -163,9 +164,7 @@ Siete pregati di pagare entro {last_day} o verrete rimossi dal gruppo.</sentence
     <!-- Check no payment command message (only telegram) -->
     <sentence id="CHECK_NO_PAYMENT_ONLY_TG_CMD">\n\nSe siete nella lista ma avete pagato, contattate @{support_telegram} **specificando il vostro username Telegram**.</sentence>
     <!-- Check no payment command message (all ok) -->
-    <sentence id="CHECK_NO_PAYMENT_ALL_OK_CMD">**CONTROLLO PAGAMENTI**
-Gruppo: **{chat_title}**
-Tutti i membri hanno rinnovato il pagamento.</sentence>
+    <sentence id="CHECK_NO_PAYMENT_ALL_OK_CMD">Tutti i membri hanno rinnovato il pagamento.</sentence>
 
     <!-- Remove no payment command message (notice) -->
     <sentence id="REMOVE_NO_PAYMENT_NOTICE_CMD">**CONTROLLO PAGAMENTI**
