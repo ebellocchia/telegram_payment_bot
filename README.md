@@ -102,14 +102,14 @@ List of supported commands:
 - **/users_list**: show the users list (can be run only in group)
 - **/invite_link**: generate a new invite link (can be run only in group)
 - **/check_no_username [<HOURS_LEFT>]**: show the list of chat members without a username (can be run only in group)
-    - *HOURS_LEFT* (optional): hours left to set the username before being removed (only for printing the message). Hours are automatically converted to days if greater than 47. If zero, it'll print "as soon as possible". Default value: 0.
+    - *HOURS_LEFT* (optional): hours left to set the username before being removed (only for printing the message). Hours are automatically converted to days if greater than 47. If less than 1, it'll print "as soon as possible". Default value: 0.
 - **/remove_no_username**: remove all the chat members without a username (can be run only in group)
 - **/check_payments_data** : check payments data for errors (e.g. invalid dates, duplicated usernames) and show them
 - **/email_no_payment [<DAYS_LEFT>]**: send a reminder email to chat members whose payment is expiring in the specified number of days
-    - *DAYS_LEFT* (optional): number of days within which the payment expires. Zero means expiring today. Default value: 0.
+    - *DAYS_LEFT* (optional): number of days within which the payment expires. Less than 1 means expiring today. Default value: 0.
 - **/check_no_payment [<DAYS_LEFT>] [<LAST_DAY>]**: show the list of chat members whose payment is expiring in the specified number of days (can be run only in group)
-    - *DAYS_LEFT* (optional): number of days within which the payment expires. Zero means expiring today. Default value: 0.
-    - *LAST_DAY* (optional): last day to complete the payment before being removed (only for printing the message). If zero, it'll print "within few days". Default value: 0.
+    - *DAYS_LEFT* (optional): number of days within which the payment expires. Less than 1 means expiring today. Default value: 0.
+    - *LAST_DAY* (optional): last day to complete the payment before being removed (only for printing the message). If less than 1 or greater than 31, it'll print "within few days". Default value: 0.
 - **/remove_no_payment**: remove the chat members whose payment has expired (can be run only in group)
 
 Add *quiet* or *q* as last parameter to send the bot response in a private chat instead of the group chat.
