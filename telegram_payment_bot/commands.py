@@ -63,7 +63,10 @@ class HelpCmd(CommandBase):
     # Execute command
     def _ExecuteCommand(self,
                         **kwargs: Any) -> None:
-        self._SendMessage(self.translator.GetSentence("HELP_CMD") % UserHelper.GetName(self.cmd_data.User()))
+        self._SendMessage(
+            self.translator.GetSentence("HELP_CMD",
+                                        {"name": UserHelper.GetName(self.cmd_data.User())})
+        )
 
 
 #
@@ -119,7 +122,10 @@ class AuthUsersCmd(CommandBase):
     # Execute command
     def _ExecuteCommand(self,
                         **kwargs: Any) -> None:
-        self._SendMessage(self.translator.GetSentence("AUTH_USERS_CMD") % AuthorizedUsersList(self.config).ToString())
+        self._SendMessage(
+            self.translator.GetSentence("AUTH_USERS_CMD",
+                                        {"auth_users_list": AuthorizedUsersList(self.config).ToString()})
+        )
 
 
 #
@@ -130,10 +136,12 @@ class ChatInfoCmd(CommandBase):
     @GroupChatOnly
     def _ExecuteCommand(self,
                         **kwargs: Any) -> None:
-        self._SendMessage(self.translator.GetSentence("CHAT_INFO_CMD") %
-                          (ChatHelper.GetTitle(self.cmd_data.Chat()),
-                          self.cmd_data.Chat().type,
-                          self.cmd_data.Chat().id))
+        self._SendMessage(
+            self.translator.GetSentence("CHAT_INFO_CMD",
+                                        {"chat_title": ChatHelper.GetTitle(self.cmd_data.Chat()),
+                                         "chat_type": self.cmd_data.Chat().type,
+                                         "chat_id": self.cmd_data.Chat().id})
+        )
 
 
 #
@@ -147,8 +155,11 @@ class UsersListCmd(CommandBase):
         # Get chat members
         chat_members = ChatMembersGetter(self.client, self.config).GetAll(self.cmd_data.Chat())
         # Send message
-        self._SendMessage(self.translator.GetSentence("USERS_LIST_CMD") %
-                          (ChatHelper.GetTitle(self.cmd_data.Chat()), chat_members.ToString()))
+        self._SendMessage(
+            self.translator.GetSentence("USERS_LIST_CMD",
+                                        {"chat_title": ChatHelper.GetTitle(self.cmd_data.Chat()),
+                                         "users_list": chat_members.ToString()})
+        )
 
 
 #
@@ -178,23 +189,29 @@ class CheckNoUsernameCmd(CommandBase):
             # Get parameter
             left_hours = self.cmd_data.Params().GetAsInt(0, 0)
 
-            msg = (self.translator.GetSentence("CHECK_NO_USERNAME_P1_CMD") %
-                   (ChatHelper.GetTitle(self.cmd_data.Chat()),
-                    chat_members.Count(),
-                    chat_members.ToString(),
-                    self.__HoursToStr(left_hours)))
+            msg = (self.translator.GetSentence("CHECK_NO_USERNAME_NOTICE_CMD",
+                                               {"chat_title": ChatHelper.GetTitle(self.cmd_data.Chat()),
+                                                "members_count": chat_members.Count(),
+                                                "members_list": chat_members.ToString(),
+                                                "hours_left": self.__HoursToStr(left_hours)})
+                   )
 
             # Add contact information if any
             support_email = self.config.GetValue(ConfigTypes.SUPPORT_EMAIL)
             support_tg = self.config.GetValue(ConfigTypes.SUPPORT_TELEGRAM)
             if support_email != "" and support_tg != "":
-                msg += self.translator.GetSentence("CHECK_NO_USERNAME_P2_CMD") % (support_email, support_tg)
+                msg += self.translator.GetSentence("CHECK_NO_USERNAME_EMAIL_TG_CMD",
+                                                   {"support_email": support_email,
+                                                    "support_telegram": support_tg})
             elif support_email != "":
-                msg += self.translator.GetSentence("CHECK_NO_USERNAME_P3_CMD") % support_email
+                msg += self.translator.GetSentence("CHECK_NO_USERNAME_ONLY_EMAIL_CMD",
+                                                   {"support_email": support_email})
             elif support_tg != "":
-                msg += self.translator.GetSentence("CHECK_NO_USERNAME_P4_CMD") % support_tg
+                msg += self.translator.GetSentence("CHECK_NO_USERNAME_ONLY_TG_CMD",
+                                                   {"support_telegram": support_tg})
         else:
-            msg = self.translator.GetSentence("CHECK_NO_USERNAME_P5_CMD") % ChatHelper.GetTitle(self.cmd_data.Chat())
+            msg = self.translator.GetSentence("CHECK_NO_USERNAME_ALL_OK_CMD",
+                                              {"chat_title": ChatHelper.GetTitle(self.cmd_data.Chat())})
 
         # Send message
         self._SendMessage(msg)
@@ -203,9 +220,11 @@ class CheckNoUsernameCmd(CommandBase):
     def __HoursToStr(self,
                      hours: int) -> str:
         if hours > 47:
-            return self.translator.GetSentence("WITHIN_DAYS_MSG") % (hours // 24)
+            return self.translator.GetSentence("WITHIN_DAYS_MSG",
+                                               {"days": hours // 24})
         elif hours > 1:
-            return self.translator.GetSentence("WITHIN_HOURS_MSG") % hours
+            return self.translator.GetSentence("WITHIN_HOURS_MSG",
+                                               {"hours": hours})
         else:
             return self.translator.GetSentence("ASAP_MSG")
 
@@ -219,8 +238,10 @@ class RemoveNoUsernameCmd(CommandBase):
     def _ExecuteCommand(self,
                         **kwargs: Any) -> None:
         # Notice before removing
-        self._SendMessage(self.translator.GetSentence("REMOVE_NO_USERNAME_P1_CMD") %
-                          ChatHelper.GetTitle(self.cmd_data.Chat()))
+        self._SendMessage(
+            self.translator.GetSentence("REMOVE_NO_USERNAME_NOTICE_CMD",
+                                        {"chat_title": ChatHelper.GetTitle(self.cmd_data.Chat())})
+        )
 
         # Kick members if any
         kicked_members = MembersKicker(self.client,
@@ -228,9 +249,11 @@ class RemoveNoUsernameCmd(CommandBase):
                                        self.logger).KickAllWithNoUsername(self.cmd_data.Chat())
 
         # Build message
-        msg = self.translator.GetSentence("REMOVE_NO_USERNAME_P2_CMD") % kicked_members.Count()
+        msg = self.translator.GetSentence("REMOVE_NO_USERNAME_COMPLETED_CMD",
+                                          {"members_count": kicked_members.Count()})
         if kicked_members.Any():
-            msg += self.translator.GetSentence("REMOVE_NO_USERNAME_P3_CMD") % kicked_members.ToString()
+            msg += self.translator.GetSentence("REMOVE_NO_USERNAME_LIST_CMD",
+                                               {"members_list": kicked_members.ToString()})
 
         # Send message
         self._SendMessage(msg)
@@ -246,7 +269,7 @@ class CheckPaymentsDataCmd(CommandBase):
     # Execute command
     def _ExecuteCommand(self,
                         **kwargs: Any) -> None:
-        self._SendMessage(self.translator.GetSentence("CHECK_PAYMENTS_DATA_P1_CMD"))
+        self._SendMessage(self.translator.GetSentence("CHECK_PAYMENTS_DATA_NOTICE_CMD"))
 
         # Check payments data
         payments_loader = PaymentsLoaderFactory(self.config, self.logger).CreateLoader()
@@ -254,17 +277,21 @@ class CheckPaymentsDataCmd(CommandBase):
 
         # Check results
         if payments_data_err.Any():
-            msg = self.translator.GetSentence("CHECK_PAYMENTS_DATA_P2_CMD") % payments_data_err.Count()
+            msg = self.translator.GetSentence("CHECK_PAYMENTS_DATA_COMPLETED_CMD",
+                                              {"errors_count": payments_data_err.Count()})
 
             for payment_err in payments_data_err:
                 if payment_err.Type() == PaymentErrorTypes.DUPLICATED_USERNAME_ERR:
-                    msg += self.translator.GetSentence("CHECK_PAYMENTS_DATA_P3_CMD") % (
-                        payment_err.Username(), payment_err.Row())
+                    msg += self.translator.GetSentence("CHECK_PAYMENTS_DATA_USERNAME_ERR_CMD",
+                                                       {"username": payment_err.Username(),
+                                                        "row_index": payment_err.Row()})
                 elif payment_err.Type() == PaymentErrorTypes.INVALID_DATE_ERR:
-                    msg += self.translator.GetSentence("CHECK_PAYMENTS_DATA_P4_CMD") % (
-                        payment_err.Username(), payment_err.Row(), payment_err.ExpirationDate())
+                    msg += self.translator.GetSentence("CHECK_PAYMENTS_DATA_DATE_ERR_CMD",
+                                                       {"username": payment_err.Username(),
+                                                        "row_index": payment_err.Row(),
+                                                        "expiration_date": payment_err.ExpirationDate()})
         else:
-            msg = self.translator.GetSentence("CHECK_PAYMENTS_DATA_P5_CMD")
+            msg = self.translator.GetSentence("CHECK_PAYMENTS_DATA_ALL_OK_CMD")
 
         # Send message
         self._SendMessage(msg)
@@ -282,6 +309,13 @@ class EmailNoPaymentCmd(CommandBase):
         else:
             # Get parameter
             days_left = self.cmd_data.Params().GetAsInt(0, 0)
+
+            # Notice before notifying
+            self._SendMessage(
+                self.translator.GetSentence("EMAIL_NO_PAYMENT_NOTICE_CMD",
+                                            {"chat_title": ChatHelper.GetTitle(self.cmd_data.Chat())})
+            )
+
             # Get expired payments
             expired_payments = PaymentsEmailer(self.client,
                                                self.config,
@@ -290,16 +324,19 @@ class EmailNoPaymentCmd(CommandBase):
             # Build message
             if expired_payments.Any():
                 # Build strings for easier reading
-                days_left_str = (self.translator.GetSentence("IN_DAYS_MSG") % days_left
+                days_left_str = (self.translator.GetSentence("IN_DAYS_MSG", {"days": days_left})
                                  if days_left > 1 else
                                  (self.translator.GetSentence("TOMORROW_MSG")
                                   if days_left == 1 else
                                   self.translator.GetSentence("TODAY_MSG")))
 
-                msg = (self.translator.GetSentence("EMAIL_NO_PAYMENT_P1_CMD") %
-                       (days_left_str, expired_payments.Count(), expired_payments.ToString()))
+                msg = (self.translator.GetSentence("EMAIL_NO_PAYMENT_COMPLETED_CMD",
+                                                   {"days_left": days_left_str,
+                                                    "members_count": expired_payments.Count(),
+                                                    "members_list": expired_payments.ToString()})
+                       )
             else:
-                msg = self.translator.GetSentence("EMAIL_NO_PAYMENT_P2_CMD")
+                msg = self.translator.GetSentence("EMAIL_NO_PAYMENT_ALL_OK_CMD")
 
         # Send message
         self._SendMessage(msg)
@@ -316,47 +353,62 @@ class CheckNoPaymentCmd(CommandBase):
         # Get parameters
         days_left = self.cmd_data.Params().GetAsInt(0, 0)
         last_day = self.cmd_data.Params().GetAsInt(1, 0)
+
+        # Notice before checking
+        self._SendMessage(
+            self.translator.GetSentence("CHECK_NO_PAYMENT_NOTICE_CMD",
+                                        {"chat_title": ChatHelper.GetTitle(self.cmd_data.Chat())})
+        )
+
         # Get expired members
         expired_members = MembersPaymentGetter(self.client,
                                                self.config,
-                                               self.logger).GetAllMembersWithExpiringPayment(self.cmd_data.Chat(), days_left)
+                                               self.logger).GetAllMembersWithExpiringPayment(self.cmd_data.Chat(),
+                                                                                             days_left)
 
         # Build message
         if expired_members.Any():
             # Build strings for easier reading
-            days_left_str = (self.translator.GetSentence("IN_DAYS_MSG") % days_left
+            days_left_str = (self.translator.GetSentence("IN_DAYS_MSG", {"days": days_left})
                              if days_left > 1 else
                              (self.translator.GetSentence("TOMORROW_MSG")
                               if days_left == 1 else
                               self.translator.GetSentence("TODAY_MSG")))
-            last_day_str = (self.translator.GetSentence("DAY_OF_MONTH_MSG") % last_day
+            last_day_str = (self.translator.GetSentence("DAY_OF_MONTH_MSG", {"day_of_month": last_day})
                             if 1 <= last_day <= 31
                             else self.translator.GetSentence("FEW_DAYS_MSG"))
 
             # Build message
-            msg = (self.translator.GetSentence("CHECK_NO_PAYMENT_P1_CMD") %
-                   (ChatHelper.GetTitle(self.cmd_data.Chat()),
-                    days_left_str,
-                    expired_members.Count(),
-                    expired_members.ToString(),
-                    last_day_str))
+            msg = (self.translator.GetSentence("CHECK_NO_PAYMENT_COMPLETED_CMD",
+                                               {"chat_title": ChatHelper.GetTitle(self.cmd_data.Chat()),
+                                                "days_left": days_left_str,
+                                                "members_count": expired_members.Count(),
+                                                "members_list": expired_members.ToString(),
+                                                "last_day": last_day_str})
+                   )
 
             # Add website if any
             website = self.config.GetValue(ConfigTypes.PAYMENT_WEBSITE)
             if website != "":
-                msg += self.translator.GetSentence("CHECK_NO_PAYMENT_P2_CMD") % website
+                msg += self.translator.GetSentence("CHECK_NO_PAYMENT_WEBSITE_CMD",
+                                                   {"website": website})
 
             # Add contact information if any
             support_email = self.config.GetValue(ConfigTypes.SUPPORT_EMAIL)
             support_tg = self.config.GetValue(ConfigTypes.SUPPORT_TELEGRAM)
             if support_email != "" and support_tg != "":
-                msg += self.translator.GetSentence("CHECK_NO_PAYMENT_P3_CMD") % (support_email, support_tg)
+                msg += self.translator.GetSentence("CHECK_NO_PAYMENT_EMAIL_TG_CMD",
+                                                   {"support_email": support_email,
+                                                    "support_telegram": support_tg})
             elif support_email != "":
-                msg += self.translator.GetSentence("CHECK_NO_PAYMENT_P4_CMD") % support_email
+                msg += self.translator.GetSentence("CHECK_NO_PAYMENT_ONLY_EMAIL_CMD",
+                                                   {"support_email": support_email})
             elif support_tg != "":
-                msg += self.translator.GetSentence("CHECK_NO_PAYMENT_P5_CMD") % support_tg
+                msg += self.translator.GetSentence("CHECK_NO_PAYMENT_ONLY_TG_CMD",
+                                                   {"support_telegram": support_tg})
         else:
-            msg = self.translator.GetSentence("CHECK_NO_PAYMENT_P6_CMD") % ChatHelper.GetTitle(self.cmd_data.Chat())
+            msg = self.translator.GetSentence("CHECK_NO_PAYMENT_ALL_OK_CMD",
+                                              {"chat_title": ChatHelper.GetTitle(self.cmd_data.Chat())})
 
         # Send message
         self._SendMessage(msg)
@@ -371,8 +423,10 @@ class RemoveNoPaymentCmd(CommandBase):
     def _ExecuteCommand(self,
                         **kwargs: Any) -> None:
         # Notice before removing
-        self._SendMessage(self.translator.GetSentence("REMOVE_NO_PAYMENT_P1_CMD") %
-                          ChatHelper.GetTitle(self.cmd_data.Chat()))
+        self._SendMessage(
+            self.translator.GetSentence("REMOVE_NO_PAYMENT_NOTICE_CMD",
+                                        {"chat_title": ChatHelper.GetTitle(self.cmd_data.Chat())})
+        )
 
         # Kick members if any
         kicked_members = MembersKicker(self.client,
@@ -380,9 +434,11 @@ class RemoveNoPaymentCmd(CommandBase):
                                        self.logger).KickAllWithExpiredPayment(self.cmd_data.Chat())
 
         # Build message
-        msg = self.translator.GetSentence("REMOVE_NO_PAYMENT_P2_CMD") % kicked_members.Count()
+        msg = self.translator.GetSentence("REMOVE_NO_PAYMENT_COMPLETED_CMD",
+                                          {"members_count": kicked_members.Count()})
         if kicked_members.Any():
-            msg += self.translator.GetSentence("REMOVE_NO_PAYMENT_P3_CMD") % kicked_members.ToString()
+            msg += self.translator.GetSentence("REMOVE_NO_PAYMENT_ALL_OK_CMD",
+                                               {"members_list": kicked_members.ToString()})
 
         # Send message
         self._SendMessage(msg)

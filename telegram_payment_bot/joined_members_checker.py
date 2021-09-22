@@ -67,13 +67,19 @@ class JoinedMembersChecker:
         # Kick if no username
         if self.member_kicker.KickSingleIfNoUsername(chat, user):
             self.logger.GetLogger().info("New user %s kicked (joined with no username)" % UserHelper.GetNameOrId(user))
-            self.message_sender.SendMessageToAuthUsers(chat,
-                                                       self.translator.GetSentence("JOINED_MEMBER_KICKED_FOR_USERNAME_MSG") % UserHelper.GetNameOrId(user))
+            self.message_sender.SendMessageToAuthUsers(
+                chat,
+                self.translator.GetSentence("JOINED_MEMBER_KICKED_FOR_USERNAME_MSG",
+                                            {"name": UserHelper.GetNameOrId(user)})
+            )
         # Kick if no payment
         elif self.member_kicker.KickSingleIfExpiredPayment(chat, user):
             self.logger.GetLogger().info("New user %s kicked (joined with no payment)" % UserHelper.GetNameOrId(user))
-            self.message_sender.SendMessageToAuthUsers(chat,
-                                                       self.translator.GetSentence("JOINED_MEMBER_KICKED_FOR_PAYMENT_MSG") % UserHelper.GetNameOrId(user))
+            self.message_sender.SendMessageToAuthUsers(
+                chat,
+                self.translator.GetSentence("JOINED_MEMBER_KICKED_FOR_PAYMENT_MSG",
+                                            {"name": UserHelper.GetNameOrId(user)})
+            )
         # Everything ok
         else:
             self.logger.GetLogger().info("New user %s joined, username and payment ok" % UserHelper.GetNameOrId(user))

@@ -113,8 +113,11 @@ class CommandBase(ABC):
         invite_link = self.client.export_chat_invite_link(self.cmd_data.Chat().id)
         # Send messages
         self._SendMessage(self.translator.GetSentence("INVITE_LINK_ALL_CMD"))
-        self._SendMessageToAuthUsers(self.translator.GetSentence("INVITE_LINK_AUTH_CMD") %
-                                     (ChatHelper.GetTitle(self.cmd_data.Chat()), invite_link))
+        self._SendMessageToAuthUsers(
+            self.translator.GetSentence("INVITE_LINK_AUTH_CMD",
+                                        {"chat_title": ChatHelper.GetTitle(self.cmd_data.Chat()),
+                                         "invite_link": invite_link})
+        )
 
     # Log command
     def __LogCommand(self) -> None:

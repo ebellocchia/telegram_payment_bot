@@ -23,7 +23,7 @@
 #
 import os
 from xml.etree import ElementTree
-from typing import Optional
+from typing import Dict, Optional
 from telegram_payment_bot.logger import Logger
 
 
@@ -52,7 +52,9 @@ class TranslationLoader:
     # Load translation file
     def Load(self,
              file_name: Optional[str] = None) -> None:
-        def_file_path = os.path.join(os.path.dirname(__file__), TranslationLoaderConst.DEF_LANG_FOLDER, TranslationLoaderConst.DEF_FILE_NAME)
+        def_file_path = os.path.join(os.path.dirname(__file__),
+                                     TranslationLoaderConst.DEF_LANG_FOLDER,
+                                     TranslationLoaderConst.DEF_FILE_NAME)
 
         if file_name is not None:
             try:
@@ -67,8 +69,15 @@ class TranslationLoader:
 
     # Get sentence
     def GetSentence(self,
-                    sentence_id: str) -> str:
-        return self.sentences[sentence_id]
+                    sentence_id: str,
+                    placeholders: Optional[Dict[str, str]] = None) -> str:
+        sentence = self.sentences[sentence_id]
+
+        if placeholders is not None:
+            for placeholder, value in placeholders.items():
+                sentence = sentence.replace("{%s}" % placeholder, str(value))
+
+        return sentence
 
     # Load file
     def __LoadFile(self,
