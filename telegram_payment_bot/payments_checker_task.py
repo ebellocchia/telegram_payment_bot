@@ -96,7 +96,7 @@ class PaymentsCheckerTask:
         check_period_min = self.config.GetValue(ConfigTypes.PAYMENT_CHECK_PERIOD_MIN)
         if check_period_min >= PaymentsCheckerTaskConst.MIN_PERIOD_MINUTE:
             self.logger.GetLogger().info("Payment check task initialized (period: %d min)" % check_period_min)
-            self.scheduler.add_job(lambda: self.payment_checker_job.CheckPayments(),
+            self.scheduler.add_job(self.payment_checker_job.CheckPayments,
                                    "interval",
                                    minutes=check_period_min,
                                    id=PaymentsCheckerTaskConst.JOB_ID)
