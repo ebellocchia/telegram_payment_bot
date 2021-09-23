@@ -79,6 +79,10 @@ class PaymentBot:
 
     # Setup handlers
     def __SetupHandlers(self) -> None:
+        #
+        # Generic
+        #
+
         # Start command
         self.client.add_handler(MessageHandler(
             lambda client, message: self.__DispatchCommand(client, message, CommandTypes.START_CMD),
@@ -107,38 +111,57 @@ class PaymentBot:
         self.client.add_handler(MessageHandler(
             lambda client, message: self.__DispatchCommand(client, message, CommandTypes.CHAT_INFO_CMD),
             filters.command(["chat_info"])))
-        # Users_list command
+        # Users list command
         self.client.add_handler(MessageHandler(
             lambda client, message: self.__DispatchCommand(client, message, CommandTypes.USERS_LIST_CMD),
             filters.command(["users_list"])))
-        # Invite_link command
+        # Invite link command
         self.client.add_handler(MessageHandler(
             lambda client, message: self.__DispatchCommand(client, message, CommandTypes.INVITE_LINKS_CMD),
             filters.command(["invite_link"])))
-        # Check_no_username command
+
+        #
+        # Username
+        #
+
+        # Check no username command
         self.client.add_handler(MessageHandler(
             lambda client, message: self.__DispatchCommand(client, message, CommandTypes.CHECK_NO_USERNAME_CMD),
             filters.command(["check_no_username"])))
-        # Remove_no_username command
+        # Remove no username command
         self.client.add_handler(MessageHandler(
             lambda client, message: self.__DispatchCommand(client, message, CommandTypes.REMOVE_NO_USERNAME_CMD),
             filters.command(["remove_no_username"])))
-        # Email_no_payment command
+
+        #
+        # Payments
+        #
+
+        # Check payments data command
+        self.client.add_handler(MessageHandler(
+            lambda client, message: self.__DispatchCommand(client, message, CommandTypes.SET_CHECK_PAYMENT_ON_JOIN),
+            filters.command(["set_check_payment_on_join"])))
+        # Check payments data command
+        self.client.add_handler(MessageHandler(
+            lambda client, message: self.__DispatchCommand(client, message, CommandTypes.IS_CHECK_PAYMENT_ON_JOIN),
+            filters.command(["is_check_payment_on_join"])))
+        # Check payments data command
         self.client.add_handler(MessageHandler(
             lambda client, message: self.__DispatchCommand(client, message, CommandTypes.CHECK_PAYMENTS_DATA_CMD),
             filters.command(["check_payments_data"])))
-        # Email_no_payment command
+        # Email no payment command
         self.client.add_handler(MessageHandler(
             lambda client, message: self.__DispatchCommand(client, message, CommandTypes.EMAIL_NO_PAYMENT_CMD),
             filters.command(["email_no_payment"])))
-        # Check_no_payment command
+        # Check no payment command
         self.client.add_handler(MessageHandler(
             lambda client, message: self.__DispatchCommand(client, message, CommandTypes.CHECK_NO_PAYMENT_CMD),
             filters.command(["check_no_payment"])))
-        # Remove_no_payment command
+        # Remove no payment command
         self.client.add_handler(MessageHandler(
             lambda client, message: self.__DispatchCommand(client, message, CommandTypes.REMOVE_NO_PAYMENT_CMD),
             filters.command(["remove_no_payment"])))
+
         # Handler for messages
         self.client.add_handler(MessageHandler(
             lambda client, message: self.__HandleMessage(client, message),

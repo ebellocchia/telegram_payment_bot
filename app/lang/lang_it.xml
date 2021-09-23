@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
 <translation>
+    <!--
+        Generic
+    -->
+
     <!-- Generic error message -->
     <sentence id="GENERIC_ERR">**ERRORE**
 Si è verificato un errore durante l'esecuzione del comando.</sentence>
@@ -18,21 +22,23 @@ Qui trovi la lista dei comandi supportati.
 **Generici**
 /help : mostra questo messaggio
 /alive : mostra se il bot è attivo
-/set_test_mode true/false : attiva/disattiva la modalità di test
+/set_test_mode __true/false__ : attiva/disattiva la modalità di test
 /is_test_mode: mostra se la modalità di test è attiva
 /auth_users : mostra la lista degli utenti autorizzati a usare il bot
 /chat_info : mostra le informazioni sulla chat - **Solo Gruppo**
 /users_list : mostra la lista di tutti gli utenti del gruppo - **Solo Gruppo**
 /invite_link : genera un nuovo link di invito - **Solo Gruppo**
 
-**Controllo Username**
-/check_no_username [HOURS_LEFT] : mostra gli utenti senza username - **Solo Gruppo**
+**Username**
+/check_no_username [__HOURS_LEFT__] : mostra gli utenti senza username - **Solo Gruppo**
 /remove_no_username : rimuove gli utenti senza username - **Solo Gruppo**
 
-**Controllo Pagamenti**
+**Pagamenti**
+/set_check_payment_on_join __true/false__ : attiva/disattiva il controllo dei pagamenti sui membri appena entrati nel gruppo
+/is_check_payment_on_join : mostra se il controllo dei pagamenti sui membri appena entrati nel gruppo è attivo
 /check_payments_data : mostra se i dati di pagamento contengono degli errori
-/email_no_payment [DAYS_LEFT]: invia una email agli utenti il cui pagamento sta per scadere
-/check_no_payment [DAYS_LEFT] [LAST_DAY]: mostra gli utenti il cui pagamento sta per scadere - **Solo Gruppo**
+/email_no_payment [__DAYS_LEFT__]: invia una email agli utenti il cui pagamento sta per scadere
+/check_no_payment [__DAYS_LEFT__] [__LAST_DAY__]: mostra gli utenti il cui pagamento sta per scadere - **Solo Gruppo**
 /remove_no_payment : rimuove gli utenti il cui pagamento sta per scadere - **Solo Gruppo**
 
 I comandi che possono essere eseguiti solo nella chat di gruoppo sono specificati in grassetto.
@@ -84,6 +90,10 @@ Gruppo: **{chat_title}**
 Lista membri:
 {users_list}</sentence>
 
+    <!--
+        Username
+    -->
+
     <!-- Check username command message (notice) -->
     <sentence id="CHECK_NO_USERNAME_NOTICE_CMD">**CONTROLLO USERNAME**
 Gruppo: **{chat_title}**
@@ -113,18 +123,39 @@ I membri senza username stanno per essere rimossi.</sentence>
     <sentence id="REMOVE_NO_USERNAME_LIST_CMD">\nLista membri:
 {members_list}</sentence>
 
-    <!-- Check username command message (notice) -->
+    <!--
+        Payments
+    -->
+
+    <!-- Set payment check on joined members command enabled message -->
+    <sentence id="SET_CHECK_PAYMENT_ON_JOIN_EN_CMD">**CONTROLLO NUOVI MEMBRI**
+Controllo pagamento sui membri appena entrati attivato.</sentence>
+    <!-- Set payment check on joined members command disabled message -->
+    <sentence id="SET_CHECK_PAYMENT_ON_JOIN_DIS_CMD">**CONTROLLO NUOVI MEMBRI**
+Controllo pagamento sui membri appena entrati disattivato.</sentence>
+    <!-- Set payment check on joined members command parameter error message -->
+    <sentence id="SET_CHECK_PAYMENT_ON_JOIN_PARAM_ERR_CMD">**CONTROLLO NUOVI MEMBRI**
+Parametro non valido.</sentence>
+
+    <!-- Is payment check on joined members command enabled message -->
+    <sentence id="IS_CHECK_PAYMENT_ON_JOIN_EN_CMD">**CONTROLLO NUOVI MEMBRI**
+Il controllo pagamento sui membri appena entrati è attualmente attivato.</sentence>
+    <!-- Is payment check on joined members command disabled message -->
+    <sentence id="IS_CHECK_PAYMENT_ON_JOIN_DIS_CMD">**CONTROLLO NUOVI MEMBRI**
+Il controllo pagamento sui membri appena entrati è attualmente disattivato.</sentence>
+
+    <!-- Check payment data command message (notice) -->
     <sentence id="CHECK_PAYMENTS_DATA_NOTICE_CMD">**CONTROLLO DATI PAGAMENTO**
 I dati di pagamento stanno per essere controllati.</sentence>
-    <!-- Check username command message (completed) -->
+    <!-- Check payment data command message (completed) -->
     <sentence id="CHECK_PAYMENTS_DATA_COMPLETED_CMD">Operazione completata. Errori trovati: **{errors_count}**</sentence>
-    <!-- Check username command message (username error) -->
+    <!-- Check payment data command message (username error) -->
     <sentence id="CHECK_PAYMENTS_DATA_USERNAME_ERR_CMD">
 - Lo username @{username} è presente più di una volta alla riga {row_index}</sentence>
-    <!-- Check username command message (expiration error) -->
+    <!-- Check payment data command message (expiration error) -->
     <sentence id="CHECK_PAYMENTS_DATA_DATE_ERR_CMD">
 - La data di scadenza per lo username @{username} alla riga {row_index} non è valida ({expiration_date})</sentence>
-    <!-- Check username command message (all ok) -->
+    <!-- Check payment data command message (all ok) -->
     <sentence id="CHECK_PAYMENTS_DATA_ALL_OK_CMD">I dati di pagamento sono corretti, nessun errore trovato.</sentence>
 
     <!-- Email no payment command message (disabled) -->
@@ -176,7 +207,10 @@ I membri il cui pagamento sta per scadere stanno per essere rimossi.</sentence>
     <sentence id="REMOVE_NO_PAYMENT_ALL_OK_CMD">\nLista membri:
 {members_list}</sentence>
 
-    <!-- Misc -->
+    <!--
+        Misc
+    -->
+
     <sentence id="WITHIN_HOURS_MSG">entro {hours} ore</sentence>
     <sentence id="WITHIN_DAYS_MSG">entro {days} giorni</sentence>
     <sentence id="ASAP_MSG">il prima possibile</sentence>

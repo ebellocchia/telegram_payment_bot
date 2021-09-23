@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
 <translation>
+    <!--
+        Generic
+    -->
+
     <!-- Generic error message -->
     <sentence id="GENERIC_ERR">**ERROR**
 An error occurred while executing command.</sentence>
@@ -25,11 +29,13 @@ Here is the list of supported commands.
 /users_list : show the list of all users in group - **Only group**
 /invite_link : generate a new invite link - **Only group**
 
-**Username Check**
+**Username**
 /check_no_username [HOURS_LEFT] : show users with no username - **Only group**
 /remove_no_username : remove users with no username - **Only group**
 
-**Payments Check**
+**Payments**
+/set_check_payment_on_join true/false : enable/disable payment check when a new member joins
+/is_check_payment_on_join : show if payment check when a new member joins is enabled
 /check_payments_data : show if payments data contains some errors
 /email_no_payment [DAYS_LEFT]: send a reminder email to users whose payments is about to expire
 /check_no_payment [DAYS_LEFT] [LAST_DAY]: show users whose payments is about to expire - **Only group**
@@ -84,6 +90,10 @@ Group: **{chat_title}**
 Users list:
 {users_list}</sentence>
 
+    <!--
+        Username
+    -->
+
     <!-- Check username command message (notice) -->
     <sentence id="CHECK_NO_USERNAME_NOTICE_CMD">**USERNAME CHECK**
 Group: **{chat_title}**
@@ -113,18 +123,39 @@ The members without username are going to be removed.</sentence>
     <sentence id="REMOVE_NO_USERNAME_LIST_CMD">\nMembers list:
 {members_list}</sentence>
 
-    <!-- Check username command message (notice) -->
+    <!--
+        Payments
+    -->
+
+    <!-- Set payment check on joined members command enabled message -->
+    <sentence id="SET_CHECK_PAYMENT_ON_JOIN_EN_CMD">**CHECK JOINED MEMBERS**
+Payment check on joined members enabled.</sentence>
+    <!-- Set payment check on joined members command disabled message -->
+    <sentence id="SET_CHECK_PAYMENT_ON_JOIN_DIS_CMD">**CHECK JOINED MEMBERS**
+Payment check on joined members disabled.</sentence>
+    <!-- Set payment check on joined members command parameter error message -->
+    <sentence id="SET_CHECK_PAYMENT_ON_JOIN_PARAM_ERR_CMD">**CHECK JOINED MEMBERS**
+Invalid parameter.</sentence>
+
+    <!-- Is payment check on joined members command enabled message -->
+    <sentence id="IS_CHECK_PAYMENT_ON_JOIN_EN_CMD">**CHECK JOINED MEMBERS**
+Payment check on joined members is currently enabled.</sentence>
+    <!-- Is payment check on joined members command disabled message -->
+    <sentence id="IS_CHECK_PAYMENT_ON_JOIN_DIS_CMD">**CHECK JOINED MEMBERS**
+Payment check on joined members is currently disabled.</sentence>
+
+    <!-- Check payment data command message (notice) -->
     <sentence id="CHECK_PAYMENTS_DATA_NOTICE_CMD">**CHECK PAYMENTS DATA**
 Payments data is going to be checked.</sentence>
-    <!-- Check username command message (completed) -->
+    <!-- Check payment data command message (completed) -->
     <sentence id="CHECK_PAYMENTS_DATA_COMPLETED_CMD">Operation completed. Found errors: {errors_count}</sentence>
-    <!-- Check username command message (username error) -->
+    <!-- Check payment data command message (username error) -->
     <sentence id="CHECK_PAYMENTS_DATA_USERNAME_ERR_CMD">
 - Username @{username} is present more than one time at row {row_index}</sentence>
-    <!-- Check username command message (expiration error) -->
+    <!-- Check payment data command message (expiration error) -->
     <sentence id="CHECK_PAYMENTS_DATA_DATE_ERR_CMD">
 - Expiration date for username @{username} at row {row_index} is not valid ({expiration_date})</sentence>
-    <!-- Check username command message (all ok) -->
+    <!-- Check payment data command message (all ok) -->
     <sentence id="CHECK_PAYMENTS_DATA_ALL_OK_CMD">Payments data is correct, no error found.</sentence>
 
     <!-- Email no payment command message (disabled) -->
@@ -176,7 +207,10 @@ Members whose payment is about to expire are going to be removed.</sentence>
     <sentence id="REMOVE_NO_PAYMENT_ALL_OK_CMD">\nMembers list:
 {members_list}</sentence>
 
-    <!-- Misc -->
+    <!--
+        Misc
+    -->
+
     <sentence id="WITHIN_HOURS_MSG">within {hours} hours</sentence>
     <sentence id="WITHIN_DAYS_MSG">within {days} days</sentence>
     <sentence id="ASAP_MSG">as soon as possible</sentence>

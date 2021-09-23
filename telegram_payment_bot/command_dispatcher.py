@@ -38,6 +38,7 @@ from telegram_payment_bot.translation_loader import TranslationLoader
 # Command types
 @unique
 class CommandTypes(Enum):
+    # Generic
     START_CMD = auto(),
     HELP_CMD = auto(),
     ALIVE_CMD = auto(),
@@ -47,8 +48,12 @@ class CommandTypes(Enum):
     CHAT_INFO_CMD = auto(),
     USERS_LIST_CMD = auto(),
     INVITE_LINKS_CMD = auto(),
+    # Username
     CHECK_NO_USERNAME_CMD = auto(),
     REMOVE_NO_USERNAME_CMD = auto(),
+    # Payment
+    SET_CHECK_PAYMENT_ON_JOIN = auto(),
+    IS_CHECK_PAYMENT_ON_JOIN = auto(),
     CHECK_PAYMENTS_DATA_CMD = auto(),
     EMAIL_NO_PAYMENT_CMD = auto(),
     CHECK_NO_PAYMENT_CMD = auto(),
@@ -63,6 +68,7 @@ class CommandTypes(Enum):
 class CommandDispatcherConst:
     # Command to class map
     CMD_TYPE_TO_CLASS: Dict[CommandTypes, Type[CommandBase]] = {
+        # Generic
         CommandTypes.START_CMD: HelpCmd,
         CommandTypes.HELP_CMD: HelpCmd,
         CommandTypes.ALIVE_CMD: AliveCmd,
@@ -72,8 +78,12 @@ class CommandDispatcherConst:
         CommandTypes.CHAT_INFO_CMD: ChatInfoCmd,
         CommandTypes.USERS_LIST_CMD: UsersListCmd,
         CommandTypes.INVITE_LINKS_CMD: InviteLinkCmd,
+        # Username
         CommandTypes.CHECK_NO_USERNAME_CMD: CheckNoUsernameCmd,
         CommandTypes.REMOVE_NO_USERNAME_CMD: RemoveNoUsernameCmd,
+        # Payment
+        CommandTypes.SET_CHECK_PAYMENT_ON_JOIN: SetCheckPaymentsOnJoinCmd,
+        CommandTypes.IS_CHECK_PAYMENT_ON_JOIN: IsCheckPaymentsOnJoinCmd,
         CommandTypes.CHECK_PAYMENTS_DATA_CMD: CheckPaymentsDataCmd,
         CommandTypes.EMAIL_NO_PAYMENT_CMD: EmailNoPaymentCmd,
         CommandTypes.CHECK_NO_PAYMENT_CMD: CheckNoPaymentCmd,

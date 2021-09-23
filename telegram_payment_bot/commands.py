@@ -264,6 +264,42 @@ class RemoveNoUsernameCmd(CommandBase):
 
 
 #
+# Command for setting payment check on joined members
+#
+class SetCheckPaymentsOnJoinCmd(CommandBase):
+    # Execute command
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
+        try:
+            # Get parameters
+            flag = self.cmd_data.Params().GetAsBool(0)
+        except CommandParameterError:
+            self._SendMessage(self.translator.GetSentence("SET_CHECK_PAYMENT_ON_JOIN_PARAM_ERR_CMD"))
+        else:
+            # Set test mode
+            self.config.SetValue(ConfigTypes.PAYMENT_CHECK_ON_JOIN, flag)
+
+            # Send message
+            if self.config.GetValue(ConfigTypes.PAYMENT_CHECK_ON_JOIN):
+                self._SendMessage(self.translator.GetSentence("SET_CHECK_PAYMENT_ON_JOIN_EN_CMD"))
+            else:
+                self._SendMessage(self.translator.GetSentence("SET_CHECK_PAYMENT_ON_JOIN_DIS_CMD"))
+
+
+#
+# Command for checking if payment check on joined members
+#
+class IsCheckPaymentsOnJoinCmd(CommandBase):
+    # Execute command
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
+        if self.config.GetValue(ConfigTypes.PAYMENT_CHECK_ON_JOIN):
+            self._SendMessage(self.translator.GetSentence("IS_CHECK_PAYMENT_ON_JOIN_EN_CMD"))
+        else:
+            self._SendMessage(self.translator.GetSentence("IS_CHECK_PAYMENT_ON_JOIN_DIS_CMD"))
+
+
+#
 # Command for checking payments data for errors
 #
 class CheckPaymentsDataCmd(CommandBase):
