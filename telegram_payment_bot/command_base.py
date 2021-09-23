@@ -115,8 +115,8 @@ class CommandBase(ABC):
         self._SendMessage(self.translator.GetSentence("INVITE_LINK_ALL_CMD"))
         self._SendMessageToAuthUsers(
             self.translator.GetSentence("INVITE_LINK_AUTH_CMD",
-                                        {"chat_title": ChatHelper.GetTitle(self.cmd_data.Chat()),
-                                         "invite_link": invite_link})
+                                        chat_title=ChatHelper.GetTitle(self.cmd_data.Chat()),
+                                        invite_link=invite_link)
         )
 
     # Log command

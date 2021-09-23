@@ -70,7 +70,7 @@ class JoinedMembersChecker:
             self.message_sender.SendMessageToAuthUsers(
                 chat,
                 self.translator.GetSentence("JOINED_MEMBER_KICKED_FOR_USERNAME_MSG",
-                                            {"name": UserHelper.GetNameOrId(user)})
+                                            name=UserHelper.GetNameOrId(user))
             )
         # Kick if no payment
         elif self.member_kicker.KickSingleIfExpiredPayment(chat, user):
@@ -78,7 +78,7 @@ class JoinedMembersChecker:
             self.message_sender.SendMessageToAuthUsers(
                 chat,
                 self.translator.GetSentence("JOINED_MEMBER_KICKED_FOR_PAYMENT_MSG",
-                                            {"name": UserHelper.GetNameOrId(user)})
+                                            name=UserHelper.GetNameOrId(user))
             )
         # Everything ok
         else:

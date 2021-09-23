@@ -23,7 +23,7 @@
 #
 import os
 from xml.etree import ElementTree
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 from telegram_payment_bot.logger import Logger
 
 
@@ -70,14 +70,8 @@ class TranslationLoader:
     # Get sentence
     def GetSentence(self,
                     sentence_id: str,
-                    placeholders: Optional[Dict[str, Any]] = None) -> str:
-        sentence = self.sentences[sentence_id]
-
-        if placeholders is not None:
-            for placeholder, value in placeholders.items():
-                sentence = sentence.replace("{%s}" % placeholder, str(value))
-
-        return sentence
+                    **kwargs: Any) -> str:
+        return self.sentences[sentence_id].format(**kwargs)
 
     # Load file
     def __LoadFile(self,
