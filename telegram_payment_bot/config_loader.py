@@ -91,7 +91,7 @@ class ConfigLoader:
             field_val = self.config_parser[section][field["name"]]
         # Field not present, set default value if specified
         except KeyError:
-            if not "def_val" in field:
+            if "def_val" not in field:
                 raise ConfigError(f"Configuration field \"{field['name']}\" not found")
             field_val = field["def_val"]
 
