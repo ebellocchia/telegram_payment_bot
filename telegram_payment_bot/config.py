@@ -64,9 +64,7 @@ class ConfigTypes(Enum):
     EMAIL_PASSWORD = auto(),
     EMAIL_SUBJECT = auto(),
     EMAIL_ALT_BODY = auto(),
-    EMAIL_ALT_BODY_FILE = auto(),
     EMAIL_HTML_BODY = auto(),
-    EMAIL_HTML_BODY_FILE = auto(),
     # Logging
     LOG_LEVEL = auto(),
     LOG_CONSOLE_ENABLED = auto(),
@@ -81,6 +79,11 @@ class ConfigTypes(Enum):
 #
 # Classes
 #
+
+# Configuration error class
+class ConfigError(Exception):
+    pass
+
 
 # Configuration class
 class Config:
@@ -104,3 +107,8 @@ class Config:
             raise TypeError("Config type is not an enumerative of ConfigTypes")
 
         self.config[config_type] = value
+
+    # Get if value is set
+    def IsValueSet(self,
+                   config_type: ConfigTypes) -> bool:
+        return config_type in self.config

@@ -22,392 +22,14 @@
 # Imports
 #
 import configparser
-import logging
-from abc import ABC, abstractmethod
-from typing import Any, Callable, Dict, List, Optional, Type
-from telegram_payment_bot.config import ConfigTypes, Config
-from telegram_payment_bot.payment_types import PaymentTypes
-from telegram_payment_bot.utils import Utils
+from typing import Any, Dict, List
+from telegram_payment_bot.config import ConfigError, Config
+from telegram_payment_bot.config_data import ConfigDataConst
 
 
 #
 # Classes
 #
-
-# Configuration type converter class
-class ConfigTypeConverter:
-    # String to payment type
-    STR_TO_PAYMENT_TYPE: Dict[str, PaymentTypes] = {
-        "EXCEL_FILE": PaymentTypes.EXCEL_FILE,
-        "GOOGLE_SHEET": PaymentTypes.GOOGLE_SHEET,
-    }
-
-    # String to log level
-    STR_TO_LOG_LEVEL: Dict[str, int] = {
-        "DEBUG": logging.DEBUG,
-        "INFO": logging.INFO,
-        "WARNING": logging.WARNING,
-        "ERROR": logging.ERROR,
-        "CRITICAL": logging.CRITICAL,
-    }
-
-    # Convert string to payment type
-    @staticmethod
-    def StrToPaymentType(payment_type: str) -> PaymentTypes:
-        return ConfigTypeConverter.STR_TO_PAYMENT_TYPE[payment_type]
-
-    # Convert string to log level
-    @staticmethod
-    def StrToLogLevel(log_level: str) -> int:
-        return (ConfigTypeConverter.STR_TO_LOG_LEVEL[log_level]
-                if log_level in ConfigTypeConverter.STR_TO_LOG_LEVEL
-                else logging.INFO)
-
-    # Convert log level to string
-    @staticmethod
-    def LogLevelToStr(log_level: int) -> str:
-        idx = list(ConfigTypeConverter.STR_TO_LOG_LEVEL.values()).index(log_level)
-        return list(ConfigTypeConverter.STR_TO_LOG_LEVEL.keys())[idx]
-
-
-# Constants for configuration base class
-class ConfigBaseConst:
-    # Default values
-    DEF_VALUES: Dict[ConfigTypes, Any] = {
-        # App
-        ConfigTypes.APP_LANG_FILE: None,
-        # Support
-        ConfigTypes.SUPPORT_EMAIL: "",
-        ConfigTypes.SUPPORT_TELEGRAM: "",
-        # Payment
-        ConfigTypes.PAYMENT_WEBSITE: "",
-        ConfigTypes.PAYMENT_CHECK_ON_JOIN: True,
-        ConfigTypes.PAYMENT_CHECK_PERIOD_MIN: -1,
-        ConfigTypes.PAYMENT_CHECK_CHAT_IDS: [],
-        ConfigTypes.PAYMENT_GOOGLE_CRED: "credentials.json",
-        ConfigTypes.PAYMENT_GOOGLE_PICKLE: "token.pickle",
-        ConfigTypes.PAYMENT_EMAIL_COL: 0,
-        ConfigTypes.PAYMENT_USERNAME_COL: 1,
-        ConfigTypes.PAYMENT_EXPIRATION_COL: 2,
-        ConfigTypes.PAYMENT_DATE_FORMAT: "%d/%m/%Y",
-        # Email
-        ConfigTypes.EMAIL_ENABLED: False,
-        # Log
-        ConfigTypes.LOG_LEVEL: logging.INFO,
-        ConfigTypes.LOG_CONSOLE_ENABLED: True,
-        ConfigTypes.LOG_FILE_ENABLED: False,
-    }
-    # Maximum column index
-    MAX_COL_IDX: int = 25
-
-
-# Configuration loader base class
-class ConfigLoaderBase(ABC):
-    # Constructor
-    def __init__(self,
-                 config: Config,
-                 config_parser: configparser.ConfigParser) -> None:
-        self.config = config
-        self.config_parser = config_parser
-
-    # Load configuration
-    @abstractmethod
-    def Load(self) -> None:
-        pass
-
-    # Print configuration
-    @abstractmethod
-    def Print(self) -> None:
-        pass
-
-    # Set value
-    def _SetValue(self,
-                  config_type: ConfigTypes,
-                  section: str,
-                  field: str,
-                  fct: Optional[Callable[[str], Any]] = None):
-        val = self.config_parser[section][field] if fct is None else fct(self.config_parser[section][field])
-        self.config.SetValue(config_type, val)
-
-    # Set value with default
-    def _SetValueWithDefault(self,
-                             config_type: ConfigTypes,
-                             section: str,
-                             field: str,
-                             default_val: Any,
-                             fct: Optional[Callable[[str], Any]] = None):
-        try:
-            self._SetValue(config_type, section, field, fct)
-        except KeyError:
-            self.config.SetValue(config_type, default_val)
-
-
-# Pyrogram config loader
-class PyrogramConfigLoader(ConfigLoaderBase):
-    # Load configuration
-    def Load(self) -> None:
-        self._SetValue(ConfigTypes.SESSION_NAME, "pyrogram", "session_name")
-
-    # Print configuration
-    def Print(self) -> None:
-        print(" - Session name: %s" % self.config.GetValue(ConfigTypes.SESSION_NAME))
-
-
-# App config loader
-class AppConfigLoader(ConfigLoaderBase):
-    # Load configuration
-    def Load(self) -> None:
-        self._SetValue(ConfigTypes.APP_TEST_MODE, "app", "app_test_mode", Utils.StrToBool)
-        self._SetValueWithDefault(ConfigTypes.APP_LANG_FILE,
-                                  "app",
-                                  "app_lang_file",
-                                  ConfigBaseConst.DEF_VALUES[ConfigTypes.APP_LANG_FILE])
-
-    # Print configuration
-    def Print(self) -> None:
-        print(" - App test mode: %s" % self.config.GetValue(ConfigTypes.APP_TEST_MODE))
-
-        lang_file = self.config.GetValue(ConfigTypes.APP_LANG_FILE)
-        print(" - App language file: %s" % (lang_file if lang_file is not None else "default"))
-
-
-# User config loader
-class UserConfigLoader(ConfigLoaderBase):
-    # Load configuration
-    def Load(self) -> None:
-        self._SetValue(ConfigTypes.AUTHORIZED_USERS, "users", "authorized_users", lambda val: val.split(","))
-
-    # Print configuration
-    def Print(self) -> None:
-        print(" - Authorized users: %s" % self.config.GetValue(ConfigTypes.AUTHORIZED_USERS))
-
-
-# Support config loader
-class SupportConfigLoader(ConfigLoaderBase):
-    # Load configuration
-    def Load(self) -> None:
-        self._SetValueWithDefault(ConfigTypes.SUPPORT_EMAIL,
-                                  "support",
-                                  "support_email",
-                                  ConfigBaseConst.DEF_VALUES[ConfigTypes.SUPPORT_EMAIL])
-        self._SetValueWithDefault(ConfigTypes.SUPPORT_TELEGRAM,
-                                  "support",
-                                  "support_telegram",
-                                  ConfigBaseConst.DEF_VALUES[ConfigTypes.SUPPORT_TELEGRAM])
-
-    # Print configuration
-    def Print(self) -> None:
-        print(" - Support email: %s" % self.config.GetValue(ConfigTypes.SUPPORT_EMAIL))
-        print(" - Support telegram: %s" % self.config.GetValue(ConfigTypes.SUPPORT_TELEGRAM))
-
-
-# Payment config loader
-class PaymentConfigLoader(ConfigLoaderBase):
-    # Load configuration
-    def Load(self) -> None:
-        self._SetValueWithDefault(ConfigTypes.PAYMENT_WEBSITE,
-                                  "payment",
-                                  "payment_website",
-                                  ConfigBaseConst.DEF_VALUES[ConfigTypes.PAYMENT_WEBSITE])
-        self._SetValueWithDefault(ConfigTypes.PAYMENT_CHECK_ON_JOIN,
-                                  "payment",
-                                  "payment_check_on_join",
-                                  ConfigBaseConst.DEF_VALUES[ConfigTypes.PAYMENT_CHECK_ON_JOIN],
-                                  Utils.StrToBool)
-        self._SetValueWithDefault(ConfigTypes.PAYMENT_CHECK_PERIOD_MIN,
-                                  "payment",
-                                  "payment_check_period_min",
-                                  ConfigBaseConst.DEF_VALUES[ConfigTypes.PAYMENT_CHECK_PERIOD_MIN],
-                                  Utils.StrToInt)
-        self._SetValueWithDefault(ConfigTypes.PAYMENT_CHECK_CHAT_IDS,
-                                  "payment",
-                                  "payment_check_chat_ids",
-                                  ConfigBaseConst.DEF_VALUES[ConfigTypes.PAYMENT_CHECK_CHAT_IDS],
-                                  lambda val: [Utils.StrToInt(chat_id) for chat_id in val.split(",")] if val != "" else [])
-
-        self._SetValue(ConfigTypes.PAYMENT_TYPE, "payment", "payment_type", ConfigTypeConverter.StrToPaymentType)
-
-        # Load depending on payment type
-        payment_type = self.config.GetValue(ConfigTypes.PAYMENT_TYPE)
-        if payment_type == PaymentTypes.GOOGLE_SHEET:
-            self._SetValue(ConfigTypes.PAYMENT_GOOGLE_SHEET_ID, "payment", "payment_google_sheet_id")
-            self._SetValueWithDefault(ConfigTypes.PAYMENT_GOOGLE_CRED,
-                                      "payment",
-                                      "payment_google_cred",
-                                      ConfigBaseConst.DEF_VALUES[ConfigTypes.PAYMENT_GOOGLE_CRED])
-            self._SetValueWithDefault(ConfigTypes.PAYMENT_GOOGLE_PICKLE,
-                                      "payment",
-                                      "payment_google_pickle",
-                                      ConfigBaseConst.DEF_VALUES[ConfigTypes.PAYMENT_GOOGLE_PICKLE])
-        elif payment_type == PaymentTypes.EXCEL_FILE:
-            self._SetValue(ConfigTypes.PAYMENT_EXCEL_FILE, "payment", "payment_excel_file")
-
-        # Column indexes
-        self._SetValueWithDefault(ConfigTypes.PAYMENT_EMAIL_COL,
-                                  "payment",
-                                  "payment_email_col",
-                                  ConfigBaseConst.DEF_VALUES[ConfigTypes.PAYMENT_EMAIL_COL],
-                                  Utils.StrToInt)
-        self._SetValueWithDefault(ConfigTypes.PAYMENT_USERNAME_COL,
-                                  "payment",
-                                  "payment_username_col",
-                                  ConfigBaseConst.DEF_VALUES[ConfigTypes.PAYMENT_USERNAME_COL],
-                                  Utils.StrToInt)
-        self._SetValueWithDefault(ConfigTypes.PAYMENT_EXPIRATION_COL,
-                                  "payment",
-                                  "payment_expiration_col",
-                                  ConfigBaseConst.DEF_VALUES[ConfigTypes.PAYMENT_EXPIRATION_COL],
-                                  Utils.StrToInt)
-        self._SetValueWithDefault(ConfigTypes.PAYMENT_DATE_FORMAT,
-                                  "payment",
-                                  "payment_date_format",
-                                  ConfigBaseConst.DEF_VALUES[ConfigTypes.PAYMENT_DATE_FORMAT])
-        # Check indexes
-        self.__CheckColumnIndexes()
-
-    # Print configuration
-    def Print(self) -> None:
-        print(" - Payment website: %s" % self.config.GetValue(ConfigTypes.PAYMENT_WEBSITE))
-        print(" - Payment check on join: %s" % self.config.GetValue(ConfigTypes.PAYMENT_CHECK_ON_JOIN))
-        print(" - Payment check period (min): %s" % self.config.GetValue(ConfigTypes.PAYMENT_CHECK_PERIOD_MIN))
-        print(" - Payment chat IDs: %s" % self.config.GetValue(ConfigTypes.PAYMENT_CHECK_CHAT_IDS))
-
-        payment_type = self.config.GetValue(ConfigTypes.PAYMENT_TYPE)
-        print(" - Payment type: %s" % payment_type)
-        if payment_type == PaymentTypes.EXCEL_FILE:
-            print(" - Payment Excel file: %s" % self.config.GetValue(ConfigTypes.PAYMENT_EXCEL_FILE))
-        elif payment_type == PaymentTypes.GOOGLE_SHEET:
-            print(" - Payment Google Sheet ID: %s" % self.config.GetValue(ConfigTypes.PAYMENT_GOOGLE_SHEET_ID))
-            print(" - Payment Google credentials file: %s" % self.config.GetValue(ConfigTypes.PAYMENT_GOOGLE_CRED))
-            print(" - Payment Google pickle file: %s" % self.config.GetValue(ConfigTypes.PAYMENT_GOOGLE_PICKLE))
-
-        print(" - Payment email column: %s" % self.config.GetValue(ConfigTypes.PAYMENT_EMAIL_COL))
-        print(" - Payment username column: %s" % self.config.GetValue(ConfigTypes.PAYMENT_USERNAME_COL))
-        print(" - Payment expiration column: %s" % self.config.GetValue(ConfigTypes.PAYMENT_EXPIRATION_COL))
-        print(" - Payment date format: %s" % self.config.GetValue(ConfigTypes.PAYMENT_DATE_FORMAT))
-
-    # Check column indexes
-    def __CheckColumnIndexes(self):
-        email_col_idx = self.config.GetValue(ConfigTypes.PAYMENT_EMAIL_COL)
-        username_col_idx = self.config.GetValue(ConfigTypes.PAYMENT_USERNAME_COL)
-        expiration_col_idx = self.config.GetValue(ConfigTypes.PAYMENT_EXPIRATION_COL)
-
-        col_indexes = [email_col_idx, username_col_idx, expiration_col_idx]
-
-        if (email_col_idx == username_col_idx or
-                email_col_idx == expiration_col_idx or
-                username_col_idx == expiration_col_idx):
-            raise ValueError("Invalid payment column indexes, they shall be all different")
-        elif any(idx < 0 for idx in col_indexes):
-            raise ValueError("Column indexes shall be greater than zero")
-        elif any(idx > ConfigBaseConst.MAX_COL_IDX for idx in col_indexes):
-            raise ValueError("Column indexes shall be lower than %d" % ConfigBaseConst.MAX_COL_IDX)
-
-
-# Email config loader
-class EmailConfigLoader(ConfigLoaderBase):
-    # Load configuration
-    def Load(self) -> None:
-        self._SetValueWithDefault(ConfigTypes.EMAIL_ENABLED,
-                                  "email",
-                                  "email_enabled",
-                                  ConfigBaseConst.DEF_VALUES[ConfigTypes.EMAIL_ENABLED],
-                                  Utils.StrToBool)
-
-        if self.config.GetValue(ConfigTypes.EMAIL_ENABLED):
-            self._SetValue(ConfigTypes.EMAIL_FROM, "email", "email_from")
-            self._SetValue(ConfigTypes.EMAIL_REPLY_TO, "email", "email_reply_to")
-            self._SetValue(ConfigTypes.EMAIL_HOST, "email", "email_host")
-            self._SetValue(ConfigTypes.EMAIL_USER, "email", "email_user")
-            self._SetValue(ConfigTypes.EMAIL_PASSWORD, "email", "email_password")
-            self._SetValue(ConfigTypes.EMAIL_SUBJECT, "email", "email_subject")
-            self._SetValue(ConfigTypes.EMAIL_ALT_BODY_FILE, "email", "email_alt_body")
-            self._SetValue(ConfigTypes.EMAIL_HTML_BODY_FILE, "email", "email_html_body")
-            self.config.SetValue(ConfigTypes.EMAIL_ALT_BODY, self.__ReadFile(ConfigTypes.EMAIL_ALT_BODY_FILE))
-            self.config.SetValue(ConfigTypes.EMAIL_HTML_BODY, self.__ReadFile(ConfigTypes.EMAIL_HTML_BODY_FILE))
-
-    # Print configuration
-    def Print(self) -> None:
-        print(" - Email enabled: %s" % self.config.GetValue(ConfigTypes.EMAIL_ENABLED))
-
-        if self.config.GetValue(ConfigTypes.EMAIL_ENABLED):
-            print(" - Email from: %s" % self.config.GetValue(ConfigTypes.EMAIL_FROM))
-            print(" - Email reply-to: %s" % self.config.GetValue(ConfigTypes.EMAIL_REPLY_TO))
-            print(" - Email host: %s" % self.config.GetValue(ConfigTypes.EMAIL_HOST))
-            print(" - Email user: %s" % self.config.GetValue(ConfigTypes.EMAIL_USER))
-            print(" - Email password: %s" % self.config.GetValue(ConfigTypes.EMAIL_PASSWORD))
-            print(" - Email subject: %s" % self.config.GetValue(ConfigTypes.EMAIL_SUBJECT))
-            print(" - Email ALT body file: %s" % self.config.GetValue(ConfigTypes.EMAIL_ALT_BODY_FILE))
-            print(" - Email HTML body file: %s" % self.config.GetValue(ConfigTypes.EMAIL_HTML_BODY_FILE))
-
-    # Read file
-    def __ReadFile(self,
-                   config_type: ConfigTypes) -> str:
-        with open(self.config.GetValue(config_type), "r") as fin:
-            file_data = fin.read()
-        return file_data
-
-
-# Logging config loader
-class LoggingConfigLoader(ConfigLoaderBase):
-    # Load configuration
-    def Load(self) -> None:
-        self._SetValueWithDefault(ConfigTypes.LOG_LEVEL,
-                                  "logging",
-                                  "log_level",
-                                  ConfigBaseConst.DEF_VALUES[ConfigTypes.LOG_LEVEL],
-                                  ConfigTypeConverter.StrToLogLevel)
-        self._SetValueWithDefault(ConfigTypes.LOG_CONSOLE_ENABLED,
-                                  "logging",
-                                  "log_console_enabled",
-                                  ConfigBaseConst.DEF_VALUES[ConfigTypes.LOG_CONSOLE_ENABLED],
-                                  Utils.StrToBool)
-        self._SetValueWithDefault(ConfigTypes.LOG_FILE_ENABLED,
-                                  "logging",
-                                  "log_file_enabled",
-                                  ConfigBaseConst.DEF_VALUES[ConfigTypes.LOG_FILE_ENABLED],
-                                  Utils.StrToBool)
-
-        if self.config.GetValue(ConfigTypes.LOG_FILE_ENABLED):
-            self._SetValue(ConfigTypes.LOG_FILE_NAME, "logging", "log_file_name")
-            self._SetValue(ConfigTypes.LOG_FILE_USE_ROTATING, "logging", "log_file_use_rotating", Utils.StrToBool)
-
-            if not self.config.GetValue(ConfigTypes.LOG_FILE_USE_ROTATING):
-                self._SetValue(ConfigTypes.LOG_FILE_APPEND, "logging", "log_file_append", Utils.StrToBool)
-            else:
-                self._SetValue(ConfigTypes.LOG_FILE_MAX_BYTES, "logging", "log_file_max_bytes", Utils.StrToInt)
-                self._SetValue(ConfigTypes.LOG_FILE_BACKUP_CNT, "logging", "log_file_backup_cnt", Utils.StrToInt)
-
-    # Print configuration
-    def Print(self) -> None:
-        print(" - Log level: %s" % ConfigTypeConverter.LogLevelToStr(self.config.GetValue(ConfigTypes.LOG_LEVEL)))
-        print(" - Log console enabled: %s" % self.config.GetValue(ConfigTypes.LOG_CONSOLE_ENABLED))
-        print(" - Log file enabled: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_ENABLED))
-
-        if self.config.GetValue(ConfigTypes.LOG_FILE_ENABLED):
-            print(" - Log file name: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_NAME))
-            print(" - Log file use rotating: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_USE_ROTATING))
-
-            if not self.config.GetValue(ConfigTypes.LOG_FILE_USE_ROTATING):
-                print(" - Log file append: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_APPEND))
-            else:
-                print(" - Log file max bytes: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_MAX_BYTES))
-                print(" - Log file backup count: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_BACKUP_CNT))
-
-
-# Constant for configuration loader class
-class ConfigLoaderConst:
-    # Loader classes
-    LOADER_CLASSES: List[Type[ConfigLoaderBase]] = [
-        PyrogramConfigLoader,
-        AppConfigLoader,
-        UserConfigLoader,
-        SupportConfigLoader,
-        PaymentConfigLoader,
-        EmailConfigLoader,
-        LoggingConfigLoader,
-    ]
-
 
 # Configuration loader class
 class ConfigLoader:
@@ -416,21 +38,77 @@ class ConfigLoader:
                  config_file: str) -> None:
         self.config_file = config_file
         self.config = Config()
+        self.config_parser = None
 
     # Load configuration
     def Load(self) -> None:
         # Read file
-        config_parser = configparser.ConfigParser()
-        config_parser.read(self.config_file)
+        self.config_parser = configparser.ConfigParser()
+        self.config_parser.read(self.config_file)
 
-        # Load configuration
-        print("Loaded configuration:")
-        for loader_class in ConfigLoaderConst.LOADER_CLASSES:
-            loader = loader_class(self.config, config_parser)
-            loader.Load()
-            loader.Print()
+        # Print
+        print("Loading configuration...\n")
+        # Load sections
+        self.__LoadSections()
+        # New line
         print("")
 
     # Get configuration
     def GetConfig(self) -> Config:
         return self.config
+
+    # Load sections
+    def __LoadSections(self) -> None:
+        # For each section
+        for section, fields in ConfigDataConst.CONFIG.items():
+            # Print section
+            print(f"Section [{section}]")
+            # Load fields
+            self.__LoadFields(section, fields)
+
+    # Load fields
+    def __LoadFields(self,
+                     section: str,
+                     fields: List[Dict[str, Any]]) -> None:
+        # For each field
+        for field in fields:
+            # Load if needed
+            if self.__FieldShallBeLoaded(field):
+                # Set field value and print it
+                self.__SetFieldValue(section, field)
+                self.__PrintFieldValue(field)
+
+    # Get if field shall be loaded
+    def __FieldShallBeLoaded(self,
+                             field: Dict[str, Any]) -> bool:
+        return field["load_if"](self.config) if "load_if" in field else True
+
+    # Set field value
+    def __SetFieldValue(self,
+                        section: str,
+                        field: Dict[str, Any]) -> None:
+        try:
+            field_val = self.config_parser[section][field["name"]]
+        # Field not present, set default value if specified
+        except KeyError:
+            if not "def_val" in field:
+                raise ConfigError(f"Configuration field \"{field['name']}\" not found")
+            field_val = field["def_val"]
+
+        # Convert value if needed
+        if "conv_fct" in field:
+            field_val = field["conv_fct"](field_val)
+        # Validate value if needed
+        if "valid_if" in field and not field["valid_if"](self.config, field_val):
+            raise ConfigError(f"Value '{field_val}' is not valid for field \"{field['name']}\"")
+
+        # Set value
+        self.config.SetValue(field["type"], field_val)
+
+    # Print field value
+    def __PrintFieldValue(self,
+                          field: Dict[str, Any]) -> None:
+        if "print_fct" in field:
+            print(f"- {field['name']}: {field['print_fct'](self.config.GetValue(field['type']))}")
+        else:
+            print(f"- {field['name']}: {self.config.GetValue(field['type'])}")
