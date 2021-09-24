@@ -45,4 +45,8 @@ class AuthorizedUsersList(WrappedList):
 
     # Convert to string
     def ToString(self) -> str:
-        return "".join(["- @%s\n" % username for username in self.list_elements])
+        return "\n".join([f"- @{username}" for username in self.list_elements])
+
+    # Convert to string
+    def __str__(self) -> str:
+        return self.ToString()

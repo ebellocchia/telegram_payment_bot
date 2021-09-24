@@ -49,18 +49,21 @@ class UserHelper:
     @staticmethod
     def GetNameOrId(user: pyrogram.types.User) -> str:
         if user.username is not None:
-            return "@%s (%s - ID: %d)" % (user.username, UserHelper.GetName(user), user.id)
+            return f"@{user.username} ({UserHelper.GetName(user)} - ID: {user.id})"
         else:
             name = UserHelper.GetName(user)
             if name is not None:
-                return "%s (ID: %d)" % (name, user.id)
+                return f"{name} (ID: {user.id})"
             else:
-                return "ID: %d" % user.id
+                return f"ID: {user.id}"
 
     # Get user name
     @staticmethod
     def GetName(user: pyrogram.types.User) -> Optional[str]:
         if user.first_name is not None:
-            return "%s %s" % (user.first_name, user.last_name) if user.last_name is not None else user.first_name
+            if user.last_name is not None:
+                return f"{user.first_name} {user.last_name}"
+            else:
+                return f"{user.first_name}"
         else:
             return user.last_name

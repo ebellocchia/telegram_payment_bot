@@ -80,7 +80,7 @@ class CommandParametersList(WrappedList):
             if def_val is not None:
                 return def_val
             else:
-                raise CommandParameterError("Invalid command parameter #%d" % idx)
+                raise CommandParameterError(f"Invalid command parameter #{idx}")
 
 
 # Command data

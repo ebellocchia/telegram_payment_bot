@@ -126,7 +126,7 @@ class AuthUsersCmd(CommandBase):
                         **kwargs: Any) -> None:
         self._SendMessage(
             self.translator.GetSentence("AUTH_USERS_CMD",
-                                        auth_users_list=AuthorizedUsersList(self.config).ToString())
+                                        auth_users_list=str(AuthorizedUsersList(self.config)))
         )
 
 
@@ -160,7 +160,7 @@ class UsersListCmd(CommandBase):
         self._SendMessage(
             self.translator.GetSentence("USERS_LIST_CMD",
                                         chat_title=ChatHelper.GetTitle(self.cmd_data.Chat()),
-                                        users_list=chat_members.ToString())
+                                        users_list=str(chat_members))
         )
 
 
@@ -194,7 +194,7 @@ class CheckNoUsernameCmd(CommandBase):
             msg = self.translator.GetSentence("CHECK_NO_USERNAME_NOTICE_CMD",
                                               chat_title=ChatHelper.GetTitle(self.cmd_data.Chat()),
                                               members_count=chat_members.Count(),
-                                              members_list=chat_members.ToString(),
+                                              members_list=str(chat_members),
                                               hours_left=self.__HoursToStr(left_hours))
 
             # Add contact information if any
@@ -254,7 +254,7 @@ class RemoveNoUsernameCmd(CommandBase):
                                           members_count=kicked_members.Count())
         if kicked_members.Any():
             msg += self.translator.GetSentence("REMOVE_NO_USERNAME_LIST_CMD",
-                                               members_list=kicked_members.ToString())
+                                               members_list=str(kicked_members))
 
         # Send message
         self._SendMessage(msg)
@@ -371,7 +371,7 @@ class EmailNoPaymentCmd(CommandBase):
                     msg = self.translator.GetSentence("EMAIL_NO_PAYMENT_COMPLETED_CMD",
                                                       days_left=days_left_str,
                                                       members_count=expired_payments.Count(),
-                                                      members_list=expired_payments.ToString())
+                                                      members_list=str(expired_payments))
                 else:
                     msg = self.translator.GetSentence("EMAIL_NO_PAYMENT_ALL_OK_CMD")
             except SmtpEmailerError:
@@ -422,7 +422,7 @@ class CheckNoPaymentCmd(CommandBase):
             msg = self.translator.GetSentence("CHECK_NO_PAYMENT_COMPLETED_CMD",
                                               days_left=days_left_str,
                                               members_count=expired_members.Count(),
-                                              members_list=expired_members.ToString(),
+                                              members_list=str(expired_members),
                                               last_day=last_day_str)
 
             # Add website if any
@@ -476,7 +476,7 @@ class RemoveNoPaymentCmd(CommandBase):
                                           members_count=kicked_members.Count())
         if kicked_members.Any():
             msg += self.translator.GetSentence("REMOVE_NO_PAYMENT_ALL_OK_CMD",
-                                               members_list=kicked_members.ToString())
+                                               members_list=str(kicked_members))
 
         # Send message
         self._SendMessage(msg)

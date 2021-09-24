@@ -74,13 +74,16 @@ class CommandBase(ABC):
                 self._ExecuteCommand(**kwargs)
             except RPCError:
                 self._SendMessage(self.translator.GetSentence("GENERIC_ERR"))
-                self.logger.GetLogger().exception("An error occurred while executing command %s" % self.cmd_data.Name())
+                self.logger.GetLogger().exception(
+                    f"An error occurred while executing command {self.cmd_data.Name()}"
+                )
         else:
             if self._IsPrivateChat():
                 self._SendMessage(self.translator.GetSentence("AUTH_ONLY_ERR"))
 
-            self.logger.GetLogger().warning("User %s tried to execute the command but it's not authorized" %
-                                            UserHelper.GetNameOrId(self.cmd_data.User()))
+            self.logger.GetLogger().warning(
+                f"User {UserHelper.GetNameOrId(self.cmd_data.User())} tried to execute the command but it's not authorized"
+            )
 
     # Send message
     def _SendMessage(self,
@@ -121,10 +124,9 @@ class CommandBase(ABC):
 
     # Log command
     def __LogCommand(self) -> None:
-        # Log
-        self.logger.GetLogger().info("Command: %s" % self.cmd_data.Name())
-        self.logger.GetLogger().info("Executed by user: %s" % UserHelper.GetNameOrId(self.cmd_data.User()))
-        self.logger.GetLogger().debug("Received message: %s" % self.message)
+        self.logger.GetLogger().info(f"Command: {self.cmd_data.Name()}")
+        self.logger.GetLogger().info(f"Executed by user: {UserHelper.GetNameOrId(self.cmd_data.User())}")
+        self.logger.GetLogger().debug(f"Received message: {self.message}")
 
     # Execute command - Abstract method
     @abstractmethod

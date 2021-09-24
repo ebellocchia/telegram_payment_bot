@@ -66,7 +66,9 @@ class JoinedMembersChecker:
                           user: pyrogram.types.User) -> None:
         # Kick if no username
         if self.member_kicker.KickSingleIfNoUsername(chat, user):
-            self.logger.GetLogger().info("New user %s kicked (joined with no username)" % UserHelper.GetNameOrId(user))
+            self.logger.GetLogger().info(
+                f"New user {UserHelper.GetNameOrId(user)} kicked (joined with no username)"
+            )
             self.message_sender.SendMessageToAuthUsers(
                 chat,
                 self.translator.GetSentence("JOINED_MEMBER_KICKED_FOR_USERNAME_MSG",
@@ -74,7 +76,9 @@ class JoinedMembersChecker:
             )
         # Kick if no payment
         elif self.member_kicker.KickSingleIfExpiredPayment(chat, user):
-            self.logger.GetLogger().info("New user %s kicked (joined with no payment)" % UserHelper.GetNameOrId(user))
+            self.logger.GetLogger().info(
+                f"New user {UserHelper.GetNameOrId(user)} kicked (joined with no payment)"
+            )
             self.message_sender.SendMessageToAuthUsers(
                 chat,
                 self.translator.GetSentence("JOINED_MEMBER_KICKED_FOR_PAYMENT_MSG",
@@ -82,4 +86,6 @@ class JoinedMembersChecker:
             )
         # Everything ok
         else:
-            self.logger.GetLogger().info("New user %s joined, username and payment ok" % UserHelper.GetNameOrId(user))
+            self.logger.GetLogger().info(
+                f"New user {UserHelper.GetNameOrId(user)} joined, username and payment ok"
+            )

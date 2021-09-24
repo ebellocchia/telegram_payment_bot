@@ -82,7 +82,11 @@ class SinglePayment:
 
     # Convert to string
     def ToString(self) -> str:
-        return "%s (@%s): %s" % (self.email, self.username, self.expiration_date.date().strftime("%d/%m/%Y"))
+        return f"{self.email} (@{self.username}): {self.expiration_date.date().strftime('%d/%m/%Y')}"
+
+    # Convert to string
+    def __str__(self) -> str:
+        return self.ToString()
 
 
 # Payment error class
@@ -196,7 +200,10 @@ class PaymentsData(WrappedDict):
 
     # Convert to string
     def ToString(self) -> str:
-        return "".join(
-            ["- %s\n" %
-             payment.ToString()
-             for (_, payment) in self.dict_elements.items()])
+        return "\n".join(
+            [f"- {str(payment)}" for (_, payment) in self.dict_elements.items()]
+        )
+
+    # Convert to string
+    def __str__(self) -> str:
+        return self.ToString()

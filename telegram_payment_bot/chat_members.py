@@ -34,10 +34,6 @@ from telegram_payment_bot.wrapped_list import WrappedList
 
 # Chat members list class
 class ChatMembersList(WrappedList):
-    # Convert to string
-    def ToString(self) -> str:
-        return "".join(["- %s\n" % UserHelper.GetNameOrId(member.user) for member in self.list_elements])
-
     # Get by ID
     def GetById(self,
                 user_id: int) -> Optional[pyrogram.types.ChatMember]:
@@ -59,6 +55,16 @@ class ChatMembersList(WrappedList):
     def IsUsernamePresent(self,
                           username: str) -> bool:
         return self.GetByUsername(username) is not None
+
+    # Convert to string
+    def ToString(self) -> str:
+        return "\n".join(
+            [f"- {UserHelper.GetNameOrId(member.user)}" for member in self.list_elements]
+        )
+
+    # Convert to string
+    def __str__(self) -> str:
+        return self.ToString()
 
 
 # Chat members getter class

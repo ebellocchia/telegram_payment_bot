@@ -95,12 +95,13 @@ class PaymentsEmailer:
                     self.emailer.PrepareMsg(payment.Email())
                     # Send email
                     self.emailer.Send()
-                    self.logger.GetLogger().info("Email successfully sent to: %s (@%s)" %
-                                                 (payment.Email(), payment.Username()))
+                    self.logger.GetLogger().info(
+                        f"Email successfully sent to: {payment.Email()} (@{payment.Username()})"
+                    )
                     # Sleep
                     time.sleep(PaymentsEmailerConst.SEND_EMAIL_SLEEP_TIME_SEC)
                 else:
-                    self.logger.GetLogger().warning("No email set for user @%s, skipped" % payment.Username())
+                    self.logger.GetLogger().warning(f"No email set for user @{payment.Username()}, skipped")
 
             # Disconnect
             self.emailer.Disconnect()

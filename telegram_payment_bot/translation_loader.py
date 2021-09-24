@@ -24,7 +24,7 @@
 import os
 from xml.etree import ElementTree
 from typing import Any, Optional
-from telegram_payment_bot.logger import Logger
+from telegram_crypto_price_bot.logger import Logger
 
 
 #
@@ -34,11 +34,11 @@ from telegram_payment_bot.logger import Logger
 # Constants for translation loader class
 class TranslationLoaderConst:
     # Default language folder
-    DEF_LANG_FOLDER = "lang"
+    DEF_LANG_FOLDER: str = "lang"
     # Default file name
-    DEF_FILE_NAME = "lang_en.xml"
+    DEF_FILE_NAME: str = "lang_en.xml"
     # XML tag for sentences
-    SENTENCE_XML_TAG = "sentence"
+    SENTENCE_XML_TAG: str = "sentence"
 
 
 # Translation loader class
@@ -58,10 +58,12 @@ class TranslationLoader:
 
         if file_name is not None:
             try:
-                self.logger.GetLogger().info("Loading language file '%s'..." % file_name)
+                self.logger.GetLogger().info(f"Loading language file '{file_name}'...")
                 self.__LoadFile(file_name)
             except FileNotFoundError:
-                self.logger.GetLogger().error("Language file '%s' not found, loading default language..." % file_name)
+                self.logger.GetLogger().error(
+                    f"Language file '{file_name}' not found, loading default language..."
+                )
                 self.__LoadFile(def_file_path)
         else:
             self.logger.GetLogger().info("Loading default language file...")
@@ -86,6 +88,10 @@ class TranslationLoader:
                 sentence_id = child.attrib["id"]
                 self.sentences[sentence_id] = child.text.replace("\\n", "\n")
 
-                self.logger.GetLogger().debug("Loaded sentence '%s': %s" % (sentence_id, self.sentences[sentence_id]))
+                self.logger.GetLogger().debug(
+                    f"Loaded sentence '{sentence_id}': {self.sentences[sentence_id]}"
+                )
 
-        self.logger.GetLogger().info("Language file successfully loaded, number of sentences: %d" % len(self.sentences))
+        self.logger.GetLogger().info(
+            f"Language file successfully loaded, number of sentences: {len(self.sentences)}"
+        )

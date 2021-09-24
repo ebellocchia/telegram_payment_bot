@@ -56,4 +56,4 @@ class PaymentsLoaderFactory:
         elif payment_type == PaymentTypes.GOOGLE_SHEET:
             return PaymentsGoogleSheetLoader(self.config, self.logger)
         else:
-            raise PaymentTypeError("Invalid payment type %d" % int(payment_type))
+            raise PaymentTypeError(f"Invalid payment type {payment_type}")

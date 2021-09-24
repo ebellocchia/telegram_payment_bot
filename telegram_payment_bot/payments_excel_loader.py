@@ -61,7 +61,7 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
 
         try:
             # Log
-            self.logger.GetLogger().info("Loading file \"%s\"..." % payment_file)
+            self.logger.GetLogger().info(f"Loading file \"{payment_file}\"...")
 
             # Get sheet
             sheet = self.__GetSheet(payment_file)
@@ -69,14 +69,15 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
             payments_data, payments_data_err = self.__LoadSheet(sheet)
 
             # Log
-            self.logger.GetLogger().info("File \"%s\" successfully loaded, number of rows: %d" %
-                                         (payment_file, payments_data.Count()))
+            self.logger.GetLogger().info(
+                f"File \"{payment_file}\" successfully loaded, number of rows: {payments_data.Count()}"
+            )
 
             return payments_data, payments_data_err
 
         # Catch everything and log exception
         except Exception:
-            self.logger.GetLogger().exception("An error occurred while loading file \"%s\"" % payment_file)
+            self.logger.GetLogger().exception(f"An error occurred while loading file \"{payment_file}\"")
             raise
 
     # Load sheet
@@ -122,8 +123,7 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
                                                         self.config.GetValue(ConfigTypes.PAYMENT_DATE_FORMAT))
             except ValueError:
                 self.logger.GetLogger().warning(
-                    "Expiration date for username @%s at row %d is not valid (%s), skipped" % (
-                        username, row_idx, expiration)
+                    f"Expiration date for username @{username} at row {row_idx} is not valid ({expiration}), skipped"
                 )
                 # Add error
                 payments_data_err.AddPaymentError(PaymentErrorTypes.INVALID_DATE_ERR,
@@ -134,11 +134,13 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
 
         # Add data
         if payments_data.AddPayment(email, username, expiration_datetime):
-            self.logger.GetLogger().debug("%3d - Row %3d | %s | %s | %s" % (
-                payments_data.Count(), row_idx, email, username, expiration_datetime.date()))
+            self.logger.GetLogger().debug(
+                f"{payments_data.Count():4d} - Row {row_idx:4d} | {email} | {username} | {expiration_datetime.date()}"
+            )
         else:
-            self.logger.GetLogger().warning("Username @%s is present more than one time at row %d, skipped" % (
-                username, row_idx))
+            self.logger.GetLogger().warning(
+                f"Username @{username} is present more than one time at row {row_idx}, skipped"
+            )
             # Add error
             payments_data_err.AddPaymentError(PaymentErrorTypes.DUPLICATED_USERNAME_ERR,
                                               row_idx + 1,

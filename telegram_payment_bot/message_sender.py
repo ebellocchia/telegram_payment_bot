@@ -59,7 +59,7 @@ class MessageSender:
                     msg: str,
                     **kwargs) -> None:
         # Log
-        self.logger.GetLogger().info("Sending message (length: %d):\n%s" % (len(msg), msg))
+        self.logger.GetLogger().info(f"Sending message (length: {len(msg)}):\n{msg}")
         # Split and send message
         self.__SendSplitMessage(receiver, self.__SplitMessage(msg), **kwargs)
 
@@ -68,7 +68,7 @@ class MessageSender:
                                chat: pyrogram.types.Chat,
                                msg: str) -> None:
         # Log
-        self.logger.GetLogger().info("Sending message to authorized users:\n%s" % msg)
+        self.logger.GetLogger().info(f"Sending message to authorized users:\n{msg}")
         # Split message
         split_msg = self.__SplitMessage(msg)
 
@@ -76,8 +76,9 @@ class MessageSender:
         auth_members = ChatMembersGetter(self.client, self.config).GetAuthorizedUsers(chat)
         for auth_member in auth_members:
             self.__SendSplitMessage(auth_member.user, split_msg)
-            self.logger.GetLogger().info("Message sent to authorized user: %s" %
-                                         UserHelper.GetNameOrId(auth_member.user))
+            self.logger.GetLogger().info(
+                f"Message sent to authorized user: {UserHelper.GetNameOrId(auth_member.user)}"
+            )
 
     # Send split message
     def __SendSplitMessage(self,
@@ -113,6 +114,6 @@ class MessageSender:
                     msg = msg[MessageSenderConst.MSG_MAX_LEN + 1:]
 
         # Log
-        self.logger.GetLogger().info("Message split into %d part(s)" % len(msg_parts))
+        self.logger.GetLogger().info(f"Message split into {len(msg_parts)} part(s)")
 
         return msg_parts

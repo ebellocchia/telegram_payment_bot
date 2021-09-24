@@ -57,14 +57,16 @@ class PaymentsCheckerJob:
 
         for chat_id in self.config.GetValue(ConfigTypes.PAYMENT_CHECK_CHAT_IDS):
             # Kick members
-            self.logger.GetLogger().info("Checking payments for chat ID %d..." % chat_id)
+            self.logger.GetLogger().info(f"Checking payments for chat ID {chat_id}...")
             curr_chat = pyrogram.types.Chat(id=chat_id, type="supergroup")
             kicked_members = members_kicker.KickAllWithExpiredPayment(curr_chat)
 
             # Log kicked members
-            self.logger.GetLogger().info("Kicked members for chat ID %d: %d" % (chat_id, kicked_members.Count()))
+            self.logger.GetLogger().info(
+                f"Kicked members for chat ID {chat_id}: {kicked_members.Count()}"
+            )
             if kicked_members.Any():
-                self.logger.GetLogger().info(kicked_members.ToString())
+                self.logger.GetLogger().info(str(kicked_members))
 
                 # Inform authorized users
                 msg = self.translator.GetSentence("REMOVE_NO_USERNAME_NOTICE_CMD",
@@ -72,6 +74,6 @@ class PaymentsCheckerJob:
                 msg += "\n" + self.translator.GetSentence("REMOVE_NO_USERNAME_COMPLETED_CMD",
                                                           members_count=kicked_members.Count())
                 msg += self.translator.GetSentence("REMOVE_NO_USERNAME_LIST_CMD",
-                                                   members_list=kicked_members.ToString())
+                                                   members_list=str(kicked_members))
 
                 self.message_sender.SendMessageToAuthUsers(curr_chat, msg)

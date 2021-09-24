@@ -41,9 +41,9 @@ class PaymentsCheckerTaskConst:
     JOB_ID: str = "payment_check"
 
     # Scheduler states
-    STATE_STOPPED = 0
-    STATE_RUNNING = 1
-    STATE_PAUSED = 2
+    STATE_STOPPED: int = 0
+    STATE_RUNNING: int = 1
+    STATE_PAUSED: int = 2
 
 
 # Payments checker task class
@@ -95,7 +95,7 @@ class PaymentsCheckerTask:
     def __Init(self) -> None:
         check_period_min = self.config.GetValue(ConfigTypes.PAYMENT_CHECK_PERIOD_MIN)
         if check_period_min >= PaymentsCheckerTaskConst.MIN_PERIOD_MINUTE:
-            self.logger.GetLogger().info("Payment check task initialized (period: %d min)" % check_period_min)
+            self.logger.GetLogger().info(f"Payment check task initialized (period: {check_period_min} min)")
             self.scheduler.add_job(self.payment_checker_job.CheckPayments,
                                    "interval",
                                    minutes=check_period_min,
