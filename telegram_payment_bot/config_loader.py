@@ -370,9 +370,13 @@ class LoggingConfigLoader(ConfigLoaderBase):
 
         if self.config.GetValue(ConfigTypes.LOG_FILE_ENABLED):
             self._SetValue(ConfigTypes.LOG_FILE_NAME, "logging", "log_file_name")
-            self._SetValue(ConfigTypes.LOG_FILE_APPEND, "logging", "log_file_append", Utils.StrToBool)
-            self._SetValue(ConfigTypes.LOG_FILE_MAX_BYTES, "logging", "log_file_max_bytes", Utils.StrToInt)
-            self._SetValue(ConfigTypes.LOG_FILE_BACKUP_CNT, "logging", "log_file_backup_cnt", Utils.StrToInt)
+            self._SetValue(ConfigTypes.LOG_FILE_USE_ROTATING, "logging", "log_file_use_rotating", Utils.StrToBool)
+
+            if not self.config.GetValue(ConfigTypes.LOG_FILE_USE_ROTATING):
+                self._SetValue(ConfigTypes.LOG_FILE_APPEND, "logging", "log_file_append", Utils.StrToBool)
+            else:
+                self._SetValue(ConfigTypes.LOG_FILE_MAX_BYTES, "logging", "log_file_max_bytes", Utils.StrToInt)
+                self._SetValue(ConfigTypes.LOG_FILE_BACKUP_CNT, "logging", "log_file_backup_cnt", Utils.StrToInt)
 
     # Print configuration
     def Print(self) -> None:
@@ -382,9 +386,13 @@ class LoggingConfigLoader(ConfigLoaderBase):
 
         if self.config.GetValue(ConfigTypes.LOG_FILE_ENABLED):
             print(" - Log file name: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_NAME))
-            print(" - Log file append: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_APPEND))
-            print(" - Log file max bytes: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_MAX_BYTES))
-            print(" - Log file backup count: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_BACKUP_CNT))
+            print(" - Log file use rotating: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_USE_ROTATING))
+
+            if not self.config.GetValue(ConfigTypes.LOG_FILE_USE_ROTATING):
+                print(" - Log file append: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_APPEND))
+            else:
+                print(" - Log file max bytes: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_MAX_BYTES))
+                print(" - Log file backup count: %s" % self.config.GetValue(ConfigTypes.LOG_FILE_BACKUP_CNT))
 
 
 # Constant for configuration loader class

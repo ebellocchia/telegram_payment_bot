@@ -86,9 +86,10 @@ The list of all possible fields that can be set is shown below.
 |log_console_enabled|True to enable logging to console, false otherwise (default: true)|
 |log_file_enabled|True to enable logging to file, false otherwise (default: false). If false, all the next fields will be skipped.|
 |log_file_name|Log file name|
-|log_file_append|True to append to log file, false to start from a new file each time|
-|log_file_max_bytes|Maximum size in bytes for a log file. When reached, a new log file is created up to *log_file_backup_cnt*.|
-|log_file_backup_cnt|Maximum number of log files|
+|log_file_use_rotating|True for using a rotating log file, false otherwise|
+|log_file_max_bytes|Maximum size in bytes for a log file. When reached, a new log file is created up to *log_file_backup_cnt*.. Valid only if log_file_use_rotating is true.|
+|log_file_backup_cnt|Maximum number of log files. Valid only if log_file_use_rotating is true.|
+|log_file_append|True to append to log file, false to start from a new file each time. Valid only if log_file_use_rotating is false.|
 
 ## Supported Commands
 

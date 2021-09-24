@@ -85,12 +85,18 @@ class Logger:
             log_file_name = self.config.GetValue(ConfigTypes.LOG_FILE_NAME)
             # Create log directories if needed
             self.__MakeLogDir(log_file_name)
+
             # Create file handler
-            fh = logging.handlers.RotatingFileHandler(log_file_name,
-                                                      mode="a" if self.config.GetValue(ConfigTypes.LOG_FILE_APPEND) else "w",
-                                                      maxBytes=self.config.GetValue(ConfigTypes.LOG_FILE_MAX_BYTES),
-                                                      backupCount=self.config.GetValue(ConfigTypes.LOG_FILE_BACKUP_CNT),
-                                                      encoding="utf-8")
+            if self.config.GetValue(ConfigTypes.LOG_FILE_USE_ROTATING):
+                fh = logging.handlers.RotatingFileHandler(log_file_name,
+                                                          maxBytes=self.config.GetValue(ConfigTypes.LOG_FILE_MAX_BYTES),
+                                                          backupCount=self.config.GetValue(ConfigTypes.LOG_FILE_BACKUP_CNT),
+                                                          encoding="utf-8")
+            else:
+                fh = logging.FileHandler(log_file_name,
+                                         mode="a" if self.config.GetValue(ConfigTypes.LOG_FILE_APPEND) else "w",
+                                         encoding="utf-8")
+
             fh.setLevel(self.config.GetValue(ConfigTypes.LOG_LEVEL))
             fh.setFormatter(logging.Formatter(LoggerConst.LOG_FILE_FORMAT))
             # Add handler

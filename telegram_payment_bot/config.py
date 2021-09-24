@@ -72,6 +72,7 @@ class ConfigTypes(Enum):
     LOG_CONSOLE_ENABLED = auto(),
     LOG_FILE_ENABLED = auto(),
     LOG_FILE_NAME = auto(),
+    LOG_FILE_USE_ROTATING = auto(),
     LOG_FILE_APPEND = auto(),
     LOG_FILE_MAX_BYTES = auto(),
     LOG_FILE_BACKUP_CNT = auto(),
