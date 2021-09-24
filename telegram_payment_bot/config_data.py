@@ -21,7 +21,6 @@
 #
 # Imports
 #
-import configparser
 import logging
 from typing import Any, Dict, List
 from telegram_payment_bot.config import ConfigTypes, Config
@@ -33,8 +32,8 @@ from telegram_payment_bot.utils import Utils
 # Classes
 #
 
-# Configuration type converter class
-class _ConfigTypeConverter:
+# Configuration data type converter class
+class _ConfigDataTypeConverter:
     # String to payment type
     STR_TO_PAYMENT_TYPE: Dict[str, PaymentTypes] = {
         "EXCEL_FILE": PaymentTypes.EXCEL_FILE,
@@ -53,24 +52,24 @@ class _ConfigTypeConverter:
     # Convert string to payment type
     @staticmethod
     def StrToPaymentType(payment_type: str) -> PaymentTypes:
-        return _ConfigTypeConverter.STR_TO_PAYMENT_TYPE[payment_type]
+        return _ConfigDataTypeConverter.STR_TO_PAYMENT_TYPE[payment_type]
 
     # Convert string to log level
     @staticmethod
     def StrToLogLevel(log_level: str) -> int:
-        return (_ConfigTypeConverter.STR_TO_LOG_LEVEL[log_level]
-                if log_level in _ConfigTypeConverter.STR_TO_LOG_LEVEL
+        return (_ConfigDataTypeConverter.STR_TO_LOG_LEVEL[log_level]
+                if log_level in _ConfigDataTypeConverter.STR_TO_LOG_LEVEL
                 else logging.INFO)
 
     # Convert log level to string
     @staticmethod
     def LogLevelToStr(log_level: int) -> str:
-        idx = list(_ConfigTypeConverter.STR_TO_LOG_LEVEL.values()).index(log_level)
-        return list(_ConfigTypeConverter.STR_TO_LOG_LEVEL.keys())[idx]
+        idx = list(_ConfigDataTypeConverter.STR_TO_LOG_LEVEL.values()).index(log_level)
+        return list(_ConfigDataTypeConverter.STR_TO_LOG_LEVEL.keys())[idx]
 
 
-# Utilities for configuration loader class
-class _ConfigLoaderUtils:
+# Utility functions for configuration data class
+class _ConfigDataUtils:
     # Maximum column index
     COL_IDX_MAX_VAL: int = 25
 
@@ -86,12 +85,14 @@ class _ConfigLoaderUtils:
     def AreColumnIndexesValid(config: Config,
                               curr_col_idx: int) -> bool:
         # Check value of current index
-        if curr_col_idx > _ConfigLoaderUtils.COL_IDX_MAX_VAL:
+        if curr_col_idx > _ConfigDataUtils.COL_IDX_MAX_VAL:
             return False
 
         # Get other indexes that are already available
         col_idxs = []
-        for col_idx in (ConfigTypes.PAYMENT_EMAIL_COL, ConfigTypes.PAYMENT_USERNAME_COL, ConfigTypes.PAYMENT_EXPIRATION_COL):
+        for col_idx in (ConfigTypes.PAYMENT_EMAIL_COL,
+                        ConfigTypes.PAYMENT_USERNAME_COL,
+                        ConfigTypes.PAYMENT_EXPIRATION_COL):
             if config.IsValueSet(col_idx):
                 col_idxs.append(config.GetValue(col_idx))
 
@@ -104,7 +105,6 @@ class _ConfigLoaderUtils:
             return (curr_col_idx != col_idxs[0] and
                     curr_col_idx != col_idxs[1] and
                     col_idxs[0] != col_idxs[1])
-
 
 
 # Constant for configuration data class
@@ -182,7 +182,7 @@ class ConfigDataConst:
             {
                 "type": ConfigTypes.PAYMENT_TYPE,
                 "name": "payment_type",
-                "conv_fct": _ConfigTypeConverter.StrToPaymentType,
+                "conv_fct": _ConfigDataTypeConverter.StrToPaymentType,
             },
             {
                 "type": ConfigTypes.PAYMENT_EXCEL_FILE,
@@ -209,21 +209,21 @@ class ConfigDataConst:
                 "name": "payment_email_col",
                 "conv_fct": Utils.StrToInt,
                 "def_val": 0,
-                "valid_if": lambda cfg, val: _ConfigLoaderUtils.AreColumnIndexesValid(cfg, val)
+                "valid_if": lambda cfg, val: _ConfigDataUtils.AreColumnIndexesValid(cfg, val)
             },
             {
                 "type": ConfigTypes.PAYMENT_USERNAME_COL,
                 "name": "payment_username_col",
                 "conv_fct": Utils.StrToInt,
                 "def_val": 1,
-                "valid_if": lambda cfg, val: _ConfigLoaderUtils.AreColumnIndexesValid(cfg, val)
+                "valid_if": lambda cfg, val: _ConfigDataUtils.AreColumnIndexesValid(cfg, val)
             },
             {
                 "type": ConfigTypes.PAYMENT_EXPIRATION_COL,
                 "name": "payment_expiration_col",
                 "conv_fct": Utils.StrToInt,
                 "def_val": 2,
-                "valid_if": lambda cfg, val: _ConfigLoaderUtils.AreColumnIndexesValid(cfg, val)
+                "valid_if": lambda cfg, val: _ConfigDataUtils.AreColumnIndexesValid(cfg, val)
             },
             {
                 "type": ConfigTypes.PAYMENT_DATE_FORMAT,
@@ -272,14 +272,14 @@ class ConfigDataConst:
             {
                 "type": ConfigTypes.EMAIL_ALT_BODY,
                 "name": "email_alt_body",
-                "conv_fct": _ConfigLoaderUtils.ReadFile,
+                "conv_fct": _ConfigDataUtils.ReadFile,
                 "print_fct": lambda val: "file successfully loaded",
                 "load_if": lambda cfg: cfg.GetValue(ConfigTypes.EMAIL_ENABLED),
             },
             {
                 "type": ConfigTypes.EMAIL_HTML_BODY,
                 "name": "email_html_body",
-                "conv_fct": _ConfigLoaderUtils.ReadFile,
+                "conv_fct": _ConfigDataUtils.ReadFile,
                 "print_fct": lambda val: "file successfully loaded",
                 "load_if": lambda cfg: cfg.GetValue(ConfigTypes.EMAIL_ENABLED),
             },
@@ -289,8 +289,8 @@ class ConfigDataConst:
             {
                 "type": ConfigTypes.LOG_LEVEL,
                 "name": "log_level",
-                "conv_fct": _ConfigTypeConverter.StrToLogLevel,
-                "print_fct": _ConfigTypeConverter.LogLevelToStr,
+                "conv_fct": _ConfigDataTypeConverter.StrToLogLevel,
+                "print_fct": _ConfigDataTypeConverter.LogLevelToStr,
                 "def_val": True,
             },
             {
