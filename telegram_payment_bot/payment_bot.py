@@ -72,8 +72,6 @@ class PaymentBot:
     def Run(self) -> None:
         # Print
         self.logger.GetLogger().info("Telegram Payment Bot started!\n")
-        # Run periodic checker
-        self.payments_checker_task.Start()
         # Run client
         self.client.run()
 
@@ -162,9 +160,58 @@ class PaymentBot:
             lambda client, message: self.__DispatchCommand(client, message, CommandTypes.REMOVE_NO_PAYMENT_CMD),
             filters.command(["remove_no_payment"])))
 
+        #
+        # Payment check task
+        #
+
+        # Start payment task command
+        self.client.add_handler(MessageHandler(
+            lambda client, message: self.__DispatchCommand(client,
+                                                           message,
+                                                           CommandTypes.PAYMENT_TASK_START_CMD,
+                                                           payments_checker_task=self.payments_checker_task),
+            filters.command(["payment_task_start"])))
+        # Stop payment task command
+        self.client.add_handler(MessageHandler(
+            lambda client, message: self.__DispatchCommand(client,
+                                                           message,
+                                                           CommandTypes.PAYMENT_TASK_STOP_CMD,
+                                                           payments_checker_task=self.payments_checker_task),
+            filters.command(["payment_task_stop"])))
+        # Payment task info command
+        self.client.add_handler(MessageHandler(
+            lambda client, message: self.__DispatchCommand(client,
+                                                           message,
+                                                           CommandTypes.PAYMENT_TASK_INFO_CMD,
+                                                           payments_checker_task=self.payments_checker_task),
+            filters.command(["payment_task_info"])))
+        # Payment task add chat command
+        self.client.add_handler(MessageHandler(
+            lambda client, message: self.__DispatchCommand(client,
+                                                           message,
+                                                           CommandTypes.PAYMENT_TASK_ADD_CHAT_CMD,
+                                                           payments_checker_task=self.payments_checker_task),
+            filters.command(["payment_task_add_chat"])))
+        # Payment task remove chat command
+        self.client.add_handler(MessageHandler(
+            lambda client, message: self.__DispatchCommand(client,
+                                                           message,
+                                                           CommandTypes.PAYMENT_TASK_REMOVE_CHAT_CMD,
+                                                           payments_checker_task=self.payments_checker_task),
+            filters.command(["payment_task_remove_chat"])))
+        # Payment task remove all chats command
+        self.client.add_handler(MessageHandler(
+            lambda client, message: self.__DispatchCommand(client,
+                                                           message,
+                                                           CommandTypes.PAYMENT_TASK_REMOVE_ALL_CHATS_CMD,
+                                                           payments_checker_task=self.payments_checker_task),
+            filters.command(["payment_task_remove_all_chats"])))
+
         # Handler for messages
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__HandleMessage(client, message),
+            lambda client, message: self.__HandleMessage(client,
+                                                         message,
+                                                         payments_checker_task=self.payments_checker_task),
             ~filters.private))
         # Print
         self.logger.GetLogger().info("Bot handlers set")
@@ -180,5 +227,6 @@ class PaymentBot:
     # Handle message
     def __HandleMessage(self,
                         client: pyrogram.Client,
-                        message: pyrogram.types.Message) -> None:
-        self.msg_dispatcher.Dispatch(client, message)
+                        message: pyrogram.types.Message,
+                        **kwargs: Any) -> None:
+        self.msg_dispatcher.Dispatch(client, message, **kwargs)

@@ -46,9 +46,24 @@ class WrappedDict(ABC):
                     elements: Dict[Any, Any]) -> None:
         self.dict_elements = {**self.dict_elements, **elements}
 
+    # Remove single element
+    def RemoveSingle(self,
+                     key: Any) -> None:
+        self.dict_elements.pop(key, None)
+
+    # Get if key is present
+    def IsKey(self,
+              key: Any) -> bool:
+        return key in self.dict_elements
+
+    # Get if value is present
+    def IsValue(self,
+                value: Any) -> bool:
+        return value in self.dict_elements.values()
+
     # Clear element
     def Clear(self) -> None:
-        self.dict_elements = {}
+        self.dict_elements.clear()
 
     # Get elements count
     def Count(self) -> int:

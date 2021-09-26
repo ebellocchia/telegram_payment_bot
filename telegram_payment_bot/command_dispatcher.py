@@ -58,6 +58,13 @@ class CommandTypes(Enum):
     EMAIL_NO_PAYMENT_CMD = auto(),
     CHECK_NO_PAYMENT_CMD = auto(),
     REMOVE_NO_PAYMENT_CMD = auto(),
+    # Payment check task
+    PAYMENT_TASK_START_CMD = auto(),
+    PAYMENT_TASK_STOP_CMD = auto(),
+    PAYMENT_TASK_INFO_CMD = auto(),
+    PAYMENT_TASK_ADD_CHAT_CMD = auto(),
+    PAYMENT_TASK_REMOVE_CHAT_CMD = auto(),
+    PAYMENT_TASK_REMOVE_ALL_CHATS_CMD = auto(),
 
 
 #
@@ -88,6 +95,13 @@ class CommandDispatcherConst:
         CommandTypes.EMAIL_NO_PAYMENT_CMD: EmailNoPaymentCmd,
         CommandTypes.CHECK_NO_PAYMENT_CMD: CheckNoPaymentCmd,
         CommandTypes.REMOVE_NO_PAYMENT_CMD: RemoveNoPaymentCmd,
+        # Payment check task
+        CommandTypes.PAYMENT_TASK_START_CMD: PaymentTaskStartCmd,
+        CommandTypes.PAYMENT_TASK_STOP_CMD: PaymentTaskStopCmd,
+        CommandTypes.PAYMENT_TASK_INFO_CMD: PaymentTaskInfoCmd,
+        CommandTypes.PAYMENT_TASK_ADD_CHAT_CMD: PaymentTaskAddChatCmd,
+        CommandTypes.PAYMENT_TASK_REMOVE_CHAT_CMD: PaymentTaskRemoveChatCmd,
+        CommandTypes.PAYMENT_TASK_REMOVE_ALL_CHATS_CMD: PaymentTaskRemoveAllChatsCmd,
     }
 
 

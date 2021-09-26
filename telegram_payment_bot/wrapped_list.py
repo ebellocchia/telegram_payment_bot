@@ -45,9 +45,19 @@ class WrappedList(ABC):
                     elements: List[Any]) -> None:
         self.list_elements.extend(elements)
 
+    # Remove single element
+    def RemoveSingle(self,
+                     element: Any) -> None:
+        self.list_elements.remove(element)
+
+    # Get if element is present
+    def IsElem(self,
+               element: Any) -> bool:
+        return element in self.list_elements
+
     # Clear element
     def Clear(self) -> None:
-        self.list_elements = []
+        self.list_elements.clear()
 
     # Get elements count
     def Count(self) -> int:

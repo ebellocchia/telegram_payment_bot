@@ -4,15 +4,6 @@
         Generic
     -->
 
-    <!-- Generic error message -->
-    <sentence id="GENERIC_ERR">**ERROR**
-An error occurred while executing command.</sentence>
-    <!-- Authorized-only users message -->
-    <sentence id="AUTH_ONLY_ERR">**ERROR**
-You are not authorized to use the command.</sentence>
-    <!-- Group-only message -->
-    <sentence id="GROUP_ONLY_ERR">**ERROR**
-This command can be executed only in the chat group.</sentence>
     <!-- Help command message -->
     <sentence id="HELP_CMD">**HELP**
 Hi {name},
@@ -22,24 +13,32 @@ Here is the list of supported commands.
 **Generic**
 /help : show this message
 /alive : show if bot is active
-/set_test_mode true/false : enable/disable test mode
+/set_test_mode __true/false__ : enable/disable test mode
 /is_test_mode : show if test mode is enabled
 /auth_users : show the list of users authorized to use the bot
-/chat_info : show the chat information - **Only group**
-/users_list : show the list of all users in group - **Only group**
-/invite_link : generate a new invite link - **Only group**
+/chat_info : show the chat information - **Only Group**
+/users_list : show the list of all users in group - **Only Group**
+/invite_link : generate a new invite link - **Only Group**
 
 **Username**
-/check_no_username [HOURS_LEFT] : show users with no username - **Only group**
-/remove_no_username : remove users with no username - **Only group**
+/check_no_username __[HOURS_LEFT]__ : show users with no username - **Only Group**
+/remove_no_username : remove users with no username - **Only Group**
 
 **Payments**
-/set_check_payment_on_join true/false : enable/disable payment check when a new member joins
+/set_check_payment_on_join __true/false__ : enable/disable payment check when a new member joins
 /is_check_payment_on_join : show if payment check when a new member joins is enabled
 /check_payments_data : show if payments data contains some errors
-/email_no_payment [DAYS_LEFT]: send a reminder email to users whose payments is about to expire
-/check_no_payment [DAYS_LEFT] [LAST_DAY]: show users whose payments is about to expire - **Only group**
-/remove_no_payment : remove users whose payment is expired - **Only group**
+/email_no_payment __[DAYS_LEFT]__ : send a reminder email to users whose payments is about to expire
+/check_no_payment __[DAYS_LEFT] [LAST_DAY]__ : show users whose payments is about to expire - **Only Group**
+/remove_no_payment : remove users whose payment is expired - **Only Group**
+
+**Payment Check Task**
+/payment_task_start __[PERIOD_HOURS]__ : start payment check task with the specified period
+/payment_task_stop : stop payment check task
+/payment_task_info : show payment check task information
+/payment_task_add_chat : add the current chat to the payment check task - **Only Group**
+/payment_task_remove_chat : remove the current chat from the payment check task - **Only Group**
+/payment_task_remove_all_chats : remove all chats from the payment check task
 
 Commands that can be executed only in chat group are specified in bold text.
 Parameters in square brakets are optional.
@@ -56,17 +55,14 @@ New invite link generated.
 The link has been sent privately to authorized users.</sentence>
     <!-- Alive command message -->
     <sentence id="ALIVE_CMD">**STATUS**
-The bot is alive.</sentence>
+✅ The bot is alive.</sentence>
 
     <!-- Set test mode command enabled message -->
     <sentence id="SET_TEST_MODE_EN_CMD">**TEST MODE**
-Test mode enabled.</sentence>
+✅ Test mode enabled.</sentence>
     <!-- Set test mode command disabled message -->
     <sentence id="SET_TEST_MODE_DIS_CMD">**TEST MODE**
-Test mode disabled.</sentence>
-    <!-- Set test mode command parameter error message -->
-    <sentence id="SET_TEST_MODE_PARAM_ERR_CMD">**TEST MODE**
-Invalid parameter.</sentence>
+✅ Test mode disabled.</sentence>
 
     <!-- Is test mode command enabled message -->
     <sentence id="IS_TEST_MODE_EN_CMD">**TEST MODE**
@@ -111,7 +107,7 @@ To set it: **Settings -> Edit Profile -> username**</sentence>
     <!-- Check username command message (all ok) -->
     <sentence id="CHECK_NO_USERNAME_ALL_OK_CMD">**USERNAME CHECK**
 Group: **{chat_title}**
-All members has the username set.</sentence>
+✅ All members has the username set.</sentence>
 
     <!-- Remove no username command message (notice) -->
     <sentence id="REMOVE_NO_USERNAME_NOTICE_CMD">**USERNAME CHECK**
@@ -129,13 +125,10 @@ The members without username are going to be removed.</sentence>
 
     <!-- Set payment check on joined members command enabled message -->
     <sentence id="SET_CHECK_PAYMENT_ON_JOIN_EN_CMD">**CHECK JOINED MEMBERS**
-Payment check on joined members enabled.</sentence>
+✅ Payment check on joined members enabled.</sentence>
     <!-- Set payment check on joined members command disabled message -->
     <sentence id="SET_CHECK_PAYMENT_ON_JOIN_DIS_CMD">**CHECK JOINED MEMBERS**
-Payment check on joined members disabled.</sentence>
-    <!-- Set payment check on joined members command parameter error message -->
-    <sentence id="SET_CHECK_PAYMENT_ON_JOIN_PARAM_ERR_CMD">**CHECK JOINED MEMBERS**
-Invalid parameter.</sentence>
+✅ Payment check on joined members disabled.</sentence>
 
     <!-- Is payment check on joined members command enabled message -->
     <sentence id="IS_CHECK_PAYMENT_ON_JOIN_EN_CMD">**CHECK JOINED MEMBERS**
@@ -156,11 +149,11 @@ Payments data is going to be checked.</sentence>
     <sentence id="CHECK_PAYMENTS_DATA_DATE_ERR_CMD">
 - Expiration date for username @{username} at row {row_index} is not valid ({expiration_date})</sentence>
     <!-- Check payment data command message (all ok) -->
-    <sentence id="CHECK_PAYMENTS_DATA_ALL_OK_CMD">Payments data is correct, no error found.</sentence>
+    <sentence id="CHECK_PAYMENTS_DATA_ALL_OK_CMD">✅ Payments data is correct, no error found.</sentence>
 
     <!-- Email no payment command message (disabled) -->
     <sentence id="EMAIL_NO_PAYMENT_DISABLED_CMD">**PAYMENTS REMINDER**
-Email is currently disabled.</sentence>
+❗️ Email sending is currently disabled.</sentence>
     <!-- Email no payment command message (notice) -->
     <sentence id="EMAIL_NO_PAYMENT_NOTICE_CMD">**PAYMENTS REMINDER**
 Group: **{chat_title}**
@@ -174,7 +167,7 @@ A reminder email has been sent to all members.</sentence>
     <!-- Email no payment command message (all ok) -->
     <sentence id="EMAIL_NO_PAYMENT_ALL_OK_CMD">All members paid, no email sent.</sentence>
     <!-- Email no payment command message (error) -->
-    <sentence id="EMAIL_NO_PAYMENT_ERR_CMD">Some errors occurred while sending email.</sentence>
+    <sentence id="EMAIL_NO_PAYMENT_ERR_CMD">❌ Some errors occurred while sending email.</sentence>
 
     <!-- Check no payment command message (notice) -->
     <sentence id="CHECK_NO_PAYMENT_NOTICE_CMD">**PAYMENTS CHECK**
@@ -195,7 +188,7 @@ Please pay within {last_day} or you'll be removed from the group.</sentence>
     <!-- Check no payment command message (only telegram) -->
     <sentence id="CHECK_NO_PAYMENT_ONLY_TG_CMD">\n\nIf you are on the list but you paid, please contact @{support_telegram} **specifying your Telegram username**.</sentence>
     <!-- Check no payment command message (all ok) -->
-    <sentence id="CHECK_NO_PAYMENT_ALL_OK_CMD">All members paid.</sentence>
+    <sentence id="CHECK_NO_PAYMENT_ALL_OK_CMD">✅ All members paid.</sentence>
 
     <!-- Remove no payment command message (notice) -->
     <sentence id="REMOVE_NO_PAYMENT_NOTICE_CMD">**PAYMENTS CHECK**
@@ -208,9 +201,81 @@ Members whose payment is about to expire are going to be removed.</sentence>
 {members_list}</sentence>
 
     <!--
+        Payment check task
+    -->
+
+    <!-- Payment task start command (ok) -->
+    <sentence id="PAYMENT_TASK_START_OK_CMD">**PAYMENTS CHECK TASK**
+✅ Payments check task successfully started (period: {period}h).</sentence>
+
+    <!-- Payment task stop command (ok) -->
+    <sentence id="PAYMENT_TASK_STOP_OK_CMD">**PAYMENTS CHECK TASK**
+✅ Payments check task successfully stopped.</sentence>
+
+    <!-- Payment task info command (part 1) -->
+    <sentence id="PAYMENT_TASK_INFO_P1_CMD">**PAYMENTS CHECK TASK**
+Payments check task state: **{state}**
+Number of groups: **{chats_count}**</sentence>
+
+    <!-- Payment task info command (part 2) -->
+    <sentence id="PAYMENT_TASK_INFO_P2_CMD">
+Groups list:
+{chats_list}</sentence>
+
+    <!-- Payment task add chat command (ok) -->
+    <sentence id="PAYMENT_TASK_ADD_CHAT_OK_CMD">**PAYMENTS CHECK TASK**
+✅ Current chat successfully added to payments check task.</sentence>
+    <!-- Payment task add chat command (error) -->
+    <sentence id="PAYMENT_TASK_ADD_CHAT_ERR_CMD">**PAYMENTS CHECK TASK**
+❌ Current chat has already been added to payments check task.</sentence>
+
+    <!-- Payment task remove chat command (ok) -->
+    <sentence id="PAYMENT_TASK_REMOVE_CHAT_OK_CMD">**PAYMENTS CHECK TASK**
+✅ Current chat successfully removed from payments check task.</sentence>
+    <!-- Payment task remove chat command (error) -->
+    <sentence id="PAYMENT_TASK_REMOVE_CHAT_ERR_CMD">**PAYMENTS CHECK TASK**
+❌ Current chat is not present in payments check task.</sentence>
+
+    <!-- Payment task remove all chats command (ok) -->
+    <sentence id="PAYMENT_TASK_REMOVE_ALL_CHATS_CMD">**PAYMENTS CHECK TASK**
+✅ All chats successfully removed from payments check task.</sentence>
+
+    <!--
+        Generic errors
+    -->
+
+    <!-- Generic error message -->
+    <sentence id="GENERIC_ERR_MSG">**ERROR**
+❌ An error occurred while executing command.</sentence>
+    <!-- Authorized-only userserror  message -->
+    <sentence id="AUTH_ONLY_ERR_MSG">**ERROR**
+❌ You are not authorized to use the command.</sentence>
+    <!-- Group-only error message -->
+    <sentence id="GROUP_ONLY_ERR_MSG">**ERROR**
+❌ This command can be executed only in the chat group.</sentence>
+    <!-- Parameter error message -->
+    <sentence id="PARAM_ERR_MSG">**ERROR**
+❌ Invalid parameters.</sentence>
+    <!-- Task already existent error message -->
+    <sentence id="TASK_EXISTENT_ERR_MSG">**ERROR**
+❌ Payment check task is already running.</sentence>
+    <!-- Task not existent error message -->
+    <sentence id="TASK_NOT_EXISTENT_ERR_MSG">**ERROR**
+❌ Payment check task is not running.</sentence>
+    <!-- Task period error message -->
+    <sentence id="TASK_PERIOD_ERR_MSG">**ERROR**
+❌ Period shall be between 1 and 24.</sentence>
+
+    <!--
         Misc
     -->
 
+    <sentence id="BOT_WELCOME_MSG">Hi!
+Thanks for choosing the Telegram Payment Bot.
+Use __/help__ to see the list of supported commands.
+Do not forget to **make me administrator of the group** or I won't work properly.</sentence>
+    <sentence id="TASK_RUNNING_MSG">running</sentence>
+    <sentence id="TASK_STOPPED_MSG">stopped</sentence>
     <sentence id="WITHIN_HOURS_MSG">within {hours} hours</sentence>
     <sentence id="WITHIN_DAYS_MSG">within {days} days</sentence>
     <sentence id="ASAP_MSG">as soon as possible</sentence>

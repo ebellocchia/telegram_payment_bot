@@ -31,6 +31,10 @@ from telegram_payment_bot.members_payment_getter import MembersPaymentGetter
 from telegram_payment_bot.members_username_getter import MembersUsernameGetter
 from telegram_payment_bot.special_users_list import AuthorizedUsersList
 from telegram_payment_bot.helpers import ChatHelper, UserHelper
+from telegram_payment_bot.payments_checker_task import (
+    PaymentsCheckerTaskAlreadyRunningError, PaymentsCheckerTaskNotRunningError, PaymentsCheckerTaskInvalidPeriodError,
+    PaymentsCheckerTaskChatAlreadyPresentError, PaymentsCheckerTaskChatNotPresentError
+)
 from telegram_payment_bot.payments_data import PaymentErrorTypes
 from telegram_payment_bot.payments_emailer import PaymentsEmailer
 from telegram_payment_bot.payments_loader_factory import PaymentsLoaderFactory
@@ -47,7 +51,7 @@ def GroupChatOnly(exec_cmd_fct: Callable[..., None]) -> Callable[..., None]:
                   **kwargs: Any):
         # Check if private chat
         if self._IsPrivateChat():
-            self._SendMessage(self.translator.GetSentence("GROUP_ONLY_ERR"))
+            self._SendMessage(self.translator.GetSentence("GROUP_ONLY_ERR_MSG"))
         else:
             exec_cmd_fct(self, **kwargs)
 
@@ -92,7 +96,7 @@ class SetTestModeCmd(CommandBase):
             # Get parameters
             flag = self.cmd_data.Params().GetAsBool(0)
         except CommandParameterError:
-            self._SendMessage(self.translator.GetSentence("SET_TEST_MODE_PARAM_ERR_CMD"))
+            self._SendMessage(self.translator.GetSentence("PARAM_ERR_MSG"))
         else:
             # Set test mode
             self.config.SetValue(ConfigTypes.APP_TEST_MODE, flag)
@@ -274,7 +278,7 @@ class SetCheckPaymentsOnJoinCmd(CommandBase):
             # Get parameters
             flag = self.cmd_data.Params().GetAsBool(0)
         except CommandParameterError:
-            self._SendMessage(self.translator.GetSentence("SET_CHECK_PAYMENT_ON_JOIN_PARAM_ERR_CMD"))
+            self._SendMessage(self.translator.GetSentence("PARAM_ERR_MSG"))
         else:
             # Set test mode
             self.config.SetValue(ConfigTypes.PAYMENT_CHECK_ON_JOIN, flag)
@@ -483,3 +487,106 @@ class RemoveNoPaymentCmd(CommandBase):
         # Generate new invite link if necessary
         if kicked_members.Any():
             self._NewInviteLink()
+
+
+#
+# Command for starting payment task
+#
+class PaymentTaskStartCmd(CommandBase):
+    # Execute command
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
+        try:
+            # Get parameters
+            period_hours = self.cmd_data.Params().GetAsInt(0)
+        except CommandParameterError:
+            self._SendMessage(self.translator.GetSentence("PARAM_ERR_MSG"))
+        else:
+            try:
+                kwargs["payments_checker_task"].Start(period_hours)
+                self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_START_OK_CMD", period=period_hours))
+            except PaymentsCheckerTaskAlreadyRunningError:
+                self._SendMessage(self.translator.GetSentence("TASK_EXISTENT_ERR_MSG"))
+            except PaymentsCheckerTaskInvalidPeriodError:
+                self._SendMessage(self.translator.GetSentence("TASK_PERIOD_ERR_MSG"))
+
+
+#
+# Command for stopping payment task
+#
+class PaymentTaskStopCmd(CommandBase):
+    # Execute command
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
+        try:
+            kwargs["payments_checker_task"].Stop()
+            self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_STOP_OK_CMD"))
+        except PaymentsCheckerTaskNotRunningError:
+            self._SendMessage(self.translator.GetSentence("TASK_NOT_EXISTENT_ERR_MSG"))
+
+
+#
+# Payment task info command
+#
+class PaymentTaskInfoCmd(CommandBase):
+    # Execute command
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
+        is_running = kwargs["payments_checker_task"].IsRunning()
+        chats = kwargs["payments_checker_task"].GetChats()
+
+        state = (self.translator.GetSentence("TASK_RUNNING_MSG")
+                 if is_running
+                 else self.translator.GetSentence("TASK_STOPPED_MSG"))
+
+        msg = self.translator.GetSentence("PAYMENT_TASK_INFO_P1_CMD",
+                                          state=state,
+                                          chats_count=chats.Count())
+
+        if chats.Any():
+            msg += self.translator.GetSentence("PAYMENT_TASK_INFO_P2_CMD",
+                                               chats_list=str(chats))
+
+        self._SendMessage(msg)
+
+
+#
+# Command for adding current chat to payment task
+#
+class PaymentTaskAddChatCmd(CommandBase):
+    # Execute command
+    @GroupChatOnly
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
+        try:
+            kwargs["payments_checker_task"].AddChat(self.cmd_data.Chat())
+            self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_ADD_CHAT_OK_CMD"))
+        except PaymentsCheckerTaskChatAlreadyPresentError:
+            self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_ADD_CHAT_ERR_CMD"))
+
+
+#
+# Command for removing current chat to payment task
+#
+class PaymentTaskRemoveChatCmd(CommandBase):
+    # Execute command
+    @GroupChatOnly
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
+        try:
+            kwargs["payments_checker_task"].RemoveChat(self.cmd_data.Chat())
+            self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_REMOVE_CHAT_OK_CMD"))
+        except PaymentsCheckerTaskChatNotPresentError:
+            self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_REMOVE_CHAT_ERR_CMD"))
+
+
+#
+# Command for removing all chats to payment task
+#
+class PaymentTaskRemoveAllChatsCmd(CommandBase):
+    # Execute command
+    @GroupChatOnly
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
+        kwargs["payments_checker_task"].RemoveAllChats()
+        self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_REMOVE_ALL_CHATS_CMD"))

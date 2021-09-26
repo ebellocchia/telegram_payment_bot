@@ -22,9 +22,11 @@
 # Imports
 #
 import pyrogram
+from typing import Any
 from telegram_payment_bot.config import ConfigTypes, Config
 from telegram_payment_bot.logger import Logger
 from telegram_payment_bot.joined_members_checker import JoinedMembersChecker
+from telegram_payment_bot.message_sender import MessageSender
 from telegram_payment_bot.translation_loader import TranslationLoader
 
 
@@ -46,10 +48,54 @@ class MessageDispatcher:
     # Dispatch command
     def Dispatch(self,
                  client: pyrogram.Client,
-                 message: pyrogram.types.Message) -> None:
-        # New members joined
-        if self.config.GetValue(ConfigTypes.PAYMENT_CHECK_ON_JOIN) and message.new_chat_members is not None:
+                 message: pyrogram.types.Message,
+                 **kwargs: Any) -> None:
+        # New chat created
+        if message.group_chat_created is not None:
+            self.__OnCreatedChat(client, message, **kwargs)
+        # A member left the chat
+        if message.left_chat_member is not None:
+            self.__OnLeftMember(client, message, **kwargs)
+        # A member joined the chat
+        if message.new_chat_members is not None:
+            self.__OnJoinedMember(client, message, **kwargs)
+
+    # Function called when a new chat is created
+    def __OnCreatedChat(self,
+                        client,
+                        message: pyrogram.types.Message,
+                        **kwargs: Any) -> None:
+        MessageSender(client, self.config, self.logger).SendMessage(
+            message.chat,
+            self.translator.GetSentence("BOT_WELCOME_MSG")
+        )
+
+    # Function called when a member left the chat
+    def __OnLeftMember(self,
+                       client,
+                       message: pyrogram.types.Message,
+                       **kwargs: Any) -> None:
+        # If the member is the bot itself, remove the chat from the payment check task
+        if message.left_chat_member.is_self:
+            kwargs["payments_checker_task"].ChatLeft(message.chat)
+
+    # Function called when a member joined the chat
+    def __OnJoinedMember(self,
+                         client,
+                         message: pyrogram.types.Message,
+                         **kwargs: Any) -> None:
+        # If the member is the bot itself, send the welcome message
+        for member in message.new_chat_members:
+            if member.is_self:
+                MessageSender(client, self.config, self.logger).SendMessage(
+                    message.chat,
+                    self.translator.GetSentence("BOT_WELCOME_MSG")
+                )
+                break
+
+        # Check joined members for payment in any case (there could be more than one)
+        if self.config.GetValue(ConfigTypes.PAYMENT_CHECK_ON_JOIN):
             JoinedMembersChecker(client,
                                  self.config,
                                  self.logger,
-                                 self.translator).CheckUsers(message.chat, message.new_chat_members)
+                                 self.translator).CheckNewUsers(message.chat, message.new_chat_members)

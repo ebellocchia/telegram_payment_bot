@@ -166,20 +166,6 @@ class ConfigDataConst:
                 "def_val": True,
             },
             {
-                "type": ConfigTypes.PAYMENT_CHECK_PERIOD_MIN,
-                "name": "payment_check_period_min",
-                "conv_fct": Utils.StrToInt,
-                "def_val": -1,
-            },
-            {
-                "type": ConfigTypes.PAYMENT_CHECK_CHAT_IDS,
-                "name": "payment_check_chat_ids",
-                "conv_fct": lambda val: ([Utils.StrToInt(chat_id)
-                                         for chat_id in val.split(",")] if val != ""
-                                         else []),
-                "def_val": [],
-            },
-            {
                 "type": ConfigTypes.PAYMENT_TYPE,
                 "name": "payment_type",
                 "conv_fct": _ConfigDataTypeConverter.StrToPaymentType,

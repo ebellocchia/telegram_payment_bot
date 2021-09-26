@@ -4,15 +4,6 @@
         Generic
     -->
 
-    <!-- Generic error message -->
-    <sentence id="GENERIC_ERR">**ERRORE**
-Si è verificato un errore durante l'esecuzione del comando.</sentence>
-    <!-- Authorized-only users message -->
-    <sentence id="AUTH_ONLY_ERR">**ERRORE**
-Non sei autorizzato a utilizzare il comando.</sentence>
-    <!-- Group-only message -->
-    <sentence id="GROUP_ONLY_ERR">**ERRORE**
-Questo comando può essere eseguito solo nel gruppo.</sentence>
     <!-- Help command message -->
     <sentence id="HELP_CMD">**MENU DI AIUTO**
 Ciao {name},
@@ -30,16 +21,24 @@ Qui trovi la lista dei comandi supportati.
 /invite_link : genera un nuovo link di invito - **Solo Gruppo**
 
 **Username**
-/check_no_username [__HOURS_LEFT__] : mostra gli utenti senza username - **Solo Gruppo**
+/check_no_username __[HOURS_LEFT]__ : mostra gli utenti senza username - **Solo Gruppo**
 /remove_no_username : rimuove gli utenti senza username - **Solo Gruppo**
 
 **Pagamenti**
 /set_check_payment_on_join __true/false__ : attiva/disattiva il controllo dei pagamenti sui membri appena entrati nel gruppo
 /is_check_payment_on_join : mostra se il controllo dei pagamenti sui membri appena entrati nel gruppo è attivo
 /check_payments_data : mostra se i dati di pagamento contengono degli errori
-/email_no_payment [__DAYS_LEFT__]: invia una email agli utenti il cui pagamento sta per scadere
-/check_no_payment [__DAYS_LEFT__] [__LAST_DAY__]: mostra gli utenti il cui pagamento sta per scadere - **Solo Gruppo**
+/email_no_payment __[DAYS_LEFT]__ : invia una email agli utenti il cui pagamento sta per scadere
+/check_no_payment __[DAYS_LEFT] [LAST_DAY]__ : mostra gli utenti il cui pagamento sta per scadere - **Solo Gruppo**
 /remove_no_payment : rimuove gli utenti il cui pagamento sta per scadere - **Solo Gruppo**
+
+**Task Controllo Pagamenti**
+/payment_task_start __[PERIOD_HOURS]__ : avvia il task di controllo pagamenti con il periodo specificato
+/payment_task_stop : ferma il task di controllo pagamenti
+/payment_task_info : mostra le informazioni del task di controllo pagamenti
+/payment_task_add_chat : aggiunge la chat corrente al task di controllo pagamenti - **Solo Gruppo**
+/payment_task_remove_chat : rimuove la chat corrente dal task di controllo pagamenti - **Solo Gruppo**
+/payment_task_remove_all_chats : rimuove tutte le chat dal task di controllo pagamenti
 
 I comandi che possono essere eseguiti solo nella chat di gruoppo sono specificati in grassetto.
 I parametri tra parentesi quadre sono opzionali.
@@ -56,17 +55,14 @@ Nuovo link di invito generato.
 Il link è stato inviato in privato agli utenti autorizzati.</sentence>
     <!-- Alive command message -->
     <sentence id="ALIVE_CMD">**STATO**
-Il bot è attivo.</sentence>
+✅ Il bot è attivo.</sentence>
 
     <!-- Set test mode command enabled message -->
     <sentence id="SET_TEST_MODE_EN_CMD">**MODALITÀ TEST**
-Modalità di test attivata.</sentence>
+✅ Modalità di test attivata.</sentence>
     <!-- Set test mode command disabled message -->
     <sentence id="SET_TEST_MODE_DIS_CMD">**MODALITÀ TEST**
-Modalità di test disattivata.</sentence>
-    <!-- Set test mode command parameter error message -->
-    <sentence id="SET_TEST_MODE_PARAM_ERR_CMD">**MODALITÀ TEST**
-Parametro non valido.</sentence>
+✅ Modalità di test disattivata.</sentence>
 
     <!-- Is test mode command enabled message -->
     <sentence id="IS_TEST_MODE_EN_CMD">**MODALITÀ TEST**
@@ -111,7 +107,7 @@ Per impostarlo: **Impostazioni -> Modifica profilo -> username**</sentence>
     <!-- Check username command message (all ok) -->
     <sentence id="CHECK_NO_USERNAME_ALL_OK_CMD">**CONTROLLO USERNAME**
 Gruppo: **{chat_title}**
-Tutti i membri hanno impostato lo username.</sentence>
+✅ Tutti i membri hanno impostato lo username.</sentence>
 
     <!-- Remove no username command message (notice) -->
     <sentence id="REMOVE_NO_USERNAME_NOTICE_CMD">**CONTROLLO USERNAME**
@@ -129,13 +125,10 @@ I membri senza username stanno per essere rimossi.</sentence>
 
     <!-- Set payment check on joined members command enabled message -->
     <sentence id="SET_CHECK_PAYMENT_ON_JOIN_EN_CMD">**CONTROLLO NUOVI MEMBRI**
-Controllo pagamento sui membri appena entrati attivato.</sentence>
+✅ Controllo pagamento sui membri appena entrati attivato.</sentence>
     <!-- Set payment check on joined members command disabled message -->
     <sentence id="SET_CHECK_PAYMENT_ON_JOIN_DIS_CMD">**CONTROLLO NUOVI MEMBRI**
-Controllo pagamento sui membri appena entrati disattivato.</sentence>
-    <!-- Set payment check on joined members command parameter error message -->
-    <sentence id="SET_CHECK_PAYMENT_ON_JOIN_PARAM_ERR_CMD">**CONTROLLO NUOVI MEMBRI**
-Parametro non valido.</sentence>
+✅ Controllo pagamento sui membri appena entrati disattivato.</sentence>
 
     <!-- Is payment check on joined members command enabled message -->
     <sentence id="IS_CHECK_PAYMENT_ON_JOIN_EN_CMD">**CONTROLLO NUOVI MEMBRI**
@@ -156,11 +149,11 @@ I dati di pagamento stanno per essere controllati.</sentence>
     <sentence id="CHECK_PAYMENTS_DATA_DATE_ERR_CMD">
 - La data di scadenza per lo username @{username} alla riga {row_index} non è valida ({expiration_date})</sentence>
     <!-- Check payment data command message (all ok) -->
-    <sentence id="CHECK_PAYMENTS_DATA_ALL_OK_CMD">I dati di pagamento sono corretti, nessun errore trovato.</sentence>
+    <sentence id="CHECK_PAYMENTS_DATA_ALL_OK_CMD">✅ I dati di pagamento sono corretti, nessun errore trovato.</sentence>
 
     <!-- Email no payment command message (disabled) -->
     <sentence id="EMAIL_NO_PAYMENT_DISABLED_CMD">**AVVISO PAGAMENTI**
-Le email sono al momento disabilitate.</sentence>
+❗️ L'invio email è al momento disabilitato.</sentence>
     <!-- Email no payment command message (notice) -->
     <sentence id="EMAIL_NO_PAYMENT_NOTICE_CMD">**AVVISO PAGAMENTI**
 Gruppo: **{chat_title}**
@@ -174,7 +167,7 @@ Una email è stata inviata a tutti i membri.</sentence>
     <!-- Email no payment command message (all ok) -->
     <sentence id="EMAIL_NO_PAYMENT_ALL_OK_CMD">Tutti i membri hanno pagato, nessuna email inviata.</sentence>
     <!-- Email no payment command message (error) -->
-    <sentence id="EMAIL_NO_PAYMENT_ERR_CMD">Si sono verificati degli errori durante l'invio delle email.</sentence>
+    <sentence id="EMAIL_NO_PAYMENT_ERR_CMD">❌ Si sono verificati degli errori durante l'invio delle email.</sentence>
 
     <!-- Check no payment command message (notice) -->
     <sentence id="CHECK_NO_PAYMENT_NOTICE_CMD">**CONTROLLO PAGAMENTI**
@@ -195,7 +188,7 @@ Siete pregati di pagare entro {last_day} o verrete rimossi dal gruppo.</sentence
     <!-- Check no payment command message (only telegram) -->
     <sentence id="CHECK_NO_PAYMENT_ONLY_TG_CMD">\n\nSe siete nella lista ma avete pagato, contattate @{support_telegram} **specificando il vostro username Telegram**.</sentence>
     <!-- Check no payment command message (all ok) -->
-    <sentence id="CHECK_NO_PAYMENT_ALL_OK_CMD">Tutti i membri hanno rinnovato il pagamento.</sentence>
+    <sentence id="CHECK_NO_PAYMENT_ALL_OK_CMD">✅ Tutti i membri hanno rinnovato il pagamento.</sentence>
 
     <!-- Remove no payment command message (notice) -->
     <sentence id="REMOVE_NO_PAYMENT_NOTICE_CMD">**CONTROLLO PAGAMENTI**
@@ -208,9 +201,81 @@ I membri il cui pagamento sta per scadere stanno per essere rimossi.</sentence>
 {members_list}</sentence>
 
     <!--
+        Payment check task
+    -->
+
+    <!-- Payment task start command (ok) -->
+    <sentence id="PAYMENT_TASK_START_OK_CMD">**TASK COTROLLO PAGAMENTI**
+✅ Task di controllo pagamenti avviato con successo (periodo: {period}h).</sentence>
+
+    <!-- Payment task stop command (ok) -->
+    <sentence id="PAYMENT_TASK_STOP_OK_CMD">**TASK COTROLLO PAGAMENTI**
+✅ Task di controllo pagamenti fermato con successo.</sentence>
+
+    <!-- Payment task info command (part 1) -->
+    <sentence id="PAYMENT_TASK_INFO_P1_CMD">**TASK COTROLLO PAGAMENTI**
+Stato del task di controllo pagamenti: **{state}**
+Numero gruppi: **{chats_count}**</sentence>
+
+    <!-- Payment task info command (part 2) -->
+    <sentence id="PAYMENT_TASK_INFO_P2_CMD">
+Lista gruppi:
+{chats_list}</sentence>
+
+    <!-- Payment task add chat command (ok) -->
+    <sentence id="PAYMENT_TASK_ADD_CHAT_OK_CMD">**TASK COTROLLO PAGAMENTI**
+✅ Chat corrente aggiunta con successo al task di controllo pagamenti.</sentence>
+    <!-- Payment task add chat command (error) -->
+    <sentence id="PAYMENT_TASK_ADD_CHAT_ERR_CMD">**TASK COTROLLO PAGAMENTI**
+❌ La chat corrente è già stata aggiunta al task di controllo pagamenti.</sentence>
+
+    <!-- Payment task remove chat command (ok) -->
+    <sentence id="PAYMENT_TASK_REMOVE_CHAT_OK_CMD">**TASK COTROLLO PAGAMENTI**
+✅ Chat corrente rimossa con successo dal task di controllo pagamenti.</sentence>
+    <!-- Payment task remove chat command (error) -->
+    <sentence id="PAYMENT_TASK_REMOVE_CHAT_ERR_CMD">**TASK COTROLLO PAGAMENTI**
+❌ La chat corrente non è presente nel task di controllo pagamenti.</sentence>
+
+    <!-- Payment task remove all chats command (ok) -->
+    <sentence id="PAYMENT_TASK_REMOVE_ALL_CHATS_CMD">**TASK COTROLLO PAGAMENTI**
+✅ Tutte le chat rimosse con successo dal task di controllo pagamenti.</sentence>
+
+    <!--
+        Generic errors
+    -->
+
+    <!-- Generic error message -->
+    <sentence id="GENERIC_ERR_MSG">**ERRORE**
+❌ Si è verificato un errore durante l'esecuzione del comando.</sentence>
+    <!-- Authorized-only users error message -->
+    <sentence id="AUTH_ONLY_ERR_MSG">**ERRORE**
+❌ Non sei autorizzato a utilizzare il comando.</sentence>
+    <!-- Group-only error message -->
+    <sentence id="GROUP_ONLY_ERR_MSG">**ERRORE**
+❌ Questo comando può essere eseguito solo nel gruppo.</sentence>
+    <!-- Parameter error message -->
+    <sentence id="PARAM_ERR_MSG">**ERRORE**
+❌ Parametri non validi.</sentence>
+    <!-- Task already existent error message -->
+    <sentence id="TASK_EXISTENT_ERR_MSG">**ERRORE**
+❌ Task di controllo pagamenti già attivo.</sentence>
+    <!-- Task not existent error message -->
+    <sentence id="TASK_NOT_EXISTENT_ERR_MSG">**ERRORE**
+❌ Task di controllo pagamenti non attivo.</sentence>
+    <!-- Task period error message -->
+    <sentence id="TASK_PERIOD_ERR_MSG">**ERRORE**
+❌ Il periodo deve essere compreso tra 1 e 24.</sentence>
+
+    <!--
         Misc
     -->
 
+    <sentence id="BOT_WELCOME_MSG">Ciao!
+Grazie per aver scelto il Telegram Payment Bot.
+Usa __/help__ per vedere la lista dei comandi supportati.
+Non dimenticarti di **farmi amministratore del gruppo** o non potrò funzionare correttamente.</sentence>
+    <sentence id="TASK_RUNNING_MSG">attivo</sentence>
+    <sentence id="TASK_STOPPED_MSG">inattivo</sentence>
     <sentence id="WITHIN_HOURS_MSG">entro {hours} ore</sentence>
     <sentence id="WITHIN_DAYS_MSG">entro {days} giorni</sentence>
     <sentence id="ASAP_MSG">il prima possibile</sentence>
