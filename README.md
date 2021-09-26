@@ -50,7 +50,7 @@ The list of all possible fields that can be set is shown below.
 |api_hash|API hash from [https://my.telegram.org/apps](https://my.telegram.org/apps)|
 |bot_token|Bot token from BotFather|
 |**[app]**|Configuration for app|
-|app_is_test_mode|True to activate test modem false otherwise|
+|app_is_test_mode|True to activate test mode false otherwise|
 |app_lang_file|Language file in XML format (default: English)|
 |**[users]**|Configuration for users|
 |authorized_users|List of Telegram usernames that are authorized to use the bot, comma separated|
@@ -102,18 +102,25 @@ List of supported commands:
 - **/chat_info**: show the chat information (can be run only in group)
 - **/users_list**: show the users list (can be run only in group)
 - **/invite_link**: generate a new invite link (can be run only in group)
-- **/check_no_username [*<HOURS_LEFT>*]**: show the list of chat members without a username (can be run only in group)
+- **/check_no_username *[<HOURS_LEFT>]***: show the list of chat members without a username (can be run only in group)
     - *HOURS_LEFT* (optional): hours left to set the username before being removed (only for printing the message). Hours are automatically converted to days if greater than 47. If less than 1, it'll print "as soon as possible". Default value: 0.
 - **/remove_no_username**: remove all the chat members without a username (can be run only in group)
 - **/set_check_payment_on_join *true/false***: enable/disable payment check when a new member joins
 - **/is_check_payment_on_join**: show if payment check when a new member joins is enabled
 - **/check_payments_data** : check payments data for errors (e.g. invalid dates, duplicated usernames) and show them
-- **/email_no_payment [*<DAYS_LEFT>*]**: send a reminder email to chat members whose payment is expiring in the specified number of days
+- **/email_no_payment *[<DAYS_LEFT>]***: send a reminder email to chat members whose payment is expiring in the specified number of days
     - *DAYS_LEFT* (optional): number of days within which the payment expires. Less than 1 means expiring today. Default value: 0.
-- **/check_no_payment [*<DAYS_LEFT>*] [*<LAST_DAY>*]**: show the list of chat members whose payment is expiring in the specified number of days (can be run only in group)
+- **/check_no_payment *[<DAYS_LEFT>] [<LAST_DAY>]***: show the list of chat members whose payment is expiring in the specified number of days (can be run only in group)
     - *DAYS_LEFT* (optional): number of days within which the payment expires. Less than 1 means expiring today. Default value: 0.
     - *LAST_DAY* (optional): last day to complete the payment before being removed (only for printing the message). If less than 1 or greater than 31, it'll print "within few days". Default value: 0.
 - **/remove_no_payment**: remove the chat members whose payment has expired (can be run only in group)
+- **/payment_task_start *PERIOD_HOURS***: start payment check task with the specified period
+    - *PERIOD_HOURS*: task period in hours
+- **/payment_task_stop**: stop payment check task
+- **/payment_task_info**: show payment check task information
+- **/payment_task_add_chat**: add the current chat to the payment check task
+- **/payment_task_remove_chat**: remove the current chat from the payment check task
+- **/payment_task_remove_all_chats**: remove all chats from the payment check task
 
 Add *quiet* or *q* as last parameter to send the bot response in a private chat instead of the group chat.
 
@@ -121,24 +128,26 @@ Users removed from the group are just kicked and not banned, so they can re-join
 When users are removed from the group (either because they had no username or they didn't pay), a new invite link is generated and sent to all authorized users in a private chat.\
 This automatically revokes the old invite link and prevents those users to join again using it.
 
-When checking for payments, a user is removed by group if:
+When checking for payments, a user is removed from the group if:
 - He has no Telegram username
 - His Telegram username is not found in the payments data
 - His payment is expired
 
-## Periodical Checks
+## Payment Check Task
 
-In addition to the commands, it's possible to run periodical checks.\
-These checks are:
-- Remove a user that hasn't paid as soon as he joins the group
-- Remove users that hasn't paid periodically
+It's possible to run a background task to check for payments periodically. It can be started/stopped with the *payment_task_start*/*payment_task_stop* commands.\
+The task can check multiple groups in one time (sharing the same payments data, of course). The groups can be added/removed with the *payment_task_add_chat*/*payment_task_remove_chat* commands (either while the task is running or stopped).\
+If no group was added, the task will simply run without checking any group.
 
-Both checks can be disabled if needed using the *payment_check_on_join* and *payment_check_period_min* fields.
+The period of the task always starts from midnight (if you use a VPS, be sure to set the correct time), for example:
+- A task period of 8 hours will display chart/price information at 00:00, 08:00 and 16:00
+- A task period of 6 hours will display chart/price information at 00:00, 06:00, 12:00 and 18:00
 
 ## Run the Bot
 
+The bot shall be an administrator of the group.\
 If you just need to run bot once in a while (e.g. once a week), you can do it manually using the *check_no_payment* and *remove_no_payment* commands. In this case, it's sufficient to run the bot locally on the PC when needed.\
-If you prefer to let the bot run automatically and check for payment periodically, it'll be better to run it 24h/24h on a VPS.
+If you prefer to let the bot check for payment periodically, it'll be better to run it 24h/24h on a VPS.
 
 ## Payment File
 
@@ -169,6 +178,8 @@ The indexes of these columns are set in the configuration file. It is possible t
 Test mode can be used to test the bot without any effect to the users of the group. When active:
 - Users are not kicked from the group if they don't have a username or don't have paid, both when running a command and during periodical checks
 - Emails are not sent to the users that haven't paid yet
+
+Moreover, the payment task period will be applied in minutes instead of hours. This allows to quickly check if it is working.
 
 ## Translation
 
