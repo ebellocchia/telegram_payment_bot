@@ -22,7 +22,7 @@
 # Imports
 #
 import pyrogram
-from telegram_payment_bot.config import ConfigTypes, Config
+from telegram_payment_bot.config import Config
 from telegram_payment_bot.helpers import ChatHelper
 from telegram_payment_bot.logger import Logger
 from telegram_payment_bot.members_kicker import MembersKicker

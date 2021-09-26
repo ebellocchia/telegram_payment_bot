@@ -59,7 +59,7 @@ class JoinedMembersChecker:
         # Check all the new users
         for user in new_users:
             # Skip bots
-            if not user.is_self and  not user.is_bot:
+            if not user.is_self and not user.is_bot:
                 self.__CheckSingleUser(chat, user)
 
     # Check single user
