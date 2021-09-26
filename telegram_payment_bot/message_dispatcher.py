@@ -65,6 +65,7 @@ class MessageDispatcher:
                         client,
                         message: pyrogram.types.Message,
                         **kwargs: Any) -> None:
+        # Send the welcome message
         MessageSender(client, self.config, self.logger).SendMessage(
             message.chat,
             self.translator.GetSentence("BOT_WELCOME_MSG")
