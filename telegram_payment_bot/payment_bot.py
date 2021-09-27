@@ -21,17 +21,11 @@
 #
 # Imports
 #
-import pyrogram
-from pyrogram import Client, filters
+from pyrogram import filters
 from pyrogram.handlers import MessageHandler
-from typing import Any
-from telegram_payment_bot.command_dispatcher import CommandDispatcher, CommandTypes
-from telegram_payment_bot.config import ConfigTypes
-from telegram_payment_bot.config_loader import ConfigLoader
-from telegram_payment_bot.logger import Logger
-from telegram_payment_bot.message_dispatcher import MessageDispatcher
+from telegram_payment_bot.bot_base import BotBase
+from telegram_payment_bot.command_dispatcher import CommandTypes
 from telegram_payment_bot.payments_checker_task import PaymentsCheckerTask
-from telegram_payment_bot.translation_loader import TranslationLoader
 
 
 #
@@ -39,83 +33,58 @@ from telegram_payment_bot.translation_loader import TranslationLoader
 #
 
 # Payment bot class
-class PaymentBot:
+class PaymentBot(BotBase):
     # Constructor
     def __init__(self,
                  config_file: str) -> None:
-        # Load configuration
-        config_loader = ConfigLoader(config_file)
-        config_loader.Load()
-        self.config = config_loader.GetConfig()
-        # Initialize logger
-        self.logger = Logger(self.config)
-        # Initialize translations
-        self.translator = TranslationLoader(self.logger)
-        self.translator.Load(self.config.GetValue(ConfigTypes.APP_LANG_FILE))
-        # Initialize client
-        self.client = Client(self.config.GetValue(ConfigTypes.SESSION_NAME),
-                             config_file=config_file)
+        super().__init__(config_file)
         # Initialize payment checker
         self.payments_checker_task = PaymentsCheckerTask(self.client,
                                                          self.config,
                                                          self.logger,
                                                          self.translator)
-        # Initialize helper classes
-        self.cmd_dispatcher = CommandDispatcher(self.config, self.logger, self.translator)
-        self.msg_dispatcher = MessageDispatcher(self.config, self.logger, self.translator)
-        # Setup handlers
-        self.__SetupHandlers()
-        # Log
-        self.logger.GetLogger().info("Bot initialization completed")
-
-    # Run bot
-    def Run(self) -> None:
-        # Print
-        self.logger.GetLogger().info("Telegram Payment Bot started!\n")
-        # Run client
-        self.client.run()
 
     # Setup handlers
-    def __SetupHandlers(self) -> None:
+    def _SetupHandlers(self) -> None:
         #
         # Generic
         #
 
         # Start command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client, message, CommandTypes.START_CMD),
+            lambda client, message: self._DispatchCommand(client, message, CommandTypes.START_CMD),
             filters.private & filters.command(["start"])))
         # Help command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client, message, CommandTypes.HELP_CMD),
+            lambda client, message: self._DispatchCommand(client, message, CommandTypes.HELP_CMD),
             filters.command(["help"])))
         # Alive command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client, message, CommandTypes.ALIVE_CMD),
+            lambda client, message: self._DispatchCommand(client, message, CommandTypes.ALIVE_CMD),
             filters.command(["alive"])))
         # Set test mode command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client, message, CommandTypes.SET_TEST_MODE_CMD),
+            lambda client, message: self._DispatchCommand(client, message, CommandTypes.SET_TEST_MODE_CMD),
             filters.command(["set_test_mode"])))
         # Check test mode command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client, message, CommandTypes.IS_TEST_MODE_CMD),
+            lambda client, message: self._DispatchCommand(client, message, CommandTypes.IS_TEST_MODE_CMD),
             filters.command(["is_test_mode"])))
         # Auth_users command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client, message, CommandTypes.AUTH_USERS_CMD),
+            lambda client, message: self._DispatchCommand(client, message, CommandTypes.AUTH_USERS_CMD),
             filters.command(["auth_users"])))
         # Chat info command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client, message, CommandTypes.CHAT_INFO_CMD),
+            lambda client, message: self._DispatchCommand(client, message, CommandTypes.CHAT_INFO_CMD),
             filters.command(["chat_info"])))
         # Users list command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client, message, CommandTypes.USERS_LIST_CMD),
+            lambda client, message: self._DispatchCommand(client, message, CommandTypes.USERS_LIST_CMD),
             filters.command(["users_list"])))
         # Invite link command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client, message, CommandTypes.INVITE_LINKS_CMD),
+            lambda client, message: self._DispatchCommand(client, message, CommandTypes.INVITE_LINKS_CMD),
             filters.command(["invite_link"])))
 
         #
@@ -124,11 +93,11 @@ class PaymentBot:
 
         # Check no username command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client, message, CommandTypes.CHECK_NO_USERNAME_CMD),
+            lambda client, message: self._DispatchCommand(client, message, CommandTypes.CHECK_NO_USERNAME_CMD),
             filters.command(["check_no_username"])))
         # Remove no username command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client, message, CommandTypes.REMOVE_NO_USERNAME_CMD),
+            lambda client, message: self._DispatchCommand(client, message, CommandTypes.REMOVE_NO_USERNAME_CMD),
             filters.command(["remove_no_username"])))
 
         #
@@ -137,27 +106,27 @@ class PaymentBot:
 
         # Check payments data command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client, message, CommandTypes.SET_CHECK_PAYMENT_ON_JOIN),
+            lambda client, message: self._DispatchCommand(client, message, CommandTypes.SET_CHECK_PAYMENT_ON_JOIN),
             filters.command(["set_check_payment_on_join"])))
         # Check payments data command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client, message, CommandTypes.IS_CHECK_PAYMENT_ON_JOIN),
+            lambda client, message: self._DispatchCommand(client, message, CommandTypes.IS_CHECK_PAYMENT_ON_JOIN),
             filters.command(["is_check_payment_on_join"])))
         # Check payments data command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client, message, CommandTypes.CHECK_PAYMENTS_DATA_CMD),
+            lambda client, message: self._DispatchCommand(client, message, CommandTypes.CHECK_PAYMENTS_DATA_CMD),
             filters.command(["check_payments_data"])))
         # Email no payment command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client, message, CommandTypes.EMAIL_NO_PAYMENT_CMD),
+            lambda client, message: self._DispatchCommand(client, message, CommandTypes.EMAIL_NO_PAYMENT_CMD),
             filters.command(["email_no_payment"])))
         # Check no payment command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client, message, CommandTypes.CHECK_NO_PAYMENT_CMD),
+            lambda client, message: self._DispatchCommand(client, message, CommandTypes.CHECK_NO_PAYMENT_CMD),
             filters.command(["check_no_payment"])))
         # Remove no payment command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client, message, CommandTypes.REMOVE_NO_PAYMENT_CMD),
+            lambda client, message: self._DispatchCommand(client, message, CommandTypes.REMOVE_NO_PAYMENT_CMD),
             filters.command(["remove_no_payment"])))
 
         #
@@ -166,67 +135,52 @@ class PaymentBot:
 
         # Start payment task command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client,
-                                                           message,
-                                                           CommandTypes.PAYMENT_TASK_START_CMD,
-                                                           payments_checker_task=self.payments_checker_task),
+            lambda client, message: self._DispatchCommand(client,
+                                                          message,
+                                                          CommandTypes.PAYMENT_TASK_START_CMD,
+                                                          payments_checker_task=self.payments_checker_task),
             filters.command(["payment_task_start"])))
         # Stop payment task command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client,
-                                                           message,
-                                                           CommandTypes.PAYMENT_TASK_STOP_CMD,
-                                                           payments_checker_task=self.payments_checker_task),
+            lambda client, message: self._DispatchCommand(client,
+                                                          message,
+                                                          CommandTypes.PAYMENT_TASK_STOP_CMD,
+                                                          payments_checker_task=self.payments_checker_task),
             filters.command(["payment_task_stop"])))
         # Payment task info command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client,
-                                                           message,
-                                                           CommandTypes.PAYMENT_TASK_INFO_CMD,
-                                                           payments_checker_task=self.payments_checker_task),
+            lambda client, message: self._DispatchCommand(client,
+                                                          message,
+                                                          CommandTypes.PAYMENT_TASK_INFO_CMD,
+                                                          payments_checker_task=self.payments_checker_task),
             filters.command(["payment_task_info"])))
         # Payment task add chat command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client,
-                                                           message,
-                                                           CommandTypes.PAYMENT_TASK_ADD_CHAT_CMD,
-                                                           payments_checker_task=self.payments_checker_task),
+            lambda client, message: self._DispatchCommand(client,
+                                                          message,
+                                                          CommandTypes.PAYMENT_TASK_ADD_CHAT_CMD,
+                                                          payments_checker_task=self.payments_checker_task),
             filters.command(["payment_task_add_chat"])))
         # Payment task remove chat command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client,
-                                                           message,
-                                                           CommandTypes.PAYMENT_TASK_REMOVE_CHAT_CMD,
-                                                           payments_checker_task=self.payments_checker_task),
+            lambda client, message: self._DispatchCommand(client,
+                                                          message,
+                                                          CommandTypes.PAYMENT_TASK_REMOVE_CHAT_CMD,
+                                                          payments_checker_task=self.payments_checker_task),
             filters.command(["payment_task_remove_chat"])))
         # Payment task remove all chats command
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__DispatchCommand(client,
-                                                           message,
-                                                           CommandTypes.PAYMENT_TASK_REMOVE_ALL_CHATS_CMD,
-                                                           payments_checker_task=self.payments_checker_task),
+            lambda client, message: self._DispatchCommand(client,
+                                                          message,
+                                                          CommandTypes.PAYMENT_TASK_REMOVE_ALL_CHATS_CMD,
+                                                          payments_checker_task=self.payments_checker_task),
             filters.command(["payment_task_remove_all_chats"])))
 
         # Handler for messages
         self.client.add_handler(MessageHandler(
-            lambda client, message: self.__HandleMessage(client,
-                                                         message,
-                                                         payments_checker_task=self.payments_checker_task),
+            lambda client, message: self._HandleMessage(client,
+                                                        message,
+                                                        payments_checker_task=self.payments_checker_task),
             ~filters.private))
         # Print
         self.logger.GetLogger().info("Bot handlers set")
-
-    # Dispatch command
-    def __DispatchCommand(self,
-                          client: pyrogram.Client,
-                          message: pyrogram.types.Message,
-                          cmd_type: CommandTypes,
-                          **kwargs: Any) -> None:
-        self.cmd_dispatcher.Dispatch(client, message, cmd_type, **kwargs)
-
-    # Handle message
-    def __HandleMessage(self,
-                        client: pyrogram.Client,
-                        message: pyrogram.types.Message,
-                        **kwargs: Any) -> None:
-        self.msg_dispatcher.Dispatch(client, message, **kwargs)
