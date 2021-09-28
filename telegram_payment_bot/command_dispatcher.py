@@ -61,10 +61,10 @@ class CommandTypes(Enum):
     # Payment check task
     PAYMENT_TASK_START_CMD = auto(),
     PAYMENT_TASK_STOP_CMD = auto(),
-    PAYMENT_TASK_INFO_CMD = auto(),
     PAYMENT_TASK_ADD_CHAT_CMD = auto(),
     PAYMENT_TASK_REMOVE_CHAT_CMD = auto(),
     PAYMENT_TASK_REMOVE_ALL_CHATS_CMD = auto(),
+    PAYMENT_TASK_INFO_CMD = auto(),
 
 
 #

@@ -174,13 +174,6 @@ PaymentBotHandlersCfg: HandlersCfgType = {
         {
             "callback": lambda self, client, message: self._DispatchCommand(client,
                                                                             message,
-                                                                            CommandTypes.PAYMENT_TASK_INFO_CMD,
-                                                                            payments_checker_task=self.payments_checker_task),
-            "filters": filters.command(["payment_task_info"]),
-        },
-        {
-            "callback": lambda self, client, message: self._DispatchCommand(client,
-                                                                            message,
                                                                             CommandTypes.PAYMENT_TASK_ADD_CHAT_CMD,
                                                                             payments_checker_task=self.payments_checker_task),
             "filters": filters.command(["payment_task_add_chat"]),
@@ -198,6 +191,13 @@ PaymentBotHandlersCfg: HandlersCfgType = {
                                                                             CommandTypes.PAYMENT_TASK_REMOVE_ALL_CHATS_CMD,
                                                                             payments_checker_task=self.payments_checker_task),
             "filters": filters.command(["payment_task_remove_all_chats"]),
+        },
+        {
+            "callback": lambda self, client, message: self._DispatchCommand(client,
+                                                                            message,
+                                                                            CommandTypes.PAYMENT_TASK_INFO_CMD,
+                                                                            payments_checker_task=self.payments_checker_task),
+            "filters": filters.command(["payment_task_info"]),
         },
 
         #

@@ -60,8 +60,18 @@ class PaymentsCheckerJob:
         self.config = config
         self.logger = logger
         self.translator = translator
+        self.period = 0
         self.chats = PaymentCheckerChats()
         self.message_sender = MessageSender(client, config, logger)
+
+    # Get period
+    def GetPeriod(self) -> int:
+        return self.period
+
+    # Set period
+    def SetPeriod(self,
+                  period: int) -> None:
+        self.period = period
 
     # Add chat
     def AddChat(self,

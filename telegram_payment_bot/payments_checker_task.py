@@ -85,6 +85,10 @@ class PaymentsCheckerTask:
     def GetChats(self) -> PaymentCheckerChats:
         return self.payment_checker_job.GetChats()
 
+    # Get period
+    def GetPeriod(self) -> int:
+        return self.payment_checker_job.GetPeriod()
+
     # Start
     def Start(self,
               period_hours: int) -> None:
@@ -147,6 +151,9 @@ class PaymentsCheckerTask:
     # Add task
     def __AddTask(self,
                   period: int) -> None:
+        # Set period
+        self.payment_checker_job.SetPeriod(period)
+        # Add job
         is_test_mode = self.config.GetValue(ConfigTypes.APP_TEST_MODE)
         if is_test_mode:
             self.scheduler.add_job(self.payment_checker_job.CheckPayments,

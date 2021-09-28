@@ -35,10 +35,10 @@ Qui trovi la lista dei comandi supportati.
 **Task Controllo Pagamenti**
 /payment_task_start __[PERIOD_HOURS]__ : avvia il task di controllo pagamenti con il periodo specificato
 /payment_task_stop : ferma il task di controllo pagamenti
-/payment_task_info : mostra le informazioni del task di controllo pagamenti
 /payment_task_add_chat : aggiunge la chat corrente al task di controllo pagamenti - **Solo Gruppo**
 /payment_task_remove_chat : rimuove la chat corrente dal task di controllo pagamenti - **Solo Gruppo**
 /payment_task_remove_all_chats : rimuove tutte le chat dal task di controllo pagamenti
+/payment_task_info : mostra le informazioni del task di controllo pagamenti
 
 I comandi che possono essere eseguiti solo nella chat di gruoppo sono specificati in grassetto.
 I parametri tra parentesi quadre sono opzionali.
@@ -212,13 +212,17 @@ I membri il cui pagamento sta per scadere stanno per essere rimossi.</sentence>
     <sentence id="PAYMENT_TASK_STOP_OK_CMD">**TASK COTROLLO PAGAMENTI**
 ✅ Task di controllo pagamenti fermato con successo.</sentence>
 
-    <!-- Payment task info command (part 1) -->
-    <sentence id="PAYMENT_TASK_INFO_P1_CMD">**TASK COTROLLO PAGAMENTI**
-Stato del task di controllo pagamenti: **{state}**
-Numero gruppi: **{chats_count}**</sentence>
+    <!-- Payment task info command (state) -->
+    <sentence id="PAYMENT_TASK_INFO_STATE_CMD">**TASK COTROLLO PAGAMENTI**
+Stato: **{state}**</sentence>
 
-    <!-- Payment task info command (part 2) -->
-    <sentence id="PAYMENT_TASK_INFO_P2_CMD">
+    <!-- Payment task info command (period) -->
+    <sentence id="PAYMENT_TASK_INFO_PERIOD_CMD">
+Periodo: **{period}h**</sentence>
+
+    <!-- Payment task info command (groups) -->
+    <sentence id="PAYMENT_TASK_INFO_GROUPS_CMD">
+Numero gruppi attivi: **{chats_count}**
 Lista gruppi:
 {chats_list}</sentence>
 

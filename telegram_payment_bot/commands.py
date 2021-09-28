@@ -526,31 +526,6 @@ class PaymentTaskStopCmd(CommandBase):
 
 
 #
-# Payment task info command
-#
-class PaymentTaskInfoCmd(CommandBase):
-    # Execute command
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
-        is_running = kwargs["payments_checker_task"].IsRunning()
-        chats = kwargs["payments_checker_task"].GetChats()
-
-        state = (self.translator.GetSentence("TASK_RUNNING_MSG")
-                 if is_running
-                 else self.translator.GetSentence("TASK_STOPPED_MSG"))
-
-        msg = self.translator.GetSentence("PAYMENT_TASK_INFO_P1_CMD",
-                                          state=state,
-                                          chats_count=chats.Count())
-
-        if chats.Any():
-            msg += self.translator.GetSentence("PAYMENT_TASK_INFO_P2_CMD",
-                                               chats_list=str(chats))
-
-        self._SendMessage(msg)
-
-
-#
 # Command for adding current chat to payment task
 #
 class PaymentTaskAddChatCmd(CommandBase):
@@ -590,3 +565,34 @@ class PaymentTaskRemoveAllChatsCmd(CommandBase):
                         **kwargs: Any) -> None:
         kwargs["payments_checker_task"].RemoveAllChats()
         self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_REMOVE_ALL_CHATS_CMD"))
+
+
+#
+# Payment task info command
+#
+class PaymentTaskInfoCmd(CommandBase):
+    # Execute command
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
+        is_running = kwargs["payments_checker_task"].IsRunning()
+        period = kwargs["payments_checker_task"].GetPeriod()
+        chats = kwargs["payments_checker_task"].GetChats()
+
+        state = (self.translator.GetSentence("TASK_RUNNING_MSG")
+                 if is_running
+                 else self.translator.GetSentence("TASK_STOPPED_MSG"))
+
+        # Print state
+        msg = self.translator.GetSentence("PAYMENT_TASK_INFO_STATE_CMD",
+                                          state=state)
+        # Add period if running
+        if is_running:
+            msg += self.translator.GetSentence("PAYMENT_TASK_INFO_PERIOD_CMD",
+                                               period=period)
+        # Add groups if any
+        if chats.Any():
+            msg += self.translator.GetSentence("PAYMENT_TASK_INFO_GROUPS_CMD",
+                                               chats_count=chats.Count(),
+                                               chats_list=str(chats))
+
+        self._SendMessage(msg)

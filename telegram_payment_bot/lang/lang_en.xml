@@ -35,10 +35,10 @@ Here is the list of supported commands.
 **Payment Check Task**
 /payment_task_start __[PERIOD_HOURS]__ : start payment check task with the specified period
 /payment_task_stop : stop payment check task
-/payment_task_info : show payment check task information
 /payment_task_add_chat : add the current chat to the payment check task - **Only Group**
 /payment_task_remove_chat : remove the current chat from the payment check task - **Only Group**
 /payment_task_remove_all_chats : remove all chats from the payment check task
+/payment_task_info : show payment check task information
 
 Commands that can be executed only in chat group are specified in bold text.
 Parameters in square brakets are optional.
@@ -212,13 +212,17 @@ Members whose payment is about to expire are going to be removed.</sentence>
     <sentence id="PAYMENT_TASK_STOP_OK_CMD">**PAYMENTS CHECK TASK**
 ✅ Payments check task successfully stopped.</sentence>
 
-    <!-- Payment task info command (part 1) -->
-    <sentence id="PAYMENT_TASK_INFO_P1_CMD">**PAYMENTS CHECK TASK**
-Payments check task state: **{state}**
-Number of groups: **{chats_count}**</sentence>
+    <!-- Payment task info command (state) -->
+    <sentence id="PAYMENT_TASK_INFO_STATE_CMD">**PAYMENTS CHECK TASK**
+State: **{state}**</sentence>
 
-    <!-- Payment task info command (part 2) -->
-    <sentence id="PAYMENT_TASK_INFO_P2_CMD">
+    <!-- Payment task info command (period) -->
+    <sentence id="PAYMENT_TASK_INFO_PERIOD_CMD">
+Period: **{period}h**</sentence>
+
+    <!-- Payment task info command (groups) -->
+    <sentence id="PAYMENT_TASK_INFO_GROUPS_CMD">
+Number of active groups: **{chats_count}**
 Groups list:
 {chats_list}</sentence>
 
