@@ -275,7 +275,7 @@ Groups list:
     -->
 
     <sentence id="BOT_WELCOME_MSG">Hi!
-Thanks for choosing the Telegram Payment Bot.
+Thanks for choosing the **Telegram Payment Bot**.
 Use __/help__ to see the list of supported commands.
 Do not forget to **make me administrator of the group** or I won't work properly.</sentence>
     <sentence id="TASK_RUNNING_MSG">running</sentence>
