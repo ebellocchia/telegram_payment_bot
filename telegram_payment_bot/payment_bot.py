@@ -22,7 +22,7 @@
 # Imports
 #
 from telegram_payment_bot.bot_base import BotBase
-from telegram_payment_bot.payments_checker_task import PaymentsCheckerTask
+from telegram_payment_bot.payments_check_scheduler import PaymentsCheckScheduler
 from telegram_payment_bot.payment_bot_config_cfg import PaymentBotConfigCfg
 from telegram_payment_bot.payment_bot_handlers_cfg import PaymentBotHandlersCfg
 
@@ -39,8 +39,8 @@ class PaymentBot(BotBase):
         super().__init__(config_file,
                          PaymentBotConfigCfg,
                          PaymentBotHandlersCfg)
-        # Initialize payment checker
-        self.payments_checker_task = PaymentsCheckerTask(self.client,
-                                                         self.config,
-                                                         self.logger,
-                                                         self.translator)
+        # Initialize payment check scheduler
+        self.payments_check_scheduler = PaymentsCheckScheduler(self.client,
+                                                               self.config,
+                                                               self.logger,
+                                                               self.translator)

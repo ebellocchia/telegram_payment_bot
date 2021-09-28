@@ -25,7 +25,7 @@ import pyrogram
 from apscheduler.schedulers.background import BackgroundScheduler
 from telegram_payment_bot.config import ConfigTypes, Config
 from telegram_payment_bot.logger import Logger
-from telegram_payment_bot.payments_checker_job import PaymentCheckerChats, PaymentsCheckerJob
+from telegram_payment_bot.payments_check_job import PaymentsCheckJobChats, PaymentsCheckJob
 from telegram_payment_bot.translation_loader import TranslationLoader
 
 
@@ -33,42 +33,42 @@ from telegram_payment_bot.translation_loader import TranslationLoader
 # Classes
 #
 
-# Task already running error
-class PaymentsCheckerTaskAlreadyRunningError(Exception):
+# Job already running error
+class PaymentsCheckJobAlreadyRunningError(Exception):
     pass
 
 
-# Task not running error
-class PaymentsCheckerTaskNotRunningError(Exception):
+# Job not running error
+class PaymentsCheckJobNotRunningError(Exception):
     pass
 
 
-# Task invalid period error
-class PaymentsCheckerTaskInvalidPeriodError(Exception):
+# Job invalid period error
+class PaymentsCheckJobInvalidPeriodError(Exception):
     pass
 
 
-# Task chat already present
-class PaymentsCheckerTaskChatAlreadyPresentError(Exception):
+# Job chat already present
+class PaymentsCheckJobChatAlreadyPresentError(Exception):
     pass
 
 
-# Task chat not present
-class PaymentsCheckerTaskChatNotPresentError(Exception):
+# Job chat not present
+class PaymentsCheckJobChatNotPresentError(Exception):
     pass
 
 
-# Constants for payments checker task class
-class PaymentsCheckerTaskConst:
+# Constants for payments check scheduler class
+class PaymentsCheckSchedulerConst:
     # Minimum/Maximum periods
     MIN_PERIOD_HOURS: int = 1
     MAX_PERIOD_HOURS: int = 24
     # Job ID
-    JOB_ID: str = "payment_check"
+    JOB_ID: str = "payment_check_job"
 
 
-# Payments checker task class
-class PaymentsCheckerTask:
+# Payments check scheduler class
+class PaymentsCheckScheduler:
     # Constructor
     def __init__(self,
                  client: pyrogram.Client,
@@ -77,97 +77,97 @@ class PaymentsCheckerTask:
                  translator: TranslationLoader) -> None:
         self.config = config
         self.logger = logger
-        self.payment_checker_job = PaymentsCheckerJob(client, config, logger, translator)
+        self.payments_checker_job = PaymentsCheckJob(client, config, logger, translator)
         self.scheduler = BackgroundScheduler()
         self.scheduler.start()
 
     # Get chats
-    def GetChats(self) -> PaymentCheckerChats:
-        return self.payment_checker_job.GetChats()
+    def GetChats(self) -> PaymentsCheckJobChats:
+        return self.payments_checker_job.GetChats()
 
     # Get period
     def GetPeriod(self) -> int:
-        return self.payment_checker_job.GetPeriod()
+        return self.payments_checker_job.GetPeriod()
 
     # Start
     def Start(self,
               period_hours: int) -> None:
         # Check if running
         if self.IsRunning():
-            self.logger.GetLogger().error("Payment check task already running, cannot start it")
-            raise PaymentsCheckerTaskAlreadyRunningError()
+            self.logger.GetLogger().error("Payments check job already running, cannot start it")
+            raise PaymentsCheckJobAlreadyRunningError()
 
         # Check period
-        if (period_hours < PaymentsCheckerTaskConst.MIN_PERIOD_HOURS or
-                period_hours > PaymentsCheckerTaskConst.MAX_PERIOD_HOURS):
-            self.logger.GetLogger().error(f"Invalid period {period_hours} for payment check task, cannot start it")
-            raise PaymentsCheckerTaskInvalidPeriodError()
+        if (period_hours < PaymentsCheckSchedulerConst.MIN_PERIOD_HOURS or
+                period_hours > PaymentsCheckSchedulerConst.MAX_PERIOD_HOURS):
+            self.logger.GetLogger().error(f"Invalid period {period_hours} for payments check job, cannot start it")
+            raise PaymentsCheckJobInvalidPeriodError()
 
-        # Add task
-        self.__AddTask(period_hours)
+        # Add job
+        self.__AddJob(period_hours)
 
     # Stop
     def Stop(self) -> None:
         if not self.IsRunning():
-            self.logger.GetLogger().error("Payment check task not running, cannot stop it")
-            raise PaymentsCheckerTaskNotRunningError()
+            self.logger.GetLogger().error("Payments check job not running, cannot stop it")
+            raise PaymentsCheckJobNotRunningError()
 
-        self.scheduler.remove_job(PaymentsCheckerTaskConst.JOB_ID)
-        self.logger.GetLogger().info("Stopped payment check task")
+        self.scheduler.remove_job(PaymentsCheckSchedulerConst.JOB_ID)
+        self.logger.GetLogger().info("Stopped payments check job")
 
     # Add chat
     def AddChat(self,
                 chat: pyrogram.types.Chat) -> None:
-        if not self.payment_checker_job.AddChat(chat):
-            self.logger.GetLogger().error(f"Chat {chat.id} already present in payment check task, cannot add it")
-            raise PaymentsCheckerTaskChatAlreadyPresentError()
+        if not self.payments_checker_job.AddChat(chat):
+            self.logger.GetLogger().error(f"Chat {chat.id} already present in payments check job, cannot add it")
+            raise PaymentsCheckJobChatAlreadyPresentError()
 
-        self.logger.GetLogger().info(f"Added chat {chat.id} to payment check task")
+        self.logger.GetLogger().info(f"Added chat {chat.id} to payments check job")
 
     # Remove chat
     def RemoveChat(self,
                    chat: pyrogram.types.Chat) -> None:
-        if not self.payment_checker_job.RemoveChat(chat):
-            self.logger.GetLogger().error(f"Chat {chat.id} not present in payment check task, cannot remove it")
-            raise PaymentsCheckerTaskChatNotPresentError()
+        if not self.payments_checker_job.RemoveChat(chat):
+            self.logger.GetLogger().error(f"Chat {chat.id} not present in payments check job, cannot remove it")
+            raise PaymentsCheckJobChatNotPresentError()
 
-        self.logger.GetLogger().info(f"Removed chat {chat.id} from payment check task")
+        self.logger.GetLogger().info(f"Removed chat {chat.id} from payments check job")
 
     # Called when chat is left by the bot
     def ChatLeft(self,
                  chat: pyrogram.types.Chat) -> None:
-        self.payment_checker_job.RemoveChat(chat)
+        self.payments_checker_job.RemoveChat(chat)
         self.logger.GetLogger().info(f"Left chat {chat.id}")
 
     # Remove all chats
     def RemoveAllChats(self) -> None:
-        self.payment_checker_job.RemoveAllChats()
-        self.logger.GetLogger().info(f"Removed all chats from payment check task")
+        self.payments_checker_job.RemoveAllChats()
+        self.logger.GetLogger().info(f"Removed all chats from payments check job")
 
     # Get if running
     def IsRunning(self) -> bool:
-        return self.scheduler.get_job(PaymentsCheckerTaskConst.JOB_ID) is not None
+        return self.scheduler.get_job(PaymentsCheckSchedulerConst.JOB_ID) is not None
 
-    # Add task
-    def __AddTask(self,
-                  period: int) -> None:
+    # Add job
+    def __AddJob(self,
+                 period: int) -> None:
         # Set period
-        self.payment_checker_job.SetPeriod(period)
+        self.payments_checker_job.SetPeriod(period)
         # Add job
         is_test_mode = self.config.GetValue(ConfigTypes.APP_TEST_MODE)
         if is_test_mode:
-            self.scheduler.add_job(self.payment_checker_job.CheckPayments,
+            self.scheduler.add_job(self.payments_checker_job.DoJob,
                                    "cron",
                                    minute=self.__BuildCronString(period, is_test_mode),
-                                   id=PaymentsCheckerTaskConst.JOB_ID)
+                                   id=PaymentsCheckSchedulerConst.JOB_ID)
         else:
-            self.scheduler.add_job(self.payment_checker_job.CheckPayments,
+            self.scheduler.add_job(self.payments_checker_job.DoJob,
                                    "cron",
                                    hour=self.__BuildCronString(period, is_test_mode),
-                                   id=PaymentsCheckerTaskConst.JOB_ID)
+                                   id=PaymentsCheckSchedulerConst.JOB_ID)
         # Log
         per_sym = "minute(s)" if is_test_mode else "hour(s)"
-        self.logger.GetLogger().info(f"Started payment check task (period: {period} {per_sym})")
+        self.logger.GetLogger().info(f"Started payments check job (period: {period} {per_sym})")
 
     # Build cron string
     @staticmethod

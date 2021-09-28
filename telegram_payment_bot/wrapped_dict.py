@@ -21,6 +21,7 @@
 #
 # Imports
 #
+from collections import KeysView, ValuesView, ItemsView
 from typing import Any, Dict, Iterator
 from abc import ABC
 
@@ -60,6 +61,18 @@ class WrappedDict(ABC):
     def IsValue(self,
                 value: Any) -> bool:
         return value in self.dict_elements.values()
+
+    # Get keys
+    def Keys(self) -> KeysView:
+        return self.dict_elements.keys()
+
+    # Get values
+    def Values(self) -> ValuesView:
+        return self.dict_elements.values()
+
+    # Get items
+    def Items(self) -> ItemsView:
+        return self.dict_elements.items()
 
     # Clear element
     def Clear(self) -> None:

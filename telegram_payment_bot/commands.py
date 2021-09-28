@@ -31,9 +31,9 @@ from telegram_payment_bot.members_payment_getter import MembersPaymentGetter
 from telegram_payment_bot.members_username_getter import MembersUsernameGetter
 from telegram_payment_bot.special_users_list import AuthorizedUsersList
 from telegram_payment_bot.helpers import ChatHelper, UserHelper
-from telegram_payment_bot.payments_checker_task import (
-    PaymentsCheckerTaskAlreadyRunningError, PaymentsCheckerTaskNotRunningError, PaymentsCheckerTaskInvalidPeriodError,
-    PaymentsCheckerTaskChatAlreadyPresentError, PaymentsCheckerTaskChatNotPresentError
+from telegram_payment_bot.payments_check_scheduler import (
+    PaymentsCheckJobAlreadyRunningError, PaymentsCheckJobNotRunningError, PaymentsCheckJobInvalidPeriodError,
+    PaymentsCheckJobChatAlreadyPresentError, PaymentsCheckJobChatNotPresentError
 )
 from telegram_payment_bot.payments_data import PaymentErrorTypes
 from telegram_payment_bot.payments_emailer import PaymentsEmailer
@@ -503,11 +503,11 @@ class PaymentTaskStartCmd(CommandBase):
             self._SendMessage(self.translator.GetSentence("PARAM_ERR_MSG"))
         else:
             try:
-                kwargs["payments_checker_task"].Start(period_hours)
+                kwargs["payments_check_scheduler"].Start(period_hours)
                 self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_START_OK_CMD", period=period_hours))
-            except PaymentsCheckerTaskAlreadyRunningError:
+            except PaymentsCheckJobAlreadyRunningError:
                 self._SendMessage(self.translator.GetSentence("TASK_EXISTENT_ERR_MSG"))
-            except PaymentsCheckerTaskInvalidPeriodError:
+            except PaymentsCheckJobInvalidPeriodError:
                 self._SendMessage(self.translator.GetSentence("TASK_PERIOD_ERR_MSG"))
 
 
@@ -519,9 +519,9 @@ class PaymentTaskStopCmd(CommandBase):
     def _ExecuteCommand(self,
                         **kwargs: Any) -> None:
         try:
-            kwargs["payments_checker_task"].Stop()
+            kwargs["payments_check_scheduler"].Stop()
             self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_STOP_OK_CMD"))
-        except PaymentsCheckerTaskNotRunningError:
+        except PaymentsCheckJobNotRunningError:
             self._SendMessage(self.translator.GetSentence("TASK_NOT_EXISTENT_ERR_MSG"))
 
 
@@ -534,9 +534,9 @@ class PaymentTaskAddChatCmd(CommandBase):
     def _ExecuteCommand(self,
                         **kwargs: Any) -> None:
         try:
-            kwargs["payments_checker_task"].AddChat(self.cmd_data.Chat())
+            kwargs["payments_check_scheduler"].AddChat(self.cmd_data.Chat())
             self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_ADD_CHAT_OK_CMD"))
-        except PaymentsCheckerTaskChatAlreadyPresentError:
+        except PaymentsCheckJobChatAlreadyPresentError:
             self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_ADD_CHAT_ERR_CMD"))
 
 
@@ -549,9 +549,9 @@ class PaymentTaskRemoveChatCmd(CommandBase):
     def _ExecuteCommand(self,
                         **kwargs: Any) -> None:
         try:
-            kwargs["payments_checker_task"].RemoveChat(self.cmd_data.Chat())
+            kwargs["payments_check_scheduler"].RemoveChat(self.cmd_data.Chat())
             self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_REMOVE_CHAT_OK_CMD"))
-        except PaymentsCheckerTaskChatNotPresentError:
+        except PaymentsCheckJobChatNotPresentError:
             self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_REMOVE_CHAT_ERR_CMD"))
 
 
@@ -563,7 +563,7 @@ class PaymentTaskRemoveAllChatsCmd(CommandBase):
     @GroupChatOnly
     def _ExecuteCommand(self,
                         **kwargs: Any) -> None:
-        kwargs["payments_checker_task"].RemoveAllChats()
+        kwargs["payments_check_scheduler"].RemoveAllChats()
         self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_REMOVE_ALL_CHATS_CMD"))
 
 
@@ -574,22 +574,20 @@ class PaymentTaskInfoCmd(CommandBase):
     # Execute command
     def _ExecuteCommand(self,
                         **kwargs: Any) -> None:
-        is_running = kwargs["payments_checker_task"].IsRunning()
-        period = kwargs["payments_checker_task"].GetPeriod()
-        chats = kwargs["payments_checker_task"].GetChats()
+        is_running = kwargs["payments_check_scheduler"].IsRunning()
+        period = kwargs["payments_check_scheduler"].GetPeriod()
+        chats = kwargs["payments_check_scheduler"].GetChats()
 
         state = (self.translator.GetSentence("TASK_RUNNING_MSG")
                  if is_running
                  else self.translator.GetSentence("TASK_STOPPED_MSG"))
 
-        # Print state
+        # Build message
         msg = self.translator.GetSentence("PAYMENT_TASK_INFO_STATE_CMD",
                                           state=state)
-        # Add period if running
         if is_running:
             msg += self.translator.GetSentence("PAYMENT_TASK_INFO_PERIOD_CMD",
                                                period=period)
-        # Add groups if any
         if chats.Any():
             msg += self.translator.GetSentence("PAYMENT_TASK_INFO_GROUPS_CMD",
                                                chats_count=chats.Count(),
