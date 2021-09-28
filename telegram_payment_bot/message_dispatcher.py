@@ -76,9 +76,9 @@ class MessageDispatcher:
                        client,
                        message: pyrogram.types.Message,
                        **kwargs: Any) -> None:
-        # If the member is the bot itself, remove the chat from the payment check task
+        # If the member is the bot itself, remove the chat from the scheduler
         if message.left_chat_member.is_self:
-            kwargs["payments_checker_task"].ChatLeft(message.chat)
+            kwargs["payments_check_scheduler"].ChatLeft(message.chat)
 
     # Function called when a member joined the chat
     def __OnJoinedMember(self,
