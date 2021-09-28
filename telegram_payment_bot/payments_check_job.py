@@ -110,7 +110,7 @@ class PaymentsCheckJob:
     # Do job
     def DoJob(self) -> None:
         # Log
-        self.logger.GetLogger().info("Periodic payments check started")
+        self.logger.GetLogger().info("Payments check job started")
 
         # Lock
         with self.job_chats_lock:
