@@ -129,13 +129,13 @@ class PaymentsCheckJob:
                             chat: pyrogram.types.Chat,
                             members_kicker: MembersKicker) -> None:
         # Kick all members
-        self.logger.GetLogger().info(f"Checking payments for chat '{ChatHelper.GetTitle(chat)}'...")
+        self.logger.GetLogger().info(f"Checking payments for chat {ChatHelper.GetTitleOrId(chat)}...")
         curr_chat = pyrogram.types.Chat(id=chat.id, type="supergroup")
         kicked_members = members_kicker.KickAllWithExpiredPayment(curr_chat)
 
         # Log kicked members
         self.logger.GetLogger().info(
-            f"Kicked members for chat '{ChatHelper.GetTitle(chat)}': {kicked_members.Count()}"
+            f"Kicked members for chat {ChatHelper.GetTitleOrId(chat)}: {kicked_members.Count()}"
         )
         if kicked_members.Any():
             self.logger.GetLogger().info(str(kicked_members))

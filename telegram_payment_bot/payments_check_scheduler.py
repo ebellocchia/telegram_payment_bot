@@ -24,6 +24,7 @@
 import pyrogram
 from apscheduler.schedulers.background import BackgroundScheduler
 from telegram_payment_bot.config import ConfigTypes, Config
+from telegram_payment_bot.helpers import ChatHelper
 from telegram_payment_bot.logger import Logger
 from telegram_payment_bot.payments_check_job import PaymentsCheckJobChats, PaymentsCheckJob
 from telegram_payment_bot.translation_loader import TranslationLoader
@@ -100,7 +101,9 @@ class PaymentsCheckScheduler:
         # Check period
         if (period_hours < PaymentsCheckSchedulerConst.MIN_PERIOD_HOURS or
                 period_hours > PaymentsCheckSchedulerConst.MAX_PERIOD_HOURS):
-            self.logger.GetLogger().error(f"Invalid period {period_hours} for payments check job, cannot start it")
+            self.logger.GetLogger().error(
+                f"Invalid period {period_hours} for payments check job, cannot start it"
+            )
             raise PaymentsCheckJobInvalidPeriodError()
 
         # Add job
@@ -119,25 +122,33 @@ class PaymentsCheckScheduler:
     def AddChat(self,
                 chat: pyrogram.types.Chat) -> None:
         if not self.payments_checker_job.AddChat(chat):
-            self.logger.GetLogger().error(f"Chat {chat.id} already present in payments check job, cannot add it")
+            self.logger.GetLogger().error(
+                f"Chat {ChatHelper.GetTitleOrId(chat)} already present in payments check job, cannot add it"
+            )
             raise PaymentsCheckJobChatAlreadyPresentError()
 
-        self.logger.GetLogger().info(f"Added chat {chat.id} to payments check job")
+        self.logger.GetLogger().info(
+            f"Added chat {ChatHelper.GetTitleOrId(chat)} to payments check job"
+        )
 
     # Remove chat
     def RemoveChat(self,
                    chat: pyrogram.types.Chat) -> None:
         if not self.payments_checker_job.RemoveChat(chat):
-            self.logger.GetLogger().error(f"Chat {chat.id} not present in payments check job, cannot remove it")
+            self.logger.GetLogger().error(
+                f"Chat {ChatHelper.GetTitleOrId(chat)} not present in payments check job, cannot remove it"
+            )
             raise PaymentsCheckJobChatNotPresentError()
 
-        self.logger.GetLogger().info(f"Removed chat {chat.id} from payments check job")
+        self.logger.GetLogger().info(
+            f"Removed chat {ChatHelper.GetTitleOrId(chat)} from payments check job"
+        )
 
     # Called when chat is left by the bot
     def ChatLeft(self,
                  chat: pyrogram.types.Chat) -> None:
         self.payments_checker_job.RemoveChat(chat)
-        self.logger.GetLogger().info(f"Left chat {chat.id}")
+        self.logger.GetLogger().info(f"Left chat {ChatHelper.GetTitleOrId(chat)}")
 
     # Remove all chats
     def RemoveAllChats(self) -> None:
