@@ -71,7 +71,8 @@ class _ConfigDataTypeConverter:
 
 # Utility functions for configuration data class
 class _ConfigDataUtils:
-    # Maximum column index
+    # Minimum/maximum column index
+    COL_IDX_MIN_VAL: int = 0
     COL_IDX_MAX_VAL: int = 25
 
     # Read file
@@ -86,7 +87,8 @@ class _ConfigDataUtils:
     def AreColumnIndexesValid(config: Config,
                               curr_col_idx: int) -> bool:
         # Check value of current index
-        if curr_col_idx > _ConfigDataUtils.COL_IDX_MAX_VAL:
+        if (curr_col_idx < _ConfigDataUtils.COL_IDX_MIN_VAL or
+                curr_col_idx > _ConfigDataUtils.COL_IDX_MAX_VAL):
             return False
 
         # Get other indexes that are already available
