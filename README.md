@@ -1,5 +1,8 @@
 # Telegram Payments Bot
 
+[![PyPI version](https://badge.fury.io/py/telegram-payment-bot.svg)](https://badge.fury.io/py/telegram-payment-bot)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/ebellocchia/bip_utils/master/LICENSE)
+
 Telegram bot for handling payments in groups based on *pyrogram* library.\
 Payments data can be loaded either from an *xls*/*xlsx* file or from a Google Sheet (in this way, it can be shared with other admins).\
 It is also possible to extend this to load payments data from other sources (e.g. a remote database) by inheriting and implementing the *PaymentsLoaderBase* class, but I didn't need to do it so far.\
