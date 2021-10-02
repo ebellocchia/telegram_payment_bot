@@ -197,7 +197,7 @@ Members whose payment is about to expire are going to be removed.</sentence>
     <!-- Remove no payment command message (completed) -->
     <sentence id="REMOVE_NO_PAYMENT_COMPLETED_CMD">Operation completed. Removed members: **{members_count}**</sentence>
     <!-- Remove no payment command message (all ok) -->
-    <sentence id="REMOVE_NO_PAYMENT_ALL_OK_CMD">\nMembers list:
+    <sentence id="REMOVE_NO_PAYMENT_LIST_CMD">\nMembers list:
 {members_list}</sentence>
 
     <!--

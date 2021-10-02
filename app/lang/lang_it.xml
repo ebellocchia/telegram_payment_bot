@@ -197,7 +197,7 @@ I membri il cui pagamento sta per scadere stanno per essere rimossi.</sentence>
     <!-- Remove no payment command message (completed) -->
     <sentence id="REMOVE_NO_PAYMENT_COMPLETED_CMD">Operazione completata. Membri rimossi: **{members_count}**</sentence>
     <!-- Remove no payment command message (all ok) -->
-    <sentence id="REMOVE_NO_PAYMENT_ALL_OK_CMD">\nLista membri:
+    <sentence id="REMOVE_NO_PAYMENT_LIST_CMD">\nLista membri:
 {members_list}</sentence>
 
     <!--
