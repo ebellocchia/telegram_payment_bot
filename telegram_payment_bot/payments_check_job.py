@@ -141,11 +141,11 @@ class PaymentsCheckJob:
             self.logger.GetLogger().info(str(kicked_members))
 
             # Inform authorized users
-            msg = self.translator.GetSentence("REMOVE_NO_USERNAME_NOTICE_CMD",
+            msg = self.translator.GetSentence("REMOVE_NO_PAYMENT_NOTICE_CMD",
                                               chat_title=ChatHelper.GetTitle(chat))
-            msg += "\n" + self.translator.GetSentence("REMOVE_NO_USERNAME_COMPLETED_CMD",
+            msg += "\n" + self.translator.GetSentence("REMOVE_NO_PAYMENT_COMPLETED_CMD",
                                                       members_count=kicked_members.Count())
-            msg += self.translator.GetSentence("REMOVE_NO_USERNAME_LIST_CMD",
+            msg += self.translator.GetSentence("REMOVE_NO_PAYMENT_LIST_CMD",
                                                members_list=str(kicked_members))
 
             self.message_sender.SendMessageToAuthUsers(curr_chat, msg)
