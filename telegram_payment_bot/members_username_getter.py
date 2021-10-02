@@ -24,6 +24,7 @@
 import pyrogram
 from telegram_payment_bot.config import Config
 from telegram_payment_bot.chat_members import ChatMembersList, ChatMembersGetter
+from telegram_payment_bot.helpers import MemberHelper
 
 
 #
@@ -46,7 +47,7 @@ class MembersUsernameGetter:
         chat_members_getter = ChatMembersGetter(self.client, self.config)
         return chat_members_getter.FilterMembers(
             chat,
-            lambda member: member.status == "member" and member.user.username is not None
+            lambda member: MemberHelper.IsValidMember(member) and member.user.username is not None
         )
 
     # Get all with no username
@@ -56,5 +57,5 @@ class MembersUsernameGetter:
         chat_members_getter = ChatMembersGetter(self.client, self.config)
         return chat_members_getter.FilterMembers(
             chat,
-            lambda member: member.status == "member" and member.user.username is None
+            lambda member: MemberHelper.IsValidMember(member) and member.user.username is None
         )
