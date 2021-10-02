@@ -82,7 +82,7 @@ class ChatMembersGetter:
                       filter_fct: Callable[[pyrogram.types.ChatMember], bool]) -> ChatMembersList:
         # Filter members
         filtered_members = [member for member in self.client.iter_chat_members(chat.id) if filter_fct(member)]
-        # Order filtered members
+        # Sort filtered members
         filtered_members.sort(
             key=lambda member: member.user.username.lower() if member.user.username is not None else str(member.user.id))
 
