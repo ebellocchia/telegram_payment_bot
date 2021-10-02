@@ -48,6 +48,18 @@ class ChatHelper:
         return chat.id == user.id
 
 
+# Member helper class
+class MemberHelper:
+    # Get if valid member
+    @staticmethod
+    def IsValidMember(member: pyrogram.types.ChatMember) -> bool:
+        return (
+                member.status == "member" and
+                (member.user.is_self is None or not member.user.is_self) and
+                (member.user.is_bot is None or not member.user.is_bot)
+        )
+
+
 # User helper class
 class UserHelper:
     # Get user name or ID
