@@ -31,5 +31,5 @@ from enum import Enum, auto, unique
 # Payment types
 @unique
 class PaymentTypes(Enum):
-    EXCEL_FILE = auto(),
-    GOOGLE_SHEET = auto(),
+    EXCEL_FILE = auto()
+    GOOGLE_SHEET = auto()

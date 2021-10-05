@@ -36,8 +36,8 @@ from telegram_payment_bot.wrapped_list import WrappedList
 # Payment error types
 @unique
 class PaymentErrorTypes(Enum):
-    DUPLICATED_USERNAME_ERR = auto(),
-    INVALID_DATE_ERR = auto(),
+    DUPLICATED_USERNAME_ERR = auto()
+    INVALID_DATE_ERR = auto()
 
 
 #

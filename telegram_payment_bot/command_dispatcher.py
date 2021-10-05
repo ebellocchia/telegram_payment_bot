@@ -39,32 +39,32 @@ from telegram_payment_bot.translation_loader import TranslationLoader
 @unique
 class CommandTypes(Enum):
     # Generic
-    START_CMD = auto(),
-    HELP_CMD = auto(),
-    ALIVE_CMD = auto(),
-    SET_TEST_MODE_CMD = auto(),
-    IS_TEST_MODE_CMD = auto(),
-    AUTH_USERS_CMD = auto(),
-    CHAT_INFO_CMD = auto(),
-    USERS_LIST_CMD = auto(),
-    INVITE_LINKS_CMD = auto(),
+    START_CMD = auto()
+    HELP_CMD = auto()
+    ALIVE_CMD = auto()
+    SET_TEST_MODE_CMD = auto()
+    IS_TEST_MODE_CMD = auto()
+    AUTH_USERS_CMD = auto()
+    CHAT_INFO_CMD = auto()
+    USERS_LIST_CMD = auto()
+    INVITE_LINKS_CMD = auto()
     # Username
-    CHECK_NO_USERNAME_CMD = auto(),
-    REMOVE_NO_USERNAME_CMD = auto(),
+    CHECK_NO_USERNAME_CMD = auto()
+    REMOVE_NO_USERNAME_CMD = auto()
     # Payment
-    SET_CHECK_PAYMENT_ON_JOIN = auto(),
-    IS_CHECK_PAYMENT_ON_JOIN = auto(),
-    CHECK_PAYMENTS_DATA_CMD = auto(),
-    EMAIL_NO_PAYMENT_CMD = auto(),
-    CHECK_NO_PAYMENT_CMD = auto(),
-    REMOVE_NO_PAYMENT_CMD = auto(),
+    SET_CHECK_PAYMENT_ON_JOIN = auto()
+    IS_CHECK_PAYMENT_ON_JOIN = auto()
+    CHECK_PAYMENTS_DATA_CMD = auto()
+    EMAIL_NO_PAYMENT_CMD = auto()
+    CHECK_NO_PAYMENT_CMD = auto()
+    REMOVE_NO_PAYMENT_CMD = auto()
     # Payment check task
-    PAYMENT_TASK_START_CMD = auto(),
-    PAYMENT_TASK_STOP_CMD = auto(),
-    PAYMENT_TASK_ADD_CHAT_CMD = auto(),
-    PAYMENT_TASK_REMOVE_CHAT_CMD = auto(),
-    PAYMENT_TASK_REMOVE_ALL_CHATS_CMD = auto(),
-    PAYMENT_TASK_INFO_CMD = auto(),
+    PAYMENT_TASK_START_CMD = auto()
+    PAYMENT_TASK_STOP_CMD = auto()
+    PAYMENT_TASK_ADD_CHAT_CMD = auto()
+    PAYMENT_TASK_REMOVE_CHAT_CMD = auto()
+    PAYMENT_TASK_REMOVE_ALL_CHATS_CMD = auto()
+    PAYMENT_TASK_INFO_CMD = auto()
 
 
 #

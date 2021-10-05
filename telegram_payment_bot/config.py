@@ -32,46 +32,46 @@ from enum import Enum, auto, unique
 # Configuration types
 @unique
 class ConfigTypes(Enum):
-    SESSION_NAME = auto(),
+    SESSION_NAME = auto()
     # App
-    APP_TEST_MODE = auto(),
-    APP_LANG_FILE = auto(),
+    APP_TEST_MODE = auto()
+    APP_LANG_FILE = auto()
     # Users
-    AUTHORIZED_USERS = auto(),
+    AUTHORIZED_USERS = auto()
     # Support
-    SUPPORT_EMAIL = auto(),
-    SUPPORT_TELEGRAM = auto(),
+    SUPPORT_EMAIL = auto()
+    SUPPORT_TELEGRAM = auto()
     # Payment
-    PAYMENT_WEBSITE = auto(),
-    PAYMENT_CHECK_ON_JOIN = auto(),
-    PAYMENT_TYPE = auto(),
-    PAYMENT_EXCEL_FILE = auto(),
-    PAYMENT_GOOGLE_SHEET_ID = auto(),
-    PAYMENT_GOOGLE_CRED = auto(),
-    PAYMENT_GOOGLE_PICKLE = auto(),
-    PAYMENT_EMAIL_COL = auto(),
-    PAYMENT_USERNAME_COL = auto(),
-    PAYMENT_EXPIRATION_COL = auto(),
-    PAYMENT_DATE_FORMAT = auto(),
+    PAYMENT_WEBSITE = auto()
+    PAYMENT_CHECK_ON_JOIN = auto()
+    PAYMENT_TYPE = auto()
+    PAYMENT_EXCEL_FILE = auto()
+    PAYMENT_GOOGLE_SHEET_ID = auto()
+    PAYMENT_GOOGLE_CRED = auto()
+    PAYMENT_GOOGLE_PICKLE = auto()
+    PAYMENT_EMAIL_COL = auto()
+    PAYMENT_USERNAME_COL = auto()
+    PAYMENT_EXPIRATION_COL = auto()
+    PAYMENT_DATE_FORMAT = auto()
     # Email
-    EMAIL_ENABLED = auto(),
-    EMAIL_FROM = auto(),
-    EMAIL_REPLY_TO = auto(),
-    EMAIL_HOST = auto(),
-    EMAIL_USER = auto(),
-    EMAIL_PASSWORD = auto(),
-    EMAIL_SUBJECT = auto(),
-    EMAIL_ALT_BODY = auto(),
-    EMAIL_HTML_BODY = auto(),
+    EMAIL_ENABLED = auto()
+    EMAIL_FROM = auto()
+    EMAIL_REPLY_TO = auto()
+    EMAIL_HOST = auto()
+    EMAIL_USER = auto()
+    EMAIL_PASSWORD = auto()
+    EMAIL_SUBJECT = auto()
+    EMAIL_ALT_BODY = auto()
+    EMAIL_HTML_BODY = auto()
     # Logging
-    LOG_LEVEL = auto(),
-    LOG_CONSOLE_ENABLED = auto(),
-    LOG_FILE_ENABLED = auto(),
-    LOG_FILE_NAME = auto(),
-    LOG_FILE_USE_ROTATING = auto(),
-    LOG_FILE_APPEND = auto(),
-    LOG_FILE_MAX_BYTES = auto(),
-    LOG_FILE_BACKUP_CNT = auto(),
+    LOG_LEVEL = auto()
+    LOG_CONSOLE_ENABLED = auto()
+    LOG_FILE_ENABLED = auto()
+    LOG_FILE_NAME = auto()
+    LOG_FILE_USE_ROTATING = auto()
+    LOG_FILE_APPEND = auto()
+    LOG_FILE_MAX_BYTES = auto()
+    LOG_FILE_BACKUP_CNT = auto()
 
 
 #
