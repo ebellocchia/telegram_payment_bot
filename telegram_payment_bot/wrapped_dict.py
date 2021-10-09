@@ -21,8 +21,9 @@
 #
 # Imports
 #
+import typing
 from collections import KeysView, ValuesView, ItemsView
-from typing import Any, Dict, Iterator
+from typing import Dict, Iterator
 from abc import ABC
 
 
@@ -32,34 +33,37 @@ from abc import ABC
 
 # Wrapped dict class
 class WrappedDict(ABC):
+
+    dict_elements: Dict[typing.Any, typing.Any]
+
     # Constructor
     def __init__(self) -> None:
         self.dict_elements = {}
 
     # Add single element
     def AddSingle(self,
-                  key: Any,
-                  value: Any) -> None:
+                  key: typing.Any,
+                  value: typing.Any) -> None:
         self.dict_elements[key] = value
 
     # Add multiple elements
     def AddMultiple(self,
-                    elements: Dict[Any, Any]) -> None:
+                    elements: Dict[typing.Any, typing.Any]) -> None:
         self.dict_elements = {**self.dict_elements, **elements}
 
     # Remove single element
     def RemoveSingle(self,
-                     key: Any) -> None:
+                     key: typing.Any) -> None:
         self.dict_elements.pop(key, None)
 
     # Get if key is present
     def IsKey(self,
-              key: Any) -> bool:
+              key: typing.Any) -> bool:
         return key in self.dict_elements
 
     # Get if value is present
     def IsValue(self,
-                value: Any) -> bool:
+                value: typing.Any) -> bool:
         return value in self.dict_elements.values()
 
     # Get keys
@@ -91,9 +95,9 @@ class WrappedDict(ABC):
         return self.Count() == 0
 
     # Get dict
-    def GetDict(self) -> Dict[Any, Any]:
+    def GetDict(self) -> Dict[typing.Any, typing.Any]:
         return self.dict_elements
 
     # Get iterator
-    def __iter__(self) -> Iterator[Any]:
+    def __iter__(self) -> Iterator[typing.Any]:
         yield from self.dict_elements

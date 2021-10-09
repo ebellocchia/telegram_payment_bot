@@ -41,6 +41,9 @@ class GoogleSheetServiceConst:
 
 # Google sheet service class
 class GoogleSheetService:
+
+    service: Any
+
     # Constructor
     def __init__(self) -> None:
         self.service = None
@@ -74,4 +77,5 @@ class GoogleSheetService:
 
     # Get handle
     def GetHandle(self) -> Any:
+        assert self.service is not None, "Call LogIn method before getting handle"
         return self.service

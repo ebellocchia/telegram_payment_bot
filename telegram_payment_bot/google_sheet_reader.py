@@ -21,7 +21,7 @@
 #
 # Imports
 #
-from typing import List, Union
+from typing import Any, List
 from telegram_payment_bot.google_sheet_service import GoogleSheetService
 
 
@@ -31,6 +31,10 @@ from telegram_payment_bot.google_sheet_service import GoogleSheetService
 
 # Google sheet reader class
 class GoogleSheetReader:
+
+    service: GoogleSheetService
+    sheet_id: str
+
     # Constructor
     def __init__(self,
                  service: GoogleSheetService,
@@ -40,7 +44,7 @@ class GoogleSheetReader:
 
     # Get range
     def GetRange(self,
-                 range_cells: str) -> Union[List[str], List[List[str]]]:
+                 range_cells: str) -> List[Any]:
         # Call the Sheets API
         sheet = self.service.GetHandle().spreadsheets()
         result = sheet.values().get(spreadsheetId=self.sheet_id,

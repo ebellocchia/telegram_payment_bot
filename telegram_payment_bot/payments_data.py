@@ -46,6 +46,11 @@ class PaymentErrorTypes(Enum):
 
 # Single payment class
 class SinglePayment:
+
+    email: str
+    username: str
+    expiration_date: datetime
+
     # Constructor
     def __init__(self,
                  email: str,
@@ -91,6 +96,12 @@ class SinglePayment:
 
 # Payment error class
 class PaymentError:
+
+    err_type: PaymentErrorTypes
+    row: int
+    username: str
+    expiration_date: Optional[str]
+
     # Constructor
     def __init__(self,
                  err_type: PaymentErrorTypes,

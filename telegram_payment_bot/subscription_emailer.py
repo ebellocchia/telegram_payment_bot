@@ -31,6 +31,9 @@ from telegram_payment_bot.smtp_emailer import SmtpEmailer
 
 # Subscription emailer class
 class SubscriptionEmailer:
+
+    smtp_emailer: SmtpEmailer
+
     # Constructor
     def __init__(self,
                  config: Config):

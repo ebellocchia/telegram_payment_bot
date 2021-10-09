@@ -39,15 +39,23 @@ from telegram_payment_bot.translation_loader import TranslationLoader
 # Joined members checker class
 #
 class JoinedMembersChecker:
+
+    client: pyrogram.Client
+    config: Config
+    logger: Logger
+    message_sender: MessageSender
+    translator: TranslationLoader
+    member_kicker: MembersKicker
+
     # Constructor
     def __init__(self,
                  client: pyrogram.Client,
                  config: Config,
                  logger: Logger,
                  translator: TranslationLoader) -> None:
+        self.client = client
         self.config = config
         self.logger = logger
-        self.client = client
         self.message_sender = MessageSender(client, config, logger)
         self.translator = translator
         self.member_kicker = MembersKicker(client, config, logger)

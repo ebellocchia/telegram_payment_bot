@@ -21,10 +21,10 @@
 #
 # Imports
 #
-from typing import Union
 from telegram_payment_bot.config import ConfigTypes, Config
 from telegram_payment_bot.logger import Logger
 from telegram_payment_bot.payment_types import PaymentTypes
+from telegram_payment_bot.payments_loader_base import PaymentsLoaderBase
 from telegram_payment_bot.payments_excel_loader import PaymentsExcelLoader
 from telegram_payment_bot.payments_google_sheet_loader import PaymentsGoogleSheetLoader
 
@@ -40,6 +40,10 @@ class PaymentTypeError(Exception):
 
 # Payments loader factory class
 class PaymentsLoaderFactory:
+
+    config: Config
+    logger: Logger
+
     # Constructor
     def __init__(self,
                  config: Config,
@@ -48,7 +52,7 @@ class PaymentsLoaderFactory:
         self.logger = logger
 
     # Create loader
-    def CreateLoader(self) -> Union[PaymentsExcelLoader, PaymentsGoogleSheetLoader]:
+    def CreateLoader(self) -> PaymentsLoaderBase:
         payment_type = self.config.GetValue(ConfigTypes.PAYMENT_TYPE)
 
         if payment_type == PaymentTypes.EXCEL_FILE:

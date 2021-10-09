@@ -69,6 +69,10 @@ class ChatMembersList(WrappedList):
 
 # Chat members getter class
 class ChatMembersGetter:
+
+    client: pyrogram.Client
+    config: Config
+
     # Constructor
     def __init__(self,
                  client: pyrogram.Client,

@@ -34,6 +34,10 @@ from telegram_payment_bot.payments_data import SinglePayment, PaymentsData, Paym
 
 # Payments loader base class
 class PaymentsLoaderBase(ABC):
+
+    config: Config
+    logger: Logger
+
     # Constructor
     def __init__(self,
                  config: Config,

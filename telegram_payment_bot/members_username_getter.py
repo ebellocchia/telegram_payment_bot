@@ -33,6 +33,10 @@ from telegram_payment_bot.helpers import MemberHelper
 
 # Members username getter class
 class MembersUsernameGetter:
+
+    client: pyrogram.Client
+    config: Config
+
     # Constructor
     def __init__(self,
                  client: pyrogram.Client,

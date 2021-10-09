@@ -44,6 +44,11 @@ class MessageSenderConst:
 
 # Message sender class
 class MessageSender:
+
+    client: pyrogram.Client
+    config: Config
+    logger: Logger
+
     # Constructor
     def __init__(self,
                  client: pyrogram.Client,

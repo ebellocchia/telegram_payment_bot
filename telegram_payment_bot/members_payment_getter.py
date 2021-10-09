@@ -22,11 +22,12 @@
 # Imports
 #
 import pyrogram
-from typing import Optional
+from typing import Any, Dict, Optional
 from telegram_payment_bot.config import Config
 from telegram_payment_bot.helpers import MemberHelper
 from telegram_payment_bot.logger import Logger
 from telegram_payment_bot.chat_members import ChatMembersList, ChatMembersGetter
+from telegram_payment_bot.payments_loader_base import PaymentsLoaderBase
 from telegram_payment_bot.payments_loader_factory import PaymentsLoaderFactory
 from telegram_payment_bot.payments_data import SinglePayment, PaymentsData
 
@@ -37,6 +38,14 @@ from telegram_payment_bot.payments_data import SinglePayment, PaymentsData
 
 # Members payment getter class
 class MembersPaymentGetter:
+
+    client: pyrogram.Client
+    config: Config
+    logger: Logger
+    payments_loader: PaymentsLoaderBase
+    payments_cache: Optional[PaymentsData]
+    single_payment_cache: Optional[Dict[str, Any]]
+
     # Constructor
     def __init__(self,
                  client: pyrogram.Client,

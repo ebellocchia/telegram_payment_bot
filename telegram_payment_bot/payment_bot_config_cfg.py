@@ -108,6 +108,7 @@ class _ConfigDataUtils:
             return (curr_col_idx != col_idxs[0] and
                     curr_col_idx != col_idxs[1] and
                     col_idxs[0] != col_idxs[1])
+        return False
 
 
 # Payment bot configuration

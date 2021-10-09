@@ -22,6 +22,7 @@
 # Imports
 #
 import smtplib
+from typing import Optional
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
@@ -37,6 +38,19 @@ class SmtpEmailerError(Exception):
 
 # SMTP emailer class
 class SmtpEmailer:
+
+    html_msg: str
+    plain_msg: str
+    subject: str
+    sender: str
+    recipient: str
+    reply_to: str
+    host: str
+    user: str
+    password: str
+    msg: Optional[MIMEMultipart]
+    smtp: Optional[smtplib.SMTP]
+
     # Constructor
     def __init__(self):
         self.html_msg = ""

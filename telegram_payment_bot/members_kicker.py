@@ -43,6 +43,14 @@ class MembersKickerConst:
 
 # Members kicker class
 class MembersKicker:
+
+    client: pyrogram.Client
+    config: Config
+    logger: Logger
+    ban_helper: BanHelper
+    members_payment_getter: MembersPaymentGetter
+    members_username_getter: MembersUsernameGetter
+
     # Constructor
     def __init__(self,
                  client: pyrogram.Client,

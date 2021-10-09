@@ -37,6 +37,9 @@ class BanHelperConst:
 
 # Ban helper class
 class BanHelper:
+
+    client: pyrogram.Client
+
     # Constructor
     def __init__(self,
                  client: pyrogram.Client) -> None:

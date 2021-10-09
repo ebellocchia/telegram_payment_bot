@@ -33,6 +33,9 @@ from telegram_payment_bot.payment_bot_handlers_cfg import PaymentBotHandlersCfg
 
 # Payment bot class
 class PaymentBot(BotBase):
+
+    payments_check_scheduler: PaymentsCheckScheduler
+
     # Constructor
     def __init__(self,
                  config_file: str) -> None:

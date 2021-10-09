@@ -51,6 +51,16 @@ class PaymentsCheckJobChats(WrappedDict):
 
 # Payments check job class
 class PaymentsCheckJob:
+
+    client: pyrogram.Client
+    config: Config
+    logger: Logger
+    translator: TranslationLoader
+    job_chats_lock: Lock
+    period: int
+    job_chats: PaymentsCheckJobChats
+    message_sender: MessageSender
+
     # Constructor
     def __init__(self,
                  client: pyrogram.Client,

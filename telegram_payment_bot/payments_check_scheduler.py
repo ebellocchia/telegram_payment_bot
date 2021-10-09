@@ -70,6 +70,12 @@ class PaymentsCheckSchedulerConst:
 
 # Payments check scheduler class
 class PaymentsCheckScheduler:
+
+    config: Config
+    logger: Logger
+    payments_checker_job: PaymentsCheckJob
+    scheduler: BackgroundScheduler
+
     # Constructor
     def __init__(self,
                  client: pyrogram.Client,

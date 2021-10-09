@@ -23,7 +23,7 @@
 #
 import xlrd
 from datetime import datetime
-from typing import Optional, Tuple, Union
+from typing import Any, Optional, Tuple
 from telegram_payment_bot.config import ConfigTypes
 from telegram_payment_bot.payments_loader_base import PaymentsLoaderBase
 from telegram_payment_bot.payments_data import PaymentErrorTypes, SinglePayment, PaymentsData, PaymentsDataErrors
@@ -113,7 +113,7 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
                      payments_data_err: PaymentsDataErrors,
                      email: str,
                      username: str,
-                     expiration: Union[float, int, str]) -> None:
+                     expiration: Any) -> None:
         # In Excel, a date can be a number or a string
         try:
             expiration_datetime = xlrd.xldate_as_datetime(expiration, 0)

@@ -42,6 +42,13 @@ class PaymentsEmailerConst:
 
 # Payments emailer class
 class PaymentsEmailer:
+
+    client: pyrogram.Client
+    config: Config
+    logger: Logger
+    emailer: SubscriptionEmailer
+    members_payment_getter: MembersPaymentGetter
+
     # Constructor
     def __init__(self,
                  client: pyrogram.Client,
@@ -90,18 +97,22 @@ class PaymentsEmailer:
             for username in expired_payments:
                 payment = expired_payments.GetByUsername(username)
 
-                if payment.Email() != "":
-                    # Prepare and send message
-                    self.emailer.PrepareMsg(payment.Email())
-                    # Send email
-                    self.emailer.Send()
-                    self.logger.GetLogger().info(
-                        f"Email successfully sent to: {payment.Email()} (@{payment.Username()})"
-                    )
-                    # Sleep
-                    time.sleep(PaymentsEmailerConst.SEND_EMAIL_SLEEP_TIME_SEC)
-                else:
+                # Check payment
+                if payment is None:
+                    continue
+                if payment.Email() == "":
                     self.logger.GetLogger().warning(f"No email set for user @{payment.Username()}, skipped")
+                    continue
+
+                # Prepare and send message
+                self.emailer.PrepareMsg(payment.Email())
+                # Send email
+                self.emailer.Send()
+                self.logger.GetLogger().info(
+                    f"Email successfully sent to: {payment.Email()} (@{payment.Username()})"
+                )
+                # Sleep
+                time.sleep(PaymentsEmailerConst.SEND_EMAIL_SLEEP_TIME_SEC)
 
             # Disconnect
             self.emailer.Disconnect()
