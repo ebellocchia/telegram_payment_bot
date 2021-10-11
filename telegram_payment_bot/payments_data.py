@@ -150,6 +150,7 @@ class PaymentsData(WrappedDict):
                    expiration: datetime) -> bool:
         added = False
 
+        username = username[1:] if username.startswith("@") else username
         if not self.IsUsernameExistent(username):
             self.AddSingle(username.lower(), SinglePayment(email, username, expiration))
             added = True
