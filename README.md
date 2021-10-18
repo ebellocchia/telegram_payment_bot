@@ -1,6 +1,8 @@
 # Telegram Payments Bot
 
 [![PyPI version](https://badge.fury.io/py/telegram-payment-bot.svg)](https://badge.fury.io/py/telegram-payment-bot)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/c285797e0a8042f49202947924d1f2ac)](https://www.codacy.com/gh/ebellocchia/telegram_payment_bot/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ebellocchia/telegram_payment_bot&amp;utm_campaign=Badge_Grade)
+[![CodeFactor](https://www.codefactor.io/repository/github/ebellocchia/telegram_payment_bot/badge)](https://www.codefactor.io/repository/github/ebellocchia/telegram_payment_bot)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/ebellocchia/bip_utils/master/LICENSE)
 
 Telegram bot for handling payments in groups based on *pyrogram* library.\
