@@ -29,11 +29,12 @@ class Utils:
     def StrToBool(s: str) -> bool:
         s = s.lower()
         if s in ["true", "on", "yes", "y"]:
-            return True
+            res = True
         elif s in ["false", "off", "no", "n"]:
-            return False
+            res = False
         else:
             raise ValueError("Invalid string")
+        return res
 
     # Convert string to integer
     @staticmethod

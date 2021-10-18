@@ -21,11 +21,18 @@
 #
 # Imports
 #
-import pyrogram
 from enum import Enum, auto, unique
 from typing import Any, Dict, Type
+import pyrogram
 from telegram_payment_bot.command_base import CommandBase
-from telegram_payment_bot.commands import *
+from telegram_payment_bot.commands import (
+    HelpCmd, AliveCmd, SetTestModeCmd, IsTestModeCmd, AuthUsersCmd, ChatInfoCmd, UsersListCmd, InviteLinkCmd,
+    CheckNoUsernameCmd, RemoveNoUsernameCmd,
+    SetCheckPaymentsOnJoinCmd, IsCheckPaymentsOnJoinCmd,
+    CheckPaymentsDataCmd, EmailNoPaymentCmd, CheckNoPaymentCmd, RemoveNoPaymentCmd,
+    PaymentTaskStartCmd, PaymentTaskStopCmd, PaymentTaskInfoCmd,
+    PaymentTaskAddChatCmd, PaymentTaskRemoveChatCmd, PaymentTaskRemoveAllChatsCmd
+)
 from telegram_payment_bot.config import Config
 from telegram_payment_bot.logger import Logger
 from telegram_payment_bot.translation_loader import TranslationLoader

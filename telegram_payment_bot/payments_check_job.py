@@ -21,8 +21,8 @@
 #
 # Imports
 #
-import pyrogram
 from threading import Lock
+import pyrogram
 from telegram_payment_bot.config import Config
 from telegram_payment_bot.helpers import ChatHelper
 from telegram_payment_bot.logger import Logger

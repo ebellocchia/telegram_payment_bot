@@ -21,8 +21,8 @@
 #
 # Imports
 #
-import pyrogram
 import time
+import pyrogram
 from telegram_payment_bot.config import ConfigTypes, Config
 from telegram_payment_bot.logger import Logger
 from telegram_payment_bot.members_payment_getter import MembersPaymentGetter

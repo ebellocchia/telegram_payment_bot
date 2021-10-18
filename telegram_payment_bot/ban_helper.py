@@ -21,8 +21,8 @@
 #
 # Imports
 #
-import pyrogram
 import time
+import pyrogram
 
 
 #

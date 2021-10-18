@@ -21,8 +21,8 @@
 #
 # Imports
 #
-import pyrogram
 from typing import Callable, Optional
+import pyrogram
 from telegram_payment_bot.config import ConfigTypes, Config
 from telegram_payment_bot.helpers import UserHelper
 from telegram_payment_bot.wrapped_list import WrappedList
@@ -105,13 +105,13 @@ class ChatMembersGetter:
     def GetAdmins(self,
                   chat: pyrogram.types.Chat) -> ChatMembersList:
         return self.FilterMembers(chat,
-                                  lambda member: member.status == "administrator" or member.status == "creator")
+                                  lambda member: member.status in ["administrator", "creator"])
 
     # Get authorized users
     def GetAuthorizedUsers(self,
                            chat: pyrogram.types.Chat) -> ChatMembersList:
         return self.FilterMembers(
             chat,
-            lambda member: member.user.username is not None and
-                           member.user.username in self.config.GetValue(ConfigTypes.AUTHORIZED_USERS)
+            lambda member: (member.user.username is not None and
+                            member.user.username in self.config.GetValue(ConfigTypes.AUTHORIZED_USERS))
         )

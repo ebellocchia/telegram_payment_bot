@@ -87,7 +87,7 @@ class SinglePayment:
 
     # Convert to string
     def ToString(self) -> str:
-        return f"{self.email} (@{self.username}): {self.expiration_date.date().strftime('%d/%m/%Y')}"
+        return f"{self.email} (@{self.username}): {self.expiration_date.date().strftime('%Y-%m-%d')}"
 
     # Convert to string
     def __str__(self) -> str:

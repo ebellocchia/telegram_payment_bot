@@ -159,7 +159,7 @@ class PaymentsCheckScheduler:
     # Remove all chats
     def RemoveAllChats(self) -> None:
         self.payments_checker_job.RemoveAllChats()
-        self.logger.GetLogger().info(f"Removed all chats from payments check job")
+        self.logger.GetLogger().info("Removed all chats from payments check job")
 
     # Get if running
     def IsRunning(self) -> bool:

@@ -21,10 +21,10 @@
 #
 # Imports
 #
-import typing
-from collections import KeysView, ValuesView, ItemsView
-from typing import Dict, Iterator
 from abc import ABC
+import typing
+from collections.abc import KeysView, ValuesView, ItemsView
+from typing import Dict, Iterator
 
 
 #

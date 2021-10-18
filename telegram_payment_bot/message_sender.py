@@ -21,9 +21,9 @@
 #
 # Imports
 #
-import pyrogram
 import time
 from typing import List, Union
+import pyrogram
 from telegram_payment_bot.chat_members import ChatMembersGetter
 from telegram_payment_bot.config import Config
 from telegram_payment_bot.logger import Logger
@@ -104,19 +104,19 @@ class MessageSender:
             if len(msg) <= MessageSenderConst.MSG_MAX_LEN:
                 msg_parts.append(msg)
                 break
-            else:
-                # Take the current part
-                curr_part = msg[:MessageSenderConst.MSG_MAX_LEN]
-                # Get the last occurrence of a new line
-                idx = curr_part.rfind("\n")
 
-                # Split with respect to the found occurrence
-                if idx != -1:
-                    msg_parts.append(curr_part[:idx])
-                    msg = msg[idx + 1:]
-                else:
-                    msg_parts.append(curr_part)
-                    msg = msg[MessageSenderConst.MSG_MAX_LEN + 1:]
+            # Take the current part
+            curr_part = msg[:MessageSenderConst.MSG_MAX_LEN]
+            # Get the last occurrence of a new line
+            idx = curr_part.rfind("\n")
+
+            # Split with respect to the found occurrence
+            if idx != -1:
+                msg_parts.append(curr_part[:idx])
+                msg = msg[idx + 1:]
+            else:
+                msg_parts.append(curr_part)
+                msg = msg[MessageSenderConst.MSG_MAX_LEN + 1:]
 
         # Log
         self.logger.GetLogger().info(f"Message split into {len(msg_parts)} part(s)")

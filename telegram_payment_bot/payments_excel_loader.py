@@ -21,9 +21,9 @@
 #
 # Imports
 #
-import xlrd
 from datetime import datetime
 from typing import Any, Optional, Tuple
+import xlrd
 from telegram_payment_bot.config import ConfigTypes
 from telegram_payment_bot.payments_loader_base import PaymentsLoaderBase
 from telegram_payment_bot.payments_data import PaymentErrorTypes, SinglePayment, PaymentsData, PaymentsDataErrors

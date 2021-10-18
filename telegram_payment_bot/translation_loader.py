@@ -22,8 +22,8 @@
 # Imports
 #
 import os
-from xml.etree import ElementTree
 from typing import Any, Dict, Optional
+from defusedxml import ElementTree
 from telegram_payment_bot.logger import Logger
 
 

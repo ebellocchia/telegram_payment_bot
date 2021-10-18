@@ -78,7 +78,7 @@ class _ConfigDataUtils:
     # Read file
     @staticmethod
     def ReadFile(file_name: str) -> str:
-        with open(file_name, "r") as fin:
+        with open(file_name, "r", encoding="utf-8") as fin:
             file_data = fin.read()
         return file_data
 
@@ -101,14 +101,16 @@ class _ConfigDataUtils:
 
         # All possible cases
         if len(col_idxs) == 0:
-            return True
+            res = True
         elif len(col_idxs) == 1:
-            return curr_col_idx != col_idxs[0]
+            res = curr_col_idx != col_idxs[0]
         elif len(col_idxs) == 2:
-            return (curr_col_idx != col_idxs[0] and
-                    curr_col_idx != col_idxs[1] and
-                    col_idxs[0] != col_idxs[1])
-        return False
+            res = (curr_col_idx != col_idxs[0] and
+                   curr_col_idx != col_idxs[1] and
+                   col_idxs[0] != col_idxs[1])
+        else:
+            res = False
+        return res
 
 
 # Payment bot configuration
@@ -197,21 +199,21 @@ PaymentBotConfigCfg: ConfigCfgType = {
             "name": "payment_email_col",
             "conv_fct": Utils.StrToInt,
             "def_val": 0,
-            "valid_if": lambda cfg, val: _ConfigDataUtils.AreColumnIndexesValid(cfg, val)
+            "valid_if": _ConfigDataUtils.AreColumnIndexesValid
         },
         {
             "type": ConfigTypes.PAYMENT_USERNAME_COL,
             "name": "payment_username_col",
             "conv_fct": Utils.StrToInt,
             "def_val": 1,
-            "valid_if": lambda cfg, val: _ConfigDataUtils.AreColumnIndexesValid(cfg, val)
+            "valid_if": _ConfigDataUtils.AreColumnIndexesValid
         },
         {
             "type": ConfigTypes.PAYMENT_EXPIRATION_COL,
             "name": "payment_expiration_col",
             "conv_fct": Utils.StrToInt,
             "def_val": 2,
-            "valid_if": lambda cfg, val: _ConfigDataUtils.AreColumnIndexesValid(cfg, val)
+            "valid_if": _ConfigDataUtils.AreColumnIndexesValid
         },
         {
             "type": ConfigTypes.PAYMENT_DATE_FORMAT,

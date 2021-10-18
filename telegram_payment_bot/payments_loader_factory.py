@@ -55,9 +55,11 @@ class PaymentsLoaderFactory:
     def CreateLoader(self) -> PaymentsLoaderBase:
         payment_type = self.config.GetValue(ConfigTypes.PAYMENT_TYPE)
 
+        loader: PaymentsLoaderBase
         if payment_type == PaymentTypes.EXCEL_FILE:
-            return PaymentsExcelLoader(self.config, self.logger)
+            loader = PaymentsExcelLoader(self.config, self.logger)
         elif payment_type == PaymentTypes.GOOGLE_SHEET:
-            return PaymentsGoogleSheetLoader(self.config, self.logger)
+            loader = PaymentsGoogleSheetLoader(self.config, self.logger)
         else:
             raise PaymentTypeError(f"Invalid payment type {payment_type}")
+        return loader

@@ -21,8 +21,8 @@
 #
 # Imports
 #
-import pyrogram
 from typing import Any
+import pyrogram
 from telegram_payment_bot.config import ConfigTypes, Config
 from telegram_payment_bot.logger import Logger
 from telegram_payment_bot.joined_members_checker import JoinedMembersChecker

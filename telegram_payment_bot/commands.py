@@ -225,13 +225,14 @@ class CheckNoUsernameCmd(CommandBase):
     def __HoursToStr(self,
                      hours: int) -> str:
         if hours > 47:
-            return self.translator.GetSentence("WITHIN_DAYS_MSG",
-                                               days=hours // 24)
+            hours_str = self.translator.GetSentence("WITHIN_DAYS_MSG",
+                                                    days=hours // 24)
         elif hours > 1:
-            return self.translator.GetSentence("WITHIN_HOURS_MSG",
-                                               hours=hours)
+            hours_str = self.translator.GetSentence("WITHIN_HOURS_MSG",
+                                                    hours=hours)
         else:
-            return self.translator.GetSentence("ASAP_MSG")
+            hours_str = self.translator.GetSentence("ASAP_MSG")
+        return hours_str
 
 
 #

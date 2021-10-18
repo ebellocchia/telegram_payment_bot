@@ -21,8 +21,8 @@
 #
 # Imports
 #
-import pyrogram
 from typing import Any, Dict, Optional
+import pyrogram
 from telegram_payment_bot.config import Config
 from telegram_payment_bot.helpers import MemberHelper
 from telegram_payment_bot.logger import Logger
@@ -75,9 +75,9 @@ class MembersPaymentGetter:
         chat_members_getter = ChatMembersGetter(self.client, self.config)
         return chat_members_getter.FilterMembers(
             chat,
-            lambda member: MemberHelper.IsValidMember(member) and
-                           member.user.username is not None and
-                           not payments.IsExpiredByUsername(member.user.username)
+            lambda member: (MemberHelper.IsValidMember(member) and
+                            member.user.username is not None and
+                            not payments.IsExpiredByUsername(member.user.username))
         )
 
     # Get all members with expired payment
@@ -94,9 +94,9 @@ class MembersPaymentGetter:
         chat_members_getter = ChatMembersGetter(self.client, self.config)
         return chat_members_getter.FilterMembers(
             chat,
-            lambda member: MemberHelper.IsValidMember(member) and
-                           (member.user.username is None or
-                            payments.IsExpiredByUsername(member.user.username))
+            lambda member: (MemberHelper.IsValidMember(member) and
+                            (member.user.username is None or
+                             payments.IsExpiredByUsername(member.user.username)))
         )
 
     # Get all members with expiring payment
@@ -114,9 +114,9 @@ class MembersPaymentGetter:
         chat_members_getter = ChatMembersGetter(self.client, self.config)
         return chat_members_getter.FilterMembers(
             chat,
-            lambda member: MemberHelper.IsValidMember(member) and
-                           (member.user.username is None or
-                            payments.IsExpiringInDaysByUsername(member.user.username, days))
+            lambda member: (MemberHelper.IsValidMember(member) and
+                            (member.user.username is None or
+                             payments.IsExpiringInDaysByUsername(member.user.username, days)))
         )
 
     # Get all emails with expired payment
