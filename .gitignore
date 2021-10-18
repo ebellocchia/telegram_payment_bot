@@ -30,3 +30,12 @@ venv/
 
 # mypy
 .mypy_cache/
+
+# Additional
+*.xls
+*.xlsx
+*.log
+*.json
+*.pickle
+*.session
+*.session-journal
