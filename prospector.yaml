@@ -1,0 +1,44 @@
+strictness: high
+test-warnings: false
+doc-warnings: true
+member-warnings: true
+
+ignore-paths:
+  - app
+
+ignore-patterns:
+  - setup.py
+  - _version.py
+
+# pylint configuration
+pylint:
+  disable:
+    - invalid-name
+    - missing-module-docstring
+    - missing-class-docstring
+    - missing-function-docstring
+  options:
+    max-line-length: 130
+
+# pyflakes configuration
+pyflakes:
+  disable:
+    - F401    # imported but not used
+
+# mypy configuration
+mypy:
+  run: true
+  options:
+    ignore-missing-imports: true
+    follow-imports: skip
+
+# pep257 configuration (no docstring in this project)
+pep257:
+  run: false
+
+# pep8 configuration
+pep8:
+  disable:
+    - N802    # function name should be lowercase
+  options:
+    max-line-length: 130
