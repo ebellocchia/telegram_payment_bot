@@ -71,7 +71,7 @@ The list of all possible fields that can be set is shown below.
 |payment_excel_file|Name of the Excel file used for payment data, valid only if *payment_type* is *EXCEL_FILE*|
 |payment_google_sheet_id|ID of the Google Sheet used for payment data, valid only if *payment_type* is *GOOGLE_SHEET*|
 |payment_google_cred|Name of the *json* file for the OAuth credentials (default: *credentials.json*), valid only if *payment_type* is *GOOGLE_SHEET*|
-|payment_google_pickle|Name of pickle file used for Google login (default: *token.pickle*), valid only if *payment_type* is *GOOGLE_SHEET*|
+|payment_google_cred_path|Path where Google credentials will be saved, valid only if *payment_type* is *GOOGLE_SHEET*|
 |payment_email_col|Table column (letter) containing the email used for paying (default: A, maximum: 25)|
 |payment_username_col|Table column (letter) containing the username (default: B, maximum: 25)|
 |payment_expiration_col|Table column (letter) containing the payment expiration date (default: C, maximum: 25)|
@@ -165,9 +165,9 @@ In case a Google Sheet is used:
 5. Select *Desktop app*, choose a name and download the *json* file with the credentials
 6. Go to the *Library* page, search for Google Sheet and enable Google Sheet APIs
 7. Rename the *json* file to the name specified in the configuration file (*payment_google_cred*) and place it in the *app* folder
-8. The first time the bot loads your Google Sheet, you'll be asked to login into your Google account and allow the bot to access the sheet. After this, a *pickle* file with the name you configured (*payment_google_pickle*) will be automatically created.
-9. This *pickle* file allows the bot to access the sheet next times, so you don't need to allow it again
-10. If you move the bot to another PC or server, just keep the *json* and *pickle* files to grant the bot access to the sheet without repeating the whole procedure
+8. The first time the bot loads your Google Sheet, you'll be asked to login into your Google account and allow the bot to access the sheet. After this, a new *json* file will be automatically created in the folder you configured (*payment_google_cred_path*).
+9. This *json* file allows the bot to access the sheet next times, so you don't need to allow it again
+10. If you move the bot to another PC or server, just keep the *json* files to grant the bot access to the sheet without repeating the whole procedure
 
 For more information: [create project](https://developers.google.com/workspace/guides/create-project), [create credentials](https://developers.google.com/workspace/guides/create-credentials)
 
