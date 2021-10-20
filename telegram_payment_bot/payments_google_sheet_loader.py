@@ -23,9 +23,8 @@
 #
 from datetime import datetime
 from typing import Optional, Tuple
+import pygsheets
 from telegram_payment_bot.config import ConfigTypes
-from telegram_payment_bot.google_sheet_service import GoogleSheetService
-from telegram_payment_bot.google_sheet_reader import GoogleSheetReader
 from telegram_payment_bot.payments_loader_base import PaymentsLoaderBase
 from telegram_payment_bot.payments_data import PaymentErrorTypes, SinglePayment, PaymentsData, PaymentsDataErrors
 
@@ -51,24 +50,24 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
 
     # Load and check all payments
     def __LoadAndCheckAll(self) -> Tuple[PaymentsData, PaymentsDataErrors]:
-        # Get payment sheet ID
+        # Get configuration
         sheet_id = self.config.GetValue(ConfigTypes.PAYMENT_GOOGLE_SHEET_ID)
         cred_file = self.config.GetValue(ConfigTypes.PAYMENT_GOOGLE_CRED)
-        pickle_file = self.config.GetValue(ConfigTypes.PAYMENT_GOOGLE_PICKLE)
+        cred_path = self.config.GetValue(ConfigTypes.PAYMENT_GOOGLE_CRED_PATH)
 
         try:
             # Log
             self.logger.GetLogger().info(f"Credential file: {cred_file}")
-            self.logger.GetLogger().info(f"Pickle file: {pickle_file}")
+            self.logger.GetLogger().info(f"Credential path: {cred_path}")
             self.logger.GetLogger().info(f"Loading Google Sheet ID \"{sheet_id}\"...")
 
-            # Create service
-            gs_service = GoogleSheetService()
-            gs_service.LogIn(cred_file, pickle_file)
-            # Create reader
-            gs_reader = GoogleSheetReader(gs_service, sheet_id)
-            # Load sheet
-            payments_data, payments_data_err = self.__LoadSheet(gs_reader)
+            # Get access to the Google Sheet
+            google_client = pygsheets.authorize(client_secret=cred_file, credentials_directory=cred_path)
+            google_sheet = google_client.open_by_key(sheet_id)
+            worksheet = google_sheet[0]
+
+            # Load worksheet
+            payments_data, payments_data_err = self.__LoadWorkSheet(worksheet)
 
             # Log
             self.logger.GetLogger().info(
@@ -82,9 +81,9 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
             self.logger.GetLogger().exception(f"An error occurred while loading Google Sheet ID \"{sheet_id}\"")
             raise
 
-    # Load sheet
-    def __LoadSheet(self,
-                    gs_reader: GoogleSheetReader) -> Tuple[PaymentsData, PaymentsDataErrors]:
+    # Load wotksheet
+    def __LoadWorkSheet(self,
+                        worksheet: pygsheets.Worksheet) -> Tuple[PaymentsData, PaymentsDataErrors]:
         payments_data = PaymentsData()
         payments_data_err = PaymentsDataErrors()
 
@@ -94,8 +93,7 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
         expiration_col_idx = self._ColumnToIndex(self.config.GetValue(ConfigTypes.PAYMENT_EXPIRATION_COL))
 
         # Read each row
-        last_col = chr(ord("A") + max(email_col_idx, username_col_idx, expiration_col_idx))
-        rows = gs_reader.GetRange(f"A1:{last_col}10000")
+        rows = worksheet.get_all_values(returnas="matrix")
         for i, row in enumerate(rows):
             # Skip header (first row)
             if i > 0:

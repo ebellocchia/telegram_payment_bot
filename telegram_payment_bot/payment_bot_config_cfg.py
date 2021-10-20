@@ -191,8 +191,8 @@ PaymentBotConfigCfg: ConfigCfgType = {
             "load_if": lambda cfg: cfg.GetValue(ConfigTypes.PAYMENT_TYPE) == PaymentTypes.GOOGLE_SHEET,
         },
         {
-            "type": ConfigTypes.PAYMENT_GOOGLE_PICKLE,
-            "name": "payment_google_pickle",
+            "type": ConfigTypes.PAYMENT_GOOGLE_CRED_PATH,
+            "name": "payment_google_cred_path",
             "load_if": lambda cfg: cfg.GetValue(ConfigTypes.PAYMENT_TYPE) == PaymentTypes.GOOGLE_SHEET,
         },
         {

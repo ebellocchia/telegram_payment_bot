@@ -30,7 +30,7 @@ setuptools.setup(
     url="https://github.com/ebellocchia/telegram_payment_bot",
     download_url="https://github.com/ebellocchia/telegram_payment_bot/archive/v%s.tar.gz" % version,
     license="MIT",
-    install_requires = ["google-api-python-client", "google-auth-httplib2", "google-auth-oauthlib", "pyrogram", "tgcrypto", "xlrd", "apscheduler", "defusedxml"],
+    install_requires = ["pygsheets", "pyrogram", "tgcrypto", "xlrd", "apscheduler", "defusedxml"],
     packages=setuptools.find_packages(exclude=[]),
     package_data={"telegram_payment_bot": ["lang/lang_en.xml"]},
     keywords="telegram, bot, telegram bot, payments, payments check",
