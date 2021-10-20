@@ -60,3 +60,8 @@ class PaymentsLoaderBase(ABC):
     @abstractmethod
     def CheckForErrors(self) -> PaymentsDataErrors:
         pass
+
+    # Convert column string to index
+    @staticmethod
+    def _ColumnToIndex(col: str) -> int:
+        return ord(col) - ord("A")

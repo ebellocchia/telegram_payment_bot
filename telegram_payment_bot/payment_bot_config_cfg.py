@@ -71,9 +71,9 @@ class _ConfigDataTypeConverter:
 
 # Utility functions for configuration data class
 class _ConfigDataUtils:
-    # Minimum/maximum column index
-    COL_IDX_MIN_VAL: int = 0
-    COL_IDX_MAX_VAL: int = 25
+    # Minimum/maximum column values
+    COL_MIN_VAL: str = "A"
+    COL_MAX_VAL: str = "Z"
 
     # Read file
     @staticmethod
@@ -85,10 +85,11 @@ class _ConfigDataUtils:
     # Get if column indexes are valid
     @staticmethod
     def AreColumnIndexesValid(config: Config,
-                              curr_col_idx: int) -> bool:
-        # Check value of current index
-        if (curr_col_idx < _ConfigDataUtils.COL_IDX_MIN_VAL or
-                curr_col_idx > _ConfigDataUtils.COL_IDX_MAX_VAL):
+                              curr_col: str) -> bool:
+        # Check value of current column
+        if (len(curr_col) != 1 or
+                curr_col < _ConfigDataUtils.COL_MIN_VAL or
+                curr_col > _ConfigDataUtils.COL_MAX_VAL):
             return False
 
         # Get other indexes that are already available
@@ -103,10 +104,10 @@ class _ConfigDataUtils:
         if len(col_idxs) == 0:
             res = True
         elif len(col_idxs) == 1:
-            res = curr_col_idx != col_idxs[0]
+            res = curr_col != col_idxs[0]
         elif len(col_idxs) == 2:
-            res = (curr_col_idx != col_idxs[0] and
-                   curr_col_idx != col_idxs[1] and
+            res = (curr_col != col_idxs[0] and
+                   curr_col != col_idxs[1] and
                    col_idxs[0] != col_idxs[1])
         else:
             res = False
@@ -197,22 +198,22 @@ PaymentBotConfigCfg: ConfigCfgType = {
         {
             "type": ConfigTypes.PAYMENT_EMAIL_COL,
             "name": "payment_email_col",
-            "conv_fct": Utils.StrToInt,
-            "def_val": 0,
+            "conv_fct": lambda val: val.upper(),
+            "def_val": "A",
             "valid_if": _ConfigDataUtils.AreColumnIndexesValid
         },
         {
             "type": ConfigTypes.PAYMENT_USERNAME_COL,
             "name": "payment_username_col",
-            "conv_fct": Utils.StrToInt,
-            "def_val": 1,
+            "conv_fct": lambda val: val.upper(),
+            "def_val": "B",
             "valid_if": _ConfigDataUtils.AreColumnIndexesValid
         },
         {
             "type": ConfigTypes.PAYMENT_EXPIRATION_COL,
             "name": "payment_expiration_col",
-            "conv_fct": Utils.StrToInt,
-            "def_val": 2,
+            "conv_fct": lambda val: val.upper(),
+            "def_val": "C",
             "valid_if": _ConfigDataUtils.AreColumnIndexesValid
         },
         {

@@ -89,9 +89,9 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
         payments_data_err = PaymentsDataErrors()
 
         # Get column indexes
-        email_col_idx = self.config.GetValue(ConfigTypes.PAYMENT_EMAIL_COL)
-        username_col_idx = self.config.GetValue(ConfigTypes.PAYMENT_USERNAME_COL)
-        expiration_col_idx = self.config.GetValue(ConfigTypes.PAYMENT_EXPIRATION_COL)
+        email_col_idx = self._ColumnToIndex(self.config.GetValue(ConfigTypes.PAYMENT_EMAIL_COL))
+        username_col_idx = self._ColumnToIndex(self.config.GetValue(ConfigTypes.PAYMENT_USERNAME_COL))
+        expiration_col_idx = self._ColumnToIndex(self.config.GetValue(ConfigTypes.PAYMENT_EXPIRATION_COL))
 
         # Read each row
         last_col = chr(ord("A") + max(email_col_idx, username_col_idx, expiration_col_idx))
