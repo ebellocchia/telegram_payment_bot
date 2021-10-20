@@ -72,9 +72,9 @@ The list of all possible fields that can be set is shown below.
 |payment_google_sheet_id|ID of the Google Sheet used for payment data, valid only if *payment_type* is *GOOGLE_SHEET*|
 |payment_google_cred|Name of the *json* file for the OAuth credentials (default: *credentials.json*), valid only if *payment_type* is *GOOGLE_SHEET*|
 |payment_google_pickle|Name of pickle file used for Google login (default: *token.pickle*), valid only if *payment_type* is *GOOGLE_SHEET*|
-|payment_email_col|Index of the table column containing the email used for paying (default: 0, maximum: 25)|
-|payment_username_col|Index of the table column containing the username (default: 1, maximum: 25)|
-|payment_expiration_col|Index of the table column containing the payment expiration date (default: 2, maximum: 25)|
+|payment_email_col|Table column (letter) containing the email used for paying (default: A, maximum: 25)|
+|payment_username_col|Table column (letter) containing the username (default: B, maximum: 25)|
+|payment_expiration_col|Table column (letter) containing the payment expiration date (default: C, maximum: 25)|
 |payment_date_format|Date format in payments data (default: %d/%m/%Y)|
 |**[email]**|Configuration for email that reminds users to pay|
 |email_enabled|Email enable flag (default: false). If false, all the next fields will be skipped.|
