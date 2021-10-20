@@ -1,0 +1,6 @@
+pygsheets
+xlrd
+pyrogram
+tgcrypto
+apscheduler
+defusedxml
