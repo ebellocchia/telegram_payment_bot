@@ -140,8 +140,8 @@ When checking for payments, a user is removed from the group if:
 
 ## Payment Check Task
 
-It's possible to run a background task to check for payments periodically. It can be started/stopped with the *payment_task_start*/*payment_task_stop* commands.\
-The task can check multiple groups in one time (sharing the same payments data, of course). The groups can be added/removed with the *payment_task_add_chat*/*payment_task_remove_chat* commands (either while the task is running or stopped).\
+It's possible to run a background task to check for payments periodically. It can be started/stopped with the *paybot_task_start*/*paybot_task_stop* commands.\
+The task can check multiple groups in one time (sharing the same payments data, of course). The groups can be added/removed with the *paybot_task_add_chat*/*paybot_task_remove_chat* commands (either while the task is running or stopped).\
 If no group was added, the task will simply run without checking any group.
 
 The period of the task always starts from midnight (if you use a VPS, be sure to set the correct time), for example:
