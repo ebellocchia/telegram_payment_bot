@@ -101,9 +101,7 @@ class _ConfigDataUtils:
                 columns.append(config.GetValue(column))
 
         # All possible cases
-        if len(columns) == 0:
-            return True
-        else:
+        if len(columns) > 0:
             # The current column shall be different from the already present ones
             for col in columns:
                 if curr_col == col:
