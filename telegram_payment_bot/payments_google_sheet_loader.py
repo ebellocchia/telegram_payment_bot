@@ -104,12 +104,12 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
                     expiration = row[expiration_col_idx].strip()
                 except IndexError:
                     self.logger.GetLogger().warning(
-                        f"Row index {i} is not valid (some fields are missing), skipping it..."
+                        f"Row index {i + 1} is not valid (some fields are missing), skipping it..."
                     )
                 else:
                     # Skip empty usernames
                     if username != "":
-                        self.__AddPayment(i, payments_data, payments_data_err, email, username, expiration)
+                        self.__AddPayment(i + 1, payments_data, payments_data_err, email, username, expiration)
 
         return payments_data, payments_data_err
 
@@ -131,7 +131,7 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
             )
             # Add error
             payments_data_err.AddPaymentError(PaymentErrorTypes.INVALID_DATE_ERR,
-                                              row_idx + 1,
+                                              row_idx,
                                               username,
                                               expiration)
             return
@@ -143,9 +143,10 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
             )
         else:
             self.logger.GetLogger().warning(
-                f"Username @{username} is present more than one time at row {row_idx}, skipped"
+                f"Email {email} or username @{username} is present more than one time at row {row_idx}, skipped"
             )
             # Add error
-            payments_data_err.AddPaymentError(PaymentErrorTypes.DUPLICATED_USERNAME_ERR,
-                                              row_idx + 1,
+            payments_data_err.AddPaymentError(PaymentErrorTypes.DUPLICATED_PAYMENT_ERR,
+                                              row_idx,
+                                              email,
                                               username)

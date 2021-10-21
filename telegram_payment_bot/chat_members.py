@@ -101,6 +101,12 @@ class ChatMembersGetter:
                chat: pyrogram.types.Chat) -> ChatMembersList:
         return self.FilterMembers(chat, lambda member: True)
 
+    # Get single
+    def GetSingle(self,
+                  chat: pyrogram.types.Chat,
+                  user: pyrogram.types.User) -> ChatMembersList:
+        return self.FilterMembers(chat, lambda member: user.id == member.user.id)
+
     # Get admins
     def GetAdmins(self,
                   chat: pyrogram.types.Chat) -> ChatMembersList:

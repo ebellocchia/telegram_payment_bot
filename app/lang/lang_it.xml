@@ -13,32 +13,32 @@ Qui trovi la lista dei comandi supportati.
 **Generici**
 /help : mostra questo messaggio
 /alive : mostra se il bot è attivo
-/set_test_mode __true/false__ : attiva/disattiva la modalità di test
-/is_test_mode: mostra se la modalità di test è attiva
-/auth_users : mostra la lista degli utenti autorizzati a usare il bot
-/chat_info : mostra le informazioni sulla chat - **Solo Gruppo**
-/users_list : mostra la lista di tutti gli utenti del gruppo - **Solo Gruppo**
-/invite_link : genera un nuovo link di invito - **Solo Gruppo**
+/paybot_set_test_mode __true/false__ : attiva/disattiva la modalità di test
+/paybot_is_test_mode: mostra se la modalità di test è attiva
+/paybot_auth_users : mostra la lista degli utenti autorizzati a usare il bot
+/paybot_chat_info : mostra le informazioni sulla chat - **Solo Gruppo**
+/paybot_users_list : mostra la lista di tutti gli utenti del gruppo - **Solo Gruppo**
+/paybot_invite_link : genera un nuovo link di invito - **Solo Gruppo**
 
 **Username**
-/check_no_username __[HOURS_LEFT]__ : mostra gli utenti senza username - **Solo Gruppo**
-/remove_no_username : rimuove gli utenti senza username - **Solo Gruppo**
+/paybot_check_username __[HOURS_LEFT]__ : mostra gli utenti senza username - **Solo Gruppo**
+/paybot_remove_username : rimuove gli utenti senza username - **Solo Gruppo**
 
 **Pagamenti**
-/set_check_payment_on_join __true/false__ : attiva/disattiva il controllo dei pagamenti sui membri appena entrati nel gruppo
-/is_check_payment_on_join : mostra se il controllo dei pagamenti sui membri appena entrati nel gruppo è attivo
-/check_payments_data : mostra se i dati di pagamento contengono degli errori
-/email_no_payment __[DAYS_LEFT]__ : invia una email agli utenti il cui pagamento sta per scadere
-/check_no_payment __[DAYS_LEFT] [LAST_DAY]__ : mostra gli utenti il cui pagamento sta per scadere - **Solo Gruppo**
-/remove_no_payment : rimuove gli utenti il cui pagamento sta per scadere - **Solo Gruppo**
+/paybot_set_check_on_join __true/false__ : attiva/disattiva il controllo dei pagamenti sui membri appena entrati nel gruppo
+/paybot_is_check_on_join : mostra se il controllo dei pagamenti sui membri appena entrati nel gruppo è attivo
+/paybot_check_data : mostra se i dati di pagamento contengono degli errori
+/paybot_email_payment __[DAYS_LEFT]__ : invia una email agli utenti il cui pagamento sta per scadere
+/paybot_check_payment __[DAYS_LEFT] [LAST_DAY]__ : mostra gli utenti il cui pagamento sta per scadere - **Solo Gruppo**
+/paybot_remove_payment : rimuove gli utenti il cui pagamento sta per scadere - **Solo Gruppo**
 
 **Task Controllo Pagamenti**
-/payment_task_start __[PERIOD_HOURS]__ : avvia il task di controllo pagamenti con il periodo specificato
-/payment_task_stop : ferma il task di controllo pagamenti
-/payment_task_add_chat : aggiunge la chat corrente al task di controllo pagamenti - **Solo Gruppo**
-/payment_task_remove_chat : rimuove la chat corrente dal task di controllo pagamenti - **Solo Gruppo**
-/payment_task_remove_all_chats : rimuove tutte le chat dal task di controllo pagamenti
-/payment_task_info : mostra le informazioni del task di controllo pagamenti
+/paybot_task_start __[PERIOD_HOURS]__ : avvia il task di controllo pagamenti con il periodo specificato
+/paybot_task_stop : ferma il task di controllo pagamenti
+/paybot_task_add_chat : aggiunge la chat corrente al task di controllo pagamenti - **Solo Gruppo**
+/paybot_task_remove_chat : rimuove la chat corrente dal task di controllo pagamenti - **Solo Gruppo**
+/paybot_task_remove_all_chats : rimuove tutte le chat dal task di controllo pagamenti
+/paybot_task_info : mostra le informazioni del task di controllo pagamenti
 
 I comandi che possono essere eseguiti solo nella chat di gruoppo sono specificati in grassetto.
 I parametri tra parentesi quadre sono opzionali.
@@ -112,9 +112,10 @@ Gruppo: **{chat_title}**
     <!-- Remove no username command message (notice) -->
     <sentence id="REMOVE_NO_USERNAME_NOTICE_CMD">**CONTROLLO USERNAME**
 Gruppo: **{chat_title}**
-I membri senza username stanno per essere rimossi.</sentence>
+⌛ I membri senza username stanno per essere rimossi.</sentence>
     <!-- Remove no username command message (completed) -->
-    <sentence id="REMOVE_NO_USERNAME_COMPLETED_CMD">Operazione completata. Membri rimossi: **{members_count}**</sentence>
+    <sentence id="REMOVE_NO_USERNAME_COMPLETED_CMD">✅ Operazione completata.
+Membri rimossi: **{members_count}**</sentence>
     <!-- Remove no username command message (list) -->
     <sentence id="REMOVE_NO_USERNAME_LIST_CMD">\nLista membri:
 {members_list}</sentence>
@@ -139,12 +140,14 @@ Il controllo pagamento sui membri appena entrati è attualmente disattivato.</se
 
     <!-- Check payment data command message (notice) -->
     <sentence id="CHECK_PAYMENTS_DATA_NOTICE_CMD">**CONTROLLO DATI PAGAMENTO**
-I dati di pagamento stanno per essere controllati.</sentence>
+⌛ I dati di pagamento stanno per essere controllati...</sentence>
     <!-- Check payment data command message (completed) -->
-    <sentence id="CHECK_PAYMENTS_DATA_COMPLETED_CMD">Operazione completata. Errori trovati: **{errors_count}**</sentence>
-    <!-- Check payment data command message (username error) -->
-    <sentence id="CHECK_PAYMENTS_DATA_USERNAME_ERR_CMD">
-- Lo username @{username} è presente più di una volta alla riga {row_index}</sentence>
+    <sentence id="CHECK_PAYMENTS_DATA_COMPLETED_CMD">✅ Operazione completata.
+
+Errori trovati: **{errors_count}**</sentence>
+    <!-- Check payment data command message (duplicated error) -->
+    <sentence id="CHECK_PAYMENTS_DATA_DUPLICATED_ERR_CMD">
+- L'email {email} o lo username @{username} è presente più di una volta alla riga {row_index}</sentence>
     <!-- Check payment data command message (expiration error) -->
     <sentence id="CHECK_PAYMENTS_DATA_DATE_ERR_CMD">
 - La data di scadenza per lo username @{username} alla riga {row_index} non è valida ({expiration_date})</sentence>
@@ -157,9 +160,10 @@ I dati di pagamento stanno per essere controllati.</sentence>
     <!-- Email no payment command message (notice) -->
     <sentence id="EMAIL_NO_PAYMENT_NOTICE_CMD">**AVVISO PAGAMENTI**
 Gruppo: **{chat_title}**
-I membri il cui pagamento sta per scadere stanno per essere avvisati via email.</sentence>
+⌛ I membri il cui pagamento sta per scadere stanno per essere avvisati via email...</sentence>
     <!-- Email no payment command message (completed) -->
-    <sentence id="EMAIL_NO_PAYMENT_COMPLETED_CMD">**AVVISO PAGAMENTI**
+    <sentence id="EMAIL_NO_PAYMENT_COMPLETED_CMD">✅ Operazione completata.
+
 Membri il cui pagamento sta per cadere {days_left}: **{members_count}**
 Lista membri:
 {members_list}
@@ -172,9 +176,10 @@ Una email è stata inviata a tutti i membri.</sentence>
     <!-- Check no payment command message (notice) -->
     <sentence id="CHECK_NO_PAYMENT_NOTICE_CMD">**CONTROLLO PAGAMENTI**
 Gruppo: **{chat_title}**
-I membri il cui pagamento sta per scadere stanno per essere controllati.</sentence>
+⌛ I membri il cui pagamento sta per scadere stanno per essere controllati...</sentence>
     <!-- Check no payment command message (completed) -->
-    <sentence id="CHECK_NO_PAYMENT_COMPLETED_CMD">Operazione completata.
+    <sentence id="CHECK_NO_PAYMENT_COMPLETED_CMD">✅ Operazione completata.
+
 Membri il cui pagamento sta per cadere {days_left}: **{members_count}**
 Lista membri:
 {members_list}
@@ -193,9 +198,11 @@ Siete pregati di pagare entro {last_day} o verrete rimossi dal gruppo.</sentence
     <!-- Remove no payment command message (notice) -->
     <sentence id="REMOVE_NO_PAYMENT_NOTICE_CMD">**CONTROLLO PAGAMENTI**
 Gruppo: **{chat_title}**
-I membri il cui pagamento sta per scadere stanno per essere rimossi.</sentence>
+⌛ I membri il cui pagamento sta per scadere stanno per essere rimossi...</sentence>
     <!-- Remove no payment command message (completed) -->
-    <sentence id="REMOVE_NO_PAYMENT_COMPLETED_CMD">Operazione completata. Membri rimossi: **{members_count}**</sentence>
+    <sentence id="REMOVE_NO_PAYMENT_COMPLETED_CMD">✅ Operazione completata.
+
+Membri rimossi: **{members_count}**</sentence>
     <!-- Remove no payment command message (all ok) -->
     <sentence id="REMOVE_NO_PAYMENT_LIST_CMD">\nLista membri:
 {members_list}</sentence>

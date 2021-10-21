@@ -133,7 +133,7 @@ class MembersPaymentGetter:
                               chat: pyrogram.types.Chat,
                               user: pyrogram.types.User) -> bool:
         # If the user is not in the chat, consider payment as not expired
-        chat_members = ChatMembersGetter(self.client, self.config).GetAll(chat).GetByUsername(user.username)
+        chat_members = ChatMembersGetter(self.client, self.config).GetSingle(chat, user)
         if chat_members is None:
             return False
 

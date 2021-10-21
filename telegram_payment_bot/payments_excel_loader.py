@@ -102,7 +102,7 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
 
                 # Skip empty usernames
                 if username != "":
-                    self.__AddPayment(i, payments_data, payments_data_err, email, username, expiration)
+                    self.__AddPayment(i + 1, payments_data, payments_data_err, email, username, expiration)
 
         return payments_data, payments_data_err
 
@@ -127,7 +127,7 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
                 )
                 # Add error
                 payments_data_err.AddPaymentError(PaymentErrorTypes.INVALID_DATE_ERR,
-                                                  row_idx + 1,
+                                                  row_idx,
                                                   username,
                                                   expiration)
                 return
@@ -143,7 +143,7 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
             )
             # Add error
             payments_data_err.AddPaymentError(PaymentErrorTypes.DUPLICATED_USERNAME_ERR,
-                                              row_idx + 1,
+                                              row_idx,
                                               username)
 
     # Get sheet

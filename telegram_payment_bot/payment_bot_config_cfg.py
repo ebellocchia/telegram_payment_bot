@@ -93,25 +93,22 @@ class _ConfigDataUtils:
             return False
 
         # Get other indexes that are already available
-        col_idxs = []
-        for col_idx in (ConfigTypes.PAYMENT_EMAIL_COL,
-                        ConfigTypes.PAYMENT_USERNAME_COL,
-                        ConfigTypes.PAYMENT_EXPIRATION_COL):
-            if config.IsValueSet(col_idx):
-                col_idxs.append(config.GetValue(col_idx))
+        columns = []
+        for column in (ConfigTypes.PAYMENT_EMAIL_COL,
+                       ConfigTypes.PAYMENT_USERNAME_COL,
+                       ConfigTypes.PAYMENT_EXPIRATION_COL):
+            if config.IsValueSet(column):
+                columns.append(config.GetValue(column))
 
         # All possible cases
-        if len(col_idxs) == 0:
-            res = True
-        elif len(col_idxs) == 1:
-            res = curr_col != col_idxs[0]
-        elif len(col_idxs) == 2:
-            res = (curr_col != col_idxs[0] and
-                   curr_col != col_idxs[1] and
-                   col_idxs[0] != col_idxs[1])
+        if len(columns) == 0:
+            return True
         else:
-            res = False
-        return res
+            # The current column shall be different from the already present ones
+            for col in columns:
+                if curr_col == col:
+                    return False
+        return True
 
 
 # Payment bot configuration

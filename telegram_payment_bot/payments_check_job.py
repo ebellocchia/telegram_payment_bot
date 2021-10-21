@@ -153,8 +153,9 @@ class PaymentsCheckJob:
             # Inform authorized users
             msg = self.translator.GetSentence("REMOVE_NO_PAYMENT_NOTICE_CMD",
                                               chat_title=ChatHelper.GetTitle(chat))
-            msg += "\n" + self.translator.GetSentence("REMOVE_NO_PAYMENT_COMPLETED_CMD",
-                                                      members_count=kicked_members.Count())
+            msg += "\n\n"
+            msg += self.translator.GetSentence("REMOVE_NO_PAYMENT_COMPLETED_CMD",
+                                                members_count=kicked_members.Count())
             msg += self.translator.GetSentence("REMOVE_NO_PAYMENT_LIST_CMD",
                                                members_list=str(kicked_members))
 

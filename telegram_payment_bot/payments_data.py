@@ -36,7 +36,7 @@ from telegram_payment_bot.wrapped_list import WrappedList
 # Payment error types
 @unique
 class PaymentErrorTypes(Enum):
-    DUPLICATED_USERNAME_ERR = auto()
+    DUPLICATED_PAYMENT_ERR = auto()
     INVALID_DATE_ERR = auto()
 
 
@@ -99,6 +99,7 @@ class PaymentError:
 
     err_type: PaymentErrorTypes
     row: int
+    email: str
     username: str
     expiration_date: Optional[str]
 
@@ -106,10 +107,12 @@ class PaymentError:
     def __init__(self,
                  err_type: PaymentErrorTypes,
                  row: int,
+                 email: str,
                  username: str,
                  expiration_data: Optional[str]):
         self.err_type = err_type
         self.row = row
+        self.email = email
         self.username = username
         self.expiration_date = expiration_data
 
@@ -120,6 +123,10 @@ class PaymentError:
     # Get row
     def Row(self) -> int:
         return self.row
+
+    # Get email
+    def Email(self) -> str:
+        return self.email
 
     # Get username
     def Username(self) -> str:
@@ -136,9 +143,10 @@ class PaymentsDataErrors(WrappedList):
     def AddPaymentError(self,
                         err_type: PaymentErrorTypes,
                         row: int,
+                        email: str,
                         username: str,
                         expiration: Optional[str] = None) -> None:
-        self.AddSingle(PaymentError(err_type, row, username, expiration))
+        self.AddSingle(PaymentError(err_type, row, email, username, expiration))
 
 
 # Payments data class
@@ -151,11 +159,20 @@ class PaymentsData(WrappedDict):
         added = False
 
         username = username[1:] if username.startswith("@") else username
-        if not self.IsUsernameExistent(username):
+        if (not self.IsUsernameExistent(username) and
+                (email == "" or not self.IsEmailExistent(email))):
             self.AddSingle(username.lower(), SinglePayment(email, username, expiration))
             added = True
 
         return added
+
+    # Get by email
+    def GetByEmail(self,
+                   email: str) -> Optional[SinglePayment]:
+        for _, payment in self.dict_elements.items():
+            if email == payment.Email():
+                return payment
+        return None
 
     # Get by username
     def GetByUsername(self,
@@ -164,6 +181,11 @@ class PaymentsData(WrappedDict):
             return self.dict_elements[username.lower()]
         except KeyError:
             return None
+
+    # Get if email is existent
+    def IsEmailExistent(self,
+                        email: str) -> bool:
+        return self.GetByEmail(email) is not None
 
     # Get if username is existent
     def IsUsernameExistent(self,

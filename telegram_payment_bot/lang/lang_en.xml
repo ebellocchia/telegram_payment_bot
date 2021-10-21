@@ -13,32 +13,32 @@ Here is the list of supported commands.
 **Generic**
 /help : show this message
 /alive : show if bot is active
-/set_test_mode __true/false__ : enable/disable test mode
-/is_test_mode : show if test mode is enabled
-/auth_users : show the list of users authorized to use the bot
-/chat_info : show the chat information - **Only Group**
-/users_list : show the list of all users in group - **Only Group**
-/invite_link : generate a new invite link - **Only Group**
+/paybot_set_test_mode __true/false__ : enable/disable test mode
+/paybot_is_test_mode : show if test mode is enabled
+/paybot_auth_users : show the list of users authorized to use the bot
+/paybot_chat_info : show the chat information - **Only Group**
+/paybot_users_list : show the list of all users in group - **Only Group**
+/paybot_invite_link : generate a new invite link - **Only Group**
 
 **Username**
-/check_no_username __[HOURS_LEFT]__ : show users with no username - **Only Group**
-/remove_no_username : remove users with no username - **Only Group**
+/paybot_check_username __[HOURS_LEFT]__ : show users with no username - **Only Group**
+/paybot_remove_username : remove users with no username - **Only Group**
 
 **Payments**
-/set_check_payment_on_join __true/false__ : enable/disable payment check when a new member joins
-/is_check_payment_on_join : show if payment check when a new member joins is enabled
-/check_payments_data : show if payments data contains some errors
-/email_no_payment __[DAYS_LEFT]__ : send a reminder email to users whose payments is about to expire
-/check_no_payment __[DAYS_LEFT] [LAST_DAY]__ : show users whose payments is about to expire - **Only Group**
-/remove_no_payment : remove users whose payment is expired - **Only Group**
+/paybot_set_check_on_join __true/false__ : enable/disable payment check when a new member joins
+/paybot_is_check_on_join : show if payment check when a new member joins is enabled
+/paybot_check_data : show if payments data contains some errors
+/paybot_email_payment __[DAYS_LEFT]__ : send a reminder email to users whose payments is about to expire
+/paybot_check_payment __[DAYS_LEFT] [LAST_DAY]__ : show users whose payments is about to expire - **Only Group**
+/paybot_remove_payment : remove users whose payment is expired - **Only Group**
 
 **Payment Check Task**
-/payment_task_start __[PERIOD_HOURS]__ : start payment check task with the specified period
-/payment_task_stop : stop payment check task
-/payment_task_add_chat : add the current chat to the payment check task - **Only Group**
-/payment_task_remove_chat : remove the current chat from the payment check task - **Only Group**
-/payment_task_remove_all_chats : remove all chats from the payment check task
-/payment_task_info : show payment check task information
+/paybot_task_start __[PERIOD_HOURS]__ : start payment check task with the specified period
+/paybot_task_stop : stop payment check task
+/paybot_task_add_chat : add the current chat to the payment check task - **Only Group**
+/paybot_task_remove_chat : remove the current chat from the payment check task - **Only Group**
+/paybot_task_remove_all_chats : remove all chats from the payment check task
+/paybot_task_info : show payment check task information
 
 Commands that can be executed only in chat group are specified in bold text.
 Parameters in square brakets are optional.
@@ -112,9 +112,11 @@ Group: **{chat_title}**
     <!-- Remove no username command message (notice) -->
     <sentence id="REMOVE_NO_USERNAME_NOTICE_CMD">**USERNAME CHECK**
 Group: **{chat_title}**
-The members without username are going to be removed.</sentence>
+⌛ The members without username are going to be removed...</sentence>
     <!-- Remove no username command message (completed) -->
-    <sentence id="REMOVE_NO_USERNAME_COMPLETED_CMD">Operation completed. Removed members: **{members_count}**</sentence>
+    <sentence id="REMOVE_NO_USERNAME_COMPLETED_CMD">✅ Operation completed.
+
+Removed members: **{members_count}**</sentence>
     <!-- Remove no username command message (list) -->
     <sentence id="REMOVE_NO_USERNAME_LIST_CMD">\nMembers list:
 {members_list}</sentence>
@@ -139,12 +141,14 @@ Payment check on joined members is currently disabled.</sentence>
 
     <!-- Check payment data command message (notice) -->
     <sentence id="CHECK_PAYMENTS_DATA_NOTICE_CMD">**CHECK PAYMENTS DATA**
-Payments data is going to be checked.</sentence>
+⌛ Payments data is going to be checked...</sentence>
     <!-- Check payment data command message (completed) -->
-    <sentence id="CHECK_PAYMENTS_DATA_COMPLETED_CMD">Operation completed. Found errors: {errors_count}</sentence>
-    <!-- Check payment data command message (username error) -->
-    <sentence id="CHECK_PAYMENTS_DATA_USERNAME_ERR_CMD">
-- Username @{username} is present more than one time at row {row_index}</sentence>
+    <sentence id="CHECK_PAYMENTS_DATA_COMPLETED_CMD">✅ Operation completed.
+
+Found errors: {errors_count}</sentence>
+    <!-- Check payment data command message (duplicated error) -->
+    <sentence id="CHECK_PAYMENTS_DATA_DUPLICATED_ERR_CMD">
+- Email {email} or username @{username} is present more than one time at row {row_index}</sentence>
     <!-- Check payment data command message (expiration error) -->
     <sentence id="CHECK_PAYMENTS_DATA_DATE_ERR_CMD">
 - Expiration date for username @{username} at row {row_index} is not valid ({expiration_date})</sentence>
@@ -157,9 +161,10 @@ Payments data is going to be checked.</sentence>
     <!-- Email no payment command message (notice) -->
     <sentence id="EMAIL_NO_PAYMENT_NOTICE_CMD">**PAYMENTS REMINDER**
 Group: **{chat_title}**
-Members whose payment is about to expire are going to be notified via email.</sentence>
+⌛ Members whose payment is about to expire are going to be notified via email...</sentence>
     <!-- Email no payment command message (completed) -->
-    <sentence id="EMAIL_NO_PAYMENT_COMPLETED_CMD">Operation completed.
+    <sentence id="EMAIL_NO_PAYMENT_COMPLETED_CMD">✅ Operation completed.
+
 Members whose payment is about to expire {days_left}: **{members_count}**
 Members list:
 {members_list}
@@ -172,9 +177,10 @@ A reminder email has been sent to all members.</sentence>
     <!-- Check no payment command message (notice) -->
     <sentence id="CHECK_NO_PAYMENT_NOTICE_CMD">**PAYMENTS CHECK**
 Group: **{chat_title}**
-Members whose payment is about to expire are going to be checked.</sentence>
+⌛ Members whose payment is about to expire are going to be checked...</sentence>
     <!-- Check no payment command message (completed) -->
-    <sentence id="CHECK_NO_PAYMENT_COMPLETED_CMD">Operation completed.
+    <sentence id="CHECK_NO_PAYMENT_COMPLETED_CMD">✅ Operation completed.
+
 Members whose payment is about to expire {days_left}: **{members_count}**
 Members list:
 {members_list}
@@ -193,9 +199,11 @@ Please pay within {last_day} or you'll be removed from the group.</sentence>
     <!-- Remove no payment command message (notice) -->
     <sentence id="REMOVE_NO_PAYMENT_NOTICE_CMD">**PAYMENTS CHECK**
 Group: **{chat_title}**
-Members whose payment is about to expire are going to be removed.</sentence>
+⌛ Members whose payment is about to expire are going to be removed...</sentence>
     <!-- Remove no payment command message (completed) -->
-    <sentence id="REMOVE_NO_PAYMENT_COMPLETED_CMD">Operation completed. Removed members: **{members_count}**</sentence>
+    <sentence id="REMOVE_NO_PAYMENT_COMPLETED_CMD">✅ Operation completed.
+
+Removed members: **{members_count}**</sentence>
     <!-- Remove no payment command message (all ok) -->
     <sentence id="REMOVE_NO_PAYMENT_LIST_CMD">\nMembers list:
 {members_list}</sentence>
