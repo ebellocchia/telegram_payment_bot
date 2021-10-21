@@ -100,7 +100,7 @@ class _ConfigDataUtils:
             if config.IsValueSet(column):
                 columns.append(config.GetValue(column))
 
-        # All possible cases
+        # Check columns if any
         if len(columns) > 0:
             # The current column shall be different from the already present ones
             for col in columns:
