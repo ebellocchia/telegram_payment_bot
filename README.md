@@ -101,31 +101,31 @@ The list of all possible fields that can be set is shown below.
 List of supported commands:
 - **/help**: show help message
 - **/alive**: show if bot is active
-- **/set_test_mode *true/false***: enable/disable test mode (overwrite *app_is_test_mode* configuration field)
-- **/is_test_mode**: show if test mode is enabled
-- **/auth_users**: show the list of authorized users that can use the bot
-- **/chat_info**: show the chat information (can be run only in group)
-- **/users_list**: show the users list (can be run only in group)
-- **/invite_link**: generate a new invite link (can be run only in group)
-- **/check_no_username *[<HOURS_LEFT>]***: show the list of chat members without a username (can be run only in group)
+- **/paybot_set_test_mode *true/false***: enable/disable test mode (overwrite *app_is_test_mode* configuration field)
+- **/paybot_is_test_mode**: show if test mode is enabled
+- **/paybot_auth_users**: show the list of authorized users that can use the bot
+- **/paybot_chat_info**: show the chat information (can be run only in group)
+- **/paybot_users_list**: show the users list (can be run only in group)
+- **/paybot_invite_link**: generate a new invite link (can be run only in group)
+- **/paybot_checkusername *[<HOURS_LEFT>]***: show the list of chat members without a username (can be run only in group)
     - *HOURS_LEFT* (optional): hours left to set the username before being removed (only for printing the message). Hours are automatically converted to days if greater than 47. If less than 1, it'll print "as soon as possible". Default value: 0.
-- **/remove_no_username**: remove all the chat members without a username (can be run only in group)
-- **/set_check_payment_on_join *true/false***: enable/disable payment check when a new member joins
-- **/is_check_payment_on_join**: show if payment check when a new member joins is enabled
-- **/check_payments_data** : check payments data for errors (e.g. invalid dates, duplicated usernames) and show them
-- **/email_no_payment *[<DAYS_LEFT>]***: send a reminder email to chat members whose payment is expiring in the specified number of days
+- **/paybot_removeusername**: remove all the chat members without a username (can be run only in group)
+- **/paybot_set_check_on_join *true/false***: enable/disable payment check when a new member joins
+- **/paybot_is_check_on_join**: show if payment check when a new member joins is enabled
+- **/paybot_check_data** : check payments data for errors (e.g. invalid dates, duplicated usernames) and show them
+- **/paybot_email_payment *[<DAYS_LEFT>]***: send a reminder email to chat members whose payment is expiring in the specified number of days
     - *DAYS_LEFT* (optional): number of days within which the payment expires. Less than 1 means expiring today. Default value: 0.
-- **/check_no_payment *[<DAYS_LEFT>] [<LAST_DAY>]***: show the list of chat members whose payment is expiring in the specified number of days (can be run only in group)
+- **/paybot_check_payment *[<DAYS_LEFT>] [<LAST_DAY>]***: show the list of chat members whose payment is expiring in the specified number of days (can be run only in group)
     - *DAYS_LEFT* (optional): number of days within which the payment expires. Less than 1 means expiring today. Default value: 0.
     - *LAST_DAY* (optional): last day to complete the payment before being removed (only for printing the message). If less than 1 or greater than 31, it'll print "within few days". Default value: 0.
-- **/remove_no_payment**: remove the chat members whose payment has expired (can be run only in group)
-- **/payment_task_start *PERIOD_HOURS***: start payment check task with the specified period
+- **/paybot_remove_payment**: remove the chat members whose payment has expired (can be run only in group)
+- **/paybot_task_start *PERIOD_HOURS***: start payment check task with the specified period
     - *PERIOD_HOURS*: task period in hours
-- **/payment_task_stop**: stop payment check task
-- **/payment_task_info**: show payment check task information
-- **/payment_task_add_chat**: add the current chat to the payment check task
-- **/payment_task_remove_chat**: remove the current chat from the payment check task
-- **/payment_task_remove_all_chats**: remove all chats from the payment check task
+- **/paybot_task_stop**: stop payment check task
+- **/paybot_task_info**: show payment check task information
+- **/paybot_task_add_chat**: add the current chat to the payment check task
+- **/paybot_task_remove_chat**: remove the current chat from the payment check task
+- **/paybot_task_remove_all_chats**: remove all chats from the payment check task
 
 Add *quiet* or *q* as last parameter to send the bot response in a private chat instead of the group chat.
 
