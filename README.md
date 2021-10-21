@@ -145,8 +145,8 @@ The task can check multiple groups in one time (sharing the same payments data, 
 If no group was added, the task will simply run without checking any group.
 
 The period of the task always starts from midnight (if you use a VPS, be sure to set the correct time), for example:
-- A task period of 8 hours will display chart/price information at 00:00, 08:00 and 16:00
-- A task period of 6 hours will display chart/price information at 00:00, 06:00, 12:00 and 18:00
+- A task period of 8 hours will check for payments at 00:00, 08:00 and 16:00
+- A task period of 6 hours will check for payments at 00:00, 06:00, 12:00 and 18:00
 
 ## Run the Bot
 
