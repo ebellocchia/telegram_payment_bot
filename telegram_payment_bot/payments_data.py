@@ -22,9 +22,9 @@
 # Imports
 #
 from __future__ import annotations
+import datetime
 from enum import Enum, auto, unique
 from typing import Optional
-from datetime import datetime
 from telegram_payment_bot.wrapped_dict import WrappedDict
 from telegram_payment_bot.wrapped_list import WrappedList
 
@@ -49,13 +49,13 @@ class SinglePayment:
 
     email: str
     username: str
-    expiration_date: datetime
+    expiration_date: datetime.date
 
     # Constructor
     def __init__(self,
                  email: str,
                  username: str,
-                 expiration_date: datetime):
+                 expiration_date: datetime.date):
         self.email = email
         self.username = username
         self.expiration_date = expiration_date
@@ -69,16 +69,16 @@ class SinglePayment:
         return self.username
 
     # Get expiration date
-    def ExpirationDate(self) -> datetime:
+    def ExpirationDate(self) -> datetime.date:
         return self.expiration_date
 
     # Get days left until expiration
     def DaysLeft(self) -> int:
-        return (self.expiration_date - datetime.now()).days
+        return (self.expiration_date - datetime.date.today()).days
 
     # Get if expired
     def IsExpired(self) -> bool:
-        return self.expiration_date.date() < datetime.now().date()
+        return self.expiration_date < datetime.date.today()
 
     # Get if expiring in the specified number of days
     def IsExpiringInDays(self,
@@ -87,7 +87,7 @@ class SinglePayment:
 
     # Convert to string
     def ToString(self) -> str:
-        return f"{self.email} (@{self.username}): {self.expiration_date.date().strftime('%Y-%m-%d')}"
+        return f"{self.email} (@{self.username}): {self.expiration_date.strftime('%Y-%m-%d')}"
 
     # Convert to string
     def __str__(self) -> str:
@@ -155,7 +155,7 @@ class PaymentsData(WrappedDict):
     def AddPayment(self,
                    email: str,
                    username: str,
-                   expiration: datetime) -> bool:
+                   expiration: datetime.date) -> bool:
         added = False
 
         username = username[1:] if username.startswith("@") else username

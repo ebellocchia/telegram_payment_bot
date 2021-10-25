@@ -116,11 +116,11 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
                      expiration: Any) -> None:
         # In Excel, a date can be a number or a string
         try:
-            expiration_datetime = xlrd.xldate_as_datetime(expiration, 0)
+            expiration_datetime = xlrd.xldate_as_datetime(expiration, 0).date()
         except TypeError:
             try:
                 expiration_datetime = datetime.strptime(expiration.strip(),
-                                                        self.config.GetValue(ConfigTypes.PAYMENT_DATE_FORMAT))
+                                                        self.config.GetValue(ConfigTypes.PAYMENT_DATE_FORMAT)).date()
             except ValueError:
                 self.logger.GetLogger().warning(
                     f"Expiration date for username @{username} at row {row_idx} is not valid ({expiration}), skipped"
@@ -128,6 +128,7 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
                 # Add error
                 payments_data_err.AddPaymentError(PaymentErrorTypes.INVALID_DATE_ERR,
                                                   row_idx,
+                                                  email,
                                                   username,
                                                   expiration)
                 return
@@ -135,15 +136,16 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
         # Add data
         if payments_data.AddPayment(email, username, expiration_datetime):
             self.logger.GetLogger().debug(
-                f"{payments_data.Count():4d} - Row {row_idx:4d} | {email} | {username} | {expiration_datetime.date()}"
+                f"{payments_data.Count():4d} - Row {row_idx:4d} | {email} | {username} | {expiration_datetime}"
             )
         else:
             self.logger.GetLogger().warning(
                 f"Username @{username} is present more than one time at row {row_idx}, skipped"
             )
             # Add error
-            payments_data_err.AddPaymentError(PaymentErrorTypes.DUPLICATED_USERNAME_ERR,
+            payments_data_err.AddPaymentError(PaymentErrorTypes.DUPLICATED_PAYMENT_ERR,
                                               row_idx,
+                                              email,
                                               username)
 
     # Get sheet

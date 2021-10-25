@@ -124,7 +124,7 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
         # Convert date to datetime object
         try:
             expiration_datetime = datetime.strptime(expiration,
-                                                    self.config.GetValue(ConfigTypes.PAYMENT_DATE_FORMAT))
+                                                    self.config.GetValue(ConfigTypes.PAYMENT_DATE_FORMAT)).date()
         except ValueError:
             self.logger.GetLogger().warning(
                 f"Expiration date for username @{username} at row {row_idx} is not valid ({expiration}), skipped"
@@ -132,6 +132,7 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
             # Add error
             payments_data_err.AddPaymentError(PaymentErrorTypes.INVALID_DATE_ERR,
                                               row_idx,
+                                              email,
                                               username,
                                               expiration)
             return
@@ -139,7 +140,7 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
         # Add data
         if payments_data.AddPayment(email, username, expiration_datetime):
             self.logger.GetLogger().debug(
-                f"{payments_data.Count():4d} - Row {row_idx:4d} | {email} | {username} | {expiration_datetime.date()}"
+                f"{payments_data.Count():4d} - Row {row_idx:4d} | {email} | {username} | {expiration_datetime}"
             )
         else:
             self.logger.GetLogger().warning(
