@@ -277,7 +277,7 @@ PaymentBotConfigCfg: ConfigCfgType = {
             "name": "log_level",
             "conv_fct": _ConfigDataTypeConverter.StrToLogLevel,
             "print_fct": _ConfigDataTypeConverter.LogLevelToStr,
-            "def_val": True,
+            "def_val": logging.INFO,
         },
         {
             "type": ConfigTypes.LOG_CONSOLE_ENABLED,
