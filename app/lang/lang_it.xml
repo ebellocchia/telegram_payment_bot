@@ -112,6 +112,7 @@ Gruppo: **{chat_title}**
     <!-- Remove no username command message (notice) -->
     <sentence id="REMOVE_NO_USERNAME_NOTICE_CMD">**CONTROLLO USERNAME**
 Gruppo: **{chat_title}**
+
 ⏳ I membri senza username stanno per essere rimossi.</sentence>
     <!-- Remove no username command message (completed) -->
     <sentence id="REMOVE_NO_USERNAME_COMPLETED_CMD">✅ Operazione completata.
@@ -160,6 +161,7 @@ Errori trovati: **{errors_count}**</sentence>
     <!-- Email no payment command message (notice) -->
     <sentence id="EMAIL_NO_PAYMENT_NOTICE_CMD">**AVVISO PAGAMENTI**
 Gruppo: **{chat_title}**
+
 ⏳ I membri il cui pagamento sta per scadere stanno per essere avvisati via email...</sentence>
     <!-- Email no payment command message (completed) -->
     <sentence id="EMAIL_NO_PAYMENT_COMPLETED_CMD">✅ Operazione completata.
@@ -176,6 +178,7 @@ Una email è stata inviata a tutti i membri.</sentence>
     <!-- Check no payment command message (notice) -->
     <sentence id="CHECK_NO_PAYMENT_NOTICE_CMD">**CONTROLLO PAGAMENTI**
 Gruppo: **{chat_title}**
+
 ⏳ I membri il cui pagamento sta per scadere stanno per essere controllati...</sentence>
     <!-- Check no payment command message (completed) -->
     <sentence id="CHECK_NO_PAYMENT_COMPLETED_CMD">✅ Operazione completata.
@@ -198,6 +201,7 @@ Siete pregati di pagare entro {last_day} o verrete rimossi dal gruppo.</sentence
     <!-- Remove no payment command message (notice) -->
     <sentence id="REMOVE_NO_PAYMENT_NOTICE_CMD">**CONTROLLO PAGAMENTI**
 Gruppo: **{chat_title}**
+
 ⏳ I membri il cui pagamento sta per scadere stanno per essere rimossi...</sentence>
     <!-- Remove no payment command message (completed) -->
     <sentence id="REMOVE_NO_PAYMENT_COMPLETED_CMD">✅ Operazione completata.
