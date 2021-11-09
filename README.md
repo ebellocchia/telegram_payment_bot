@@ -72,9 +72,10 @@ The list of all possible fields that can be set is shown below.
 |payment_google_sheet_id|ID of the Google Sheet used for payment data, valid only if *payment_type* is *GOOGLE_SHEET*|
 |payment_google_cred|Name of the *json* file for the OAuth credentials (default: *credentials.json*), valid only if *payment_type* is *GOOGLE_SHEET*|
 |payment_google_cred_path|Path where Google credentials will be saved, valid only if *payment_type* is *GOOGLE_SHEET*|
-|payment_email_col|Table column (letter) containing the email used for paying (default: A, maximum: 25)|
-|payment_username_col|Table column (letter) containing the username (default: B, maximum: 25)|
-|payment_expiration_col|Table column (letter) containing the payment expiration date (default: C, maximum: 25)|
+|payment_use_user_id|If true, *payment_user_col* will be considered as a user ID (number), otherwise it'll be considered as a username|
+|payment_email_col|Table column (letter) containing the email used for paying (default: A, maximum: Z)|
+|payment_user_col|Table column (letter) containing the user (default: B, maximum: Z). The user can be a username or a user ID (depending on the *payment_use_user_id* flag).|
+|payment_expiration_col|Table column (letter) containing the payment expiration date (default: C, maximum: Z)|
 |payment_date_format|Date format in payments data (default: %d/%m/%Y)|
 |**[email]**|Configuration for email that reminds users to pay|
 |email_enabled|Email enable flag (default: false). If false, all the next fields will be skipped.|
@@ -107,12 +108,12 @@ List of supported commands:
 - **/paybot_chat_info**: show the chat information (can be run only in group)
 - **/paybot_users_list**: show the users list (can be run only in group)
 - **/paybot_invite_link**: generate a new invite link (can be run only in group)
-- **/paybot_checkusername *[<HOURS_LEFT>]***: show the list of chat members without a username (can be run only in group)
+- **/paybot_check_username *[<HOURS_LEFT>]***: show the list of chat members without a username (can be run only in group)
     - *HOURS_LEFT* (optional): hours left to set the username before being removed (only for printing the message). Hours are automatically converted to days if greater than 47. If less than 1, it'll print "as soon as possible". Default value: 0.
-- **/paybot_removeusername**: remove all the chat members without a username (can be run only in group)
+- **/paybot_remove_username**: remove all the chat members without a username (can be run only in group)
 - **/paybot_set_check_on_join *true/false***: enable/disable payment check when a new member joins
 - **/paybot_is_check_on_join**: show if payment check when a new member joins is enabled
-- **/paybot_check_data** : check payments data for errors (e.g. invalid dates, duplicated usernames) and show them
+- **/paybot_check_data** : check payments data for errors (e.g. invalid dates, duplicated users) and show them
 - **/paybot_email_payment *[<DAYS_LEFT>]***: send a reminder email to chat members whose payment is expiring in the specified number of days
     - *DAYS_LEFT* (optional): number of days within which the payment expires. Less than 1 means expiring today. Default value: 0.
 - **/paybot_check_payment *[<DAYS_LEFT>] [<LAST_DAY>]***: show the list of chat members whose payment is expiring in the specified number of days (can be run only in group)
@@ -134,13 +135,13 @@ When users are removed from the group (either because they had no username or th
 This automatically revokes the old invite link and prevents those users to join again using it.
 
 When checking for payments, a user is removed from the group if:
-- He has no Telegram username
-- His Telegram username is not found in the payments data
+- He has no Telegram username (only if *payment_use_user_id* is false)
+- His Telegram username or user ID is not found in the payments data
 - His payment is expired
 
 ## Payment Check Task
 
-It's possible to run a background task to check for payments periodically. It can be started/stopped with the *paybot_task_start*/*paybot_task_stop* commands.\
+It's suggested to run a background task to check for payments periodically. It can be started/stopped with the *paybot_task_start*/*paybot_task_stop* commands.\
 The task can check multiple groups in one time (sharing the same payments data, of course). The groups can be added/removed with the *paybot_task_add_chat*/*paybot_task_remove_chat* commands (either while the task is running or stopped).\
 If no group was added, the task will simply run without checking any group.
 
@@ -173,7 +174,7 @@ For more information: [create project](https://developers.google.com/workspace/g
 
 In both cases (Google Sheet or Excel file), the file shall contain the following columns starting from the second row (the first row is used as header):
 - Email address used for paying (for convenience, since an email address is usually required in payment platforms)
-- Telegram username
+- Telegram user ID or username
 - Expiration date of the payment in the format specified by *payment_date_format*
 
 The indexes of these columns are set in the configuration file. It is possible to add other columns beside these if necessary, they are simply ignored by the bot.
