@@ -96,6 +96,7 @@ Gruppo: **{chat_title}**
 Membri senza username: **{members_count}**
 Lista membri:
 {members_list}
+
 Siete pregati di impostare lo username {hours_left} o verrete rimossi dal gruppo.
 Per impostarlo: **Impostazioni -> Modifica profilo -> username**</sentence>
     <!-- Check username command message (email/telegram) -->
@@ -148,10 +149,10 @@ Il controllo pagamento sui membri appena entrati è attualmente disattivato.</se
 Errori trovati: **{errors_count}**</sentence>
     <!-- Check payment data command message (duplicated error) -->
     <sentence id="CHECK_PAYMENTS_DATA_DUPLICATED_ERR_CMD">
-- L'email {email} o lo username @{username} è presente più di una volta alla riga {row_index}</sentence>
+- L'email {email} o lo user {user} è presente più di una volta alla riga {row_index}</sentence>
     <!-- Check payment data command message (expiration error) -->
     <sentence id="CHECK_PAYMENTS_DATA_DATE_ERR_CMD">
-- La data di scadenza per lo username @{username} alla riga {row_index} non è valida ({expiration_date})</sentence>
+- La data di scadenza per lo user {user} alla riga {row_index} non è valida ({expiration_date})</sentence>
     <!-- Check payment data command message (all ok) -->
     <sentence id="CHECK_PAYMENTS_DATA_ALL_OK_CMD">✅ I dati di pagamento sono corretti, nessun errore trovato.</sentence>
 
@@ -169,6 +170,7 @@ Gruppo: **{chat_title}**
 Membri il cui pagamento sta per cadere {days_left}: **{members_count}**
 Lista membri:
 {members_list}
+
 Una email è stata inviata a tutti i membri.</sentence>
     <!-- Email no payment command message (all ok) -->
     <sentence id="EMAIL_NO_PAYMENT_ALL_OK_CMD">Tutti i membri hanno pagato, nessuna email inviata.</sentence>
@@ -186,6 +188,7 @@ Gruppo: **{chat_title}**
 Membri il cui pagamento sta per cadere {days_left}: **{members_count}**
 Lista membri:
 {members_list}
+
 Siete pregati di pagare entro {last_day} o verrete rimossi dal gruppo.</sentence>
     <!-- Check no payment command message (website) -->
     <sentence id="CHECK_NO_PAYMENT_WEBSITE_CMD">\n\nPotete pagare direttamente dal sito: {website}</sentence>
@@ -299,6 +302,6 @@ Non dimenticarti di **farmi amministratore del gruppo** o non potrò funzionare 
     <sentence id="TOMORROW_MSG">domani</sentence>
     <sentence id="DAY_OF_MONTH_MSG">il giorno {day_of_month} del mese</sentence>
     <sentence id="FEW_DAYS_MSG">pochi giorni</sentence>
-    <sentence id="JOINED_MEMBER_KICKED_FOR_PAYMENT_MSG">Nuovo membro {name} rimosso (si è unito al gruppo senza pagamento)</sentence>
-    <sentence id="JOINED_MEMBER_KICKED_FOR_USERNAME_MSG">Nuovo membro {name} rimosso (si è unito al gruppo senza username)</sentence>
+    <sentence id="JOINED_MEMBER_KICKED_FOR_PAYMENT_MSG">❗️ Nuovo membro {name} rimosso (si è unito al gruppo senza pagamento)</sentence>
+    <sentence id="JOINED_MEMBER_KICKED_FOR_USERNAME_MSG">❗️ Nuovo membro {name} rimosso (si è unito al gruppo senza username)</sentence>
 </translation>

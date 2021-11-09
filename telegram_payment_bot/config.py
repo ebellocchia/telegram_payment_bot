@@ -49,8 +49,9 @@ class ConfigTypes(Enum):
     PAYMENT_GOOGLE_SHEET_ID = auto()
     PAYMENT_GOOGLE_CRED = auto()
     PAYMENT_GOOGLE_CRED_PATH = auto()
+    PAYMENT_USE_USER_ID = auto()
     PAYMENT_EMAIL_COL = auto()
-    PAYMENT_USERNAME_COL = auto()
+    PAYMENT_USER_COL = auto()
     PAYMENT_EXPIRATION_COL = auto()
     PAYMENT_DATE_FORMAT = auto()
     # Email

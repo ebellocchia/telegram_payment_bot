@@ -25,6 +25,7 @@ from __future__ import annotations
 import datetime
 from enum import Enum, auto, unique
 from typing import Optional
+from telegram_payment_bot.user import User
 from telegram_payment_bot.wrapped_dict import WrappedDict
 from telegram_payment_bot.wrapped_list import WrappedList
 
@@ -48,25 +49,25 @@ class PaymentErrorTypes(Enum):
 class SinglePayment:
 
     email: str
-    username: str
+    user: User
     expiration_date: datetime.date
 
     # Constructor
     def __init__(self,
                  email: str,
-                 username: str,
+                 user: User,
                  expiration_date: datetime.date):
         self.email = email
-        self.username = username
+        self.user = user
         self.expiration_date = expiration_date
 
     # Get email
     def Email(self) -> str:
         return self.email
 
-    # Get username
-    def Username(self) -> str:
-        return self.username
+    # Get user
+    def User(self) -> User:
+        return self.user
 
     # Get expiration date
     def ExpirationDate(self) -> datetime.date:
@@ -87,7 +88,7 @@ class SinglePayment:
 
     # Convert to string
     def ToString(self) -> str:
-        return f"{self.email} (@{self.username}): {self.expiration_date.strftime('%Y-%m-%d')}"
+        return f"{self.email} ({self.user}): {self.expiration_date.strftime('%Y-%m-%d')}"
 
     # Convert to string
     def __str__(self) -> str:
@@ -100,7 +101,7 @@ class PaymentError:
     err_type: PaymentErrorTypes
     row: int
     email: str
-    username: str
+    user: User
     expiration_date: Optional[str]
 
     # Constructor
@@ -108,12 +109,12 @@ class PaymentError:
                  err_type: PaymentErrorTypes,
                  row: int,
                  email: str,
-                 username: str,
+                 user: User,
                  expiration_data: Optional[str]):
         self.err_type = err_type
         self.row = row
         self.email = email
-        self.username = username
+        self.user = user
         self.expiration_date = expiration_data
 
     # Get type
@@ -128,9 +129,9 @@ class PaymentError:
     def Email(self) -> str:
         return self.email
 
-    # Get username
-    def Username(self) -> str:
-        return self.username
+    # Get user
+    def User(self) -> User:
+        return self.user
 
     # Get expiration date
     def ExpirationDate(self) -> Optional[str]:
@@ -144,9 +145,9 @@ class PaymentsDataErrors(WrappedList):
                         err_type: PaymentErrorTypes,
                         row: int,
                         email: str,
-                        username: str,
+                        user: User,
                         expiration: Optional[str] = None) -> None:
-        self.AddSingle(PaymentError(err_type, row, email, username, expiration))
+        self.AddSingle(PaymentError(err_type, row, email, user, expiration))
 
 
 # Payments data class
@@ -154,14 +155,13 @@ class PaymentsData(WrappedDict):
     # Add payment
     def AddPayment(self,
                    email: str,
-                   username: str,
+                   user: User,
                    expiration: datetime.date) -> bool:
         added = False
 
-        username = username[1:] if username.startswith("@") else username
-        if (not self.IsUsernameExistent(username) and
+        if (not self.IsUserExistent(user) and
                 (email == "" or not self.IsEmailExistent(email))):
-            self.AddSingle(username.lower(), SinglePayment(email, username, expiration))
+            self.AddSingle(user.GetAsKey(), SinglePayment(email, user, expiration))
             added = True
 
         return added
@@ -174,44 +174,43 @@ class PaymentsData(WrappedDict):
                 return payment
         return None
 
-    # Get by username
-    def GetByUsername(self,
-                      username: str) -> Optional[SinglePayment]:
-        try:
-            return self.dict_elements[username.lower()]
-        except KeyError:
+    # Get by user
+    def GetByUser(self,
+                  user: User) -> Optional[SinglePayment]:
+        if not user.IsValid() or user.GetAsKey() not in self.dict_elements:
             return None
+        return self.dict_elements[user.GetAsKey()]
 
     # Get if email is existent
     def IsEmailExistent(self,
                         email: str) -> bool:
         return self.GetByEmail(email) is not None
 
-    # Get if username is existent
-    def IsUsernameExistent(self,
-                           username: str) -> bool:
-        return self.GetByUsername(username) is not None
+    # Get if user is existent
+    def IsUserExistent(self,
+                       user: User) -> bool:
+        return self.GetByUser(user) is not None
 
-    # Get if the payment associated to the username is expired
-    def IsExpiredByUsername(self,
-                            username: str) -> bool:
+    # Get if the payment associated to the user is expired
+    def IsExpiredByUser(self,
+                        user: User) -> bool:
         # Get user payment
-        payment = self.GetByUsername(username)
-        # If username is not in the file, consider it as expired
+        payment = self.GetByUser(user)
+        # If user is not in the file, consider it as expired
         return payment.IsExpired() if payment is not None else True
 
-    # Get if the payment associated to the username is expiring payments in the specified number of days
-    def IsExpiringInDaysByUsername(self,
-                                   username: str,
-                                   days: int) -> bool:
+    # Get if the payment associated to the user is expiring payments in the specified number of days
+    def IsExpiringInDaysByUser(self,
+                               user: User,
+                               days: int) -> bool:
         # Get user payment
-        payment = self.GetByUsername(username)
-        # If username is not in the file, consider it as expired
+        payment = self.GetByUser(user)
+        # If user is not in the file, consider it as expired
         return payment.IsExpiringInDays(days) if payment is not None else True
 
     # Filter expired payments
     def FilterExpired(self) -> PaymentsData:
-        expired_payments = {username: payment for (username, payment)
+        expired_payments = {user: payment for (user, payment)
                             in self.dict_elements.items()
                             if payment.IsExpired()}
 
@@ -223,7 +222,7 @@ class PaymentsData(WrappedDict):
     # Filter expiring payments in the specified number of days
     def FilterExpiringInDays(self,
                              days: int) -> PaymentsData:
-        expiring_payments = {username: payment for (username, payment)
+        expiring_payments = {user: payment for (user, payment)
                              in self.dict_elements.items()
                              if payment.IsExpiringInDays(days)}
 
@@ -235,7 +234,7 @@ class PaymentsData(WrappedDict):
     # Convert to string
     def ToString(self) -> str:
         return "\n".join(
-            [f"- {str(payment)}" for (_, payment) in self.dict_elements.items()]
+            [f"- {str(payment)}" for _, payment in self.dict_elements.items()]
         )
 
     # Convert to string

@@ -326,11 +326,11 @@ class CheckPaymentsDataCmd(CommandBase):
                 if payment_err.Type() == PaymentErrorTypes.DUPLICATED_PAYMENT_ERR:
                     msg += self.translator.GetSentence("CHECK_PAYMENTS_DATA_DUPLICATED_ERR_CMD",
                                                        email=payment_err.Email(),
-                                                       username=payment_err.Username(),
+                                                       user=payment_err.User(),
                                                        row_index=payment_err.Row())
                 elif payment_err.Type() == PaymentErrorTypes.INVALID_DATE_ERR:
                     msg += self.translator.GetSentence("CHECK_PAYMENTS_DATA_DATE_ERR_CMD",
-                                                       username=payment_err.Username(),
+                                                       user=payment_err.User(),
                                                        row_index=payment_err.Row(),
                                                        expiration_date=payment_err.ExpirationDate())
         else:

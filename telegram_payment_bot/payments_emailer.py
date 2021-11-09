@@ -94,14 +94,10 @@ class PaymentsEmailer:
             # Connect
             self.emailer.Connect()
 
-            for username in expired_payments:
-                payment = expired_payments.GetByUsername(username)
-
-                # Check payment
-                if payment is None:
-                    continue
+            for payment in expired_payments.Values():
+                # Check email
                 if payment.Email() == "":
-                    self.logger.GetLogger().warning(f"No email set for user @{payment.Username()}, skipped")
+                    self.logger.GetLogger().warning(f"No email set for user {payment.User()}, skipped")
                     continue
 
                 # Prepare and send message
@@ -109,7 +105,7 @@ class PaymentsEmailer:
                 # Send email
                 self.emailer.Send()
                 self.logger.GetLogger().info(
-                    f"Email successfully sent to: {payment.Email()} (@{payment.Username()})"
+                    f"Email successfully sent to: {payment.Email()} ({payment.User()})"
                 )
                 # Sleep
                 time.sleep(PaymentsEmailerConst.SEND_EMAIL_SLEEP_TIME_SEC)

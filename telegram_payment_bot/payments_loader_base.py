@@ -26,6 +26,7 @@ from typing import Optional
 from telegram_payment_bot.config import Config
 from telegram_payment_bot.logger import Logger
 from telegram_payment_bot.payments_data import SinglePayment, PaymentsData, PaymentsDataErrors
+from telegram_payment_bot.user import User
 
 
 #
@@ -50,10 +51,9 @@ class PaymentsLoaderBase(ABC):
     def LoadAll(self) -> PaymentsData:
         pass
 
-    # Load single payment by username
-    @abstractmethod
-    def LoadSingleByUsername(self,
-                             username: str) -> Optional[SinglePayment]:
+    # Load single payment by user
+    def LoadSingleByUser(self,
+                         user: User) -> Optional[SinglePayment]:
         pass
 
     # Check for errors

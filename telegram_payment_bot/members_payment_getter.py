@@ -30,6 +30,7 @@ from telegram_payment_bot.chat_members import ChatMembersList, ChatMembersGetter
 from telegram_payment_bot.payments_loader_base import PaymentsLoaderBase
 from telegram_payment_bot.payments_loader_factory import PaymentsLoaderFactory
 from telegram_payment_bot.payments_data import SinglePayment, PaymentsData
+from telegram_payment_bot.user import User
 
 
 #
@@ -75,9 +76,11 @@ class MembersPaymentGetter:
         chat_members_getter = ChatMembersGetter(self.client, self.config)
         return chat_members_getter.FilterMembers(
             chat,
-            lambda member: (MemberHelper.IsValidMember(member) and
-                            member.user.username is not None and
-                            not payments.IsExpiredByUsername(member.user.username))
+            lambda member: (
+                MemberHelper.IsValidMember(member) and
+                member.user.username is not None and
+                not payments.IsExpiredByUser(User.FromUserObject(self.config, member.user))
+            )
         )
 
     # Get all members with expired payment
@@ -94,9 +97,11 @@ class MembersPaymentGetter:
         chat_members_getter = ChatMembersGetter(self.client, self.config)
         return chat_members_getter.FilterMembers(
             chat,
-            lambda member: (MemberHelper.IsValidMember(member) and
-                            (member.user.username is None or
-                             payments.IsExpiredByUsername(member.user.username)))
+            lambda member: (
+                MemberHelper.IsValidMember(member) and
+                (member.user.username is None or
+                 payments.IsExpiredByUser(User.FromUserObject(self.config, member.user)))
+            )
         )
 
     # Get all members with expiring payment
@@ -114,9 +119,11 @@ class MembersPaymentGetter:
         chat_members_getter = ChatMembersGetter(self.client, self.config)
         return chat_members_getter.FilterMembers(
             chat,
-            lambda member: (MemberHelper.IsValidMember(member) and
-                            (member.user.username is None or
-                             payments.IsExpiringInDaysByUsername(member.user.username, days)))
+            lambda member: (
+                MemberHelper.IsValidMember(member) and
+                (member.user.username is None or
+                 payments.IsExpiringInDaysByUser(User.FromUserObject(self.config, member.user), days))
+            )
         )
 
     # Get all emails with expired payment
@@ -156,7 +163,7 @@ class MembersPaymentGetter:
         # Load only the first time
         if self.single_payment_cache is None or self.single_payment_cache["user_id"] != user.id:
             self.single_payment_cache = {
-                "payment": self.payments_loader.LoadSingleByUsername(user.username),
+                "payment": self.payments_loader.LoadSingleByUser(User.FromUserObject(self.config, user)),
                 "user_id": user.id,
             }
 

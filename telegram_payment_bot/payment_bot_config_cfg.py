@@ -95,7 +95,7 @@ class _ConfigDataUtils:
         # Get other indexes that are already available
         columns = []
         for column in (ConfigTypes.PAYMENT_EMAIL_COL,
-                       ConfigTypes.PAYMENT_USERNAME_COL,
+                       ConfigTypes.PAYMENT_USER_COL,
                        ConfigTypes.PAYMENT_EXPIRATION_COL):
             if config.IsValueSet(column):
                 columns.append(config.GetValue(column))
@@ -191,6 +191,12 @@ PaymentBotConfigCfg: ConfigCfgType = {
             "load_if": lambda cfg: cfg.GetValue(ConfigTypes.PAYMENT_TYPE) == PaymentTypes.GOOGLE_SHEET,
         },
         {
+            "type": ConfigTypes.PAYMENT_USE_USER_ID,
+            "name": "payment_use_user_id",
+            "conv_fct": Utils.StrToBool,
+            "def_val": False,
+        },
+        {
             "type": ConfigTypes.PAYMENT_EMAIL_COL,
             "name": "payment_email_col",
             "conv_fct": lambda val: val.upper(),
@@ -198,8 +204,8 @@ PaymentBotConfigCfg: ConfigCfgType = {
             "valid_if": _ConfigDataUtils.AreColumnIndexesValid
         },
         {
-            "type": ConfigTypes.PAYMENT_USERNAME_COL,
-            "name": "payment_username_col",
+            "type": ConfigTypes.PAYMENT_USER_COL,
+            "name": "payment_user_col",
             "conv_fct": lambda val: val.upper(),
             "def_val": "B",
             "valid_if": _ConfigDataUtils.AreColumnIndexesValid

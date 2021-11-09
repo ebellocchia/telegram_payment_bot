@@ -55,8 +55,7 @@ class MemberHelper:
     def IsValidMember(member: pyrogram.types.ChatMember) -> bool:
         return (member.status == "member" and
                 (member.user.is_self is None or not member.user.is_self) and
-                (member.user.is_bot is None or not member.user.is_bot)
-                )
+                (member.user.is_bot is None or not member.user.is_bot))
 
 
 # User helper class

@@ -27,6 +27,7 @@ import pygsheets
 from telegram_payment_bot.config import ConfigTypes
 from telegram_payment_bot.payments_loader_base import PaymentsLoaderBase
 from telegram_payment_bot.payments_data import PaymentErrorTypes, SinglePayment, PaymentsData, PaymentsDataErrors
+from telegram_payment_bot.user import User
 
 
 #
@@ -39,10 +40,10 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
     def LoadAll(self) -> PaymentsData:
         return self.__LoadAndCheckAll()[0]
 
-    # Load single payment by username
-    def LoadSingleByUsername(self,
-                             username: str) -> Optional[SinglePayment]:
-        return self.LoadAll().GetByUsername(username)
+    # Load single payment by user
+    def LoadSingleByUser(self,
+                         user: User) -> Optional[SinglePayment]:
+        return self.LoadAll().GetByUser(user)
 
     # Check for errors
     def CheckForErrors(self) -> PaymentsDataErrors:
@@ -89,7 +90,7 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
 
         # Get column indexes
         email_col_idx = self._ColumnToIndex(self.config.GetValue(ConfigTypes.PAYMENT_EMAIL_COL))
-        username_col_idx = self._ColumnToIndex(self.config.GetValue(ConfigTypes.PAYMENT_USERNAME_COL))
+        user_col_idx = self._ColumnToIndex(self.config.GetValue(ConfigTypes.PAYMENT_USER_COL))
         expiration_col_idx = self._ColumnToIndex(self.config.GetValue(ConfigTypes.PAYMENT_EXPIRATION_COL))
 
         # Read each row
@@ -100,16 +101,16 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
                 try:
                     # Get cell values
                     email = row[email_col_idx].strip()
-                    username = row[username_col_idx].strip()
+                    user = User.FromString(self.config, row[user_col_idx].strip())
                     expiration = row[expiration_col_idx].strip()
                 except IndexError:
                     self.logger.GetLogger().warning(
                         f"Row index {i + 1} is not valid (some fields are missing), skipping it..."
                     )
                 else:
-                    # Skip empty usernames
-                    if username != "":
-                        self.__AddPayment(i + 1, payments_data, payments_data_err, email, username, expiration)
+                    # Skip invalid users
+                    if user.IsValid():
+                        self.__AddPayment(i + 1, payments_data, payments_data_err, email, user, expiration)
 
         return payments_data, payments_data_err
 
@@ -119,7 +120,7 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
                      payments_data: PaymentsData,
                      payments_data_err: PaymentsDataErrors,
                      email: str,
-                     username: str,
+                     user: User,
                      expiration: str) -> None:
         # Convert date to datetime object
         try:
@@ -127,27 +128,27 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
                                                     self.config.GetValue(ConfigTypes.PAYMENT_DATE_FORMAT)).date()
         except ValueError:
             self.logger.GetLogger().warning(
-                f"Expiration date for username @{username} at row {row_idx} is not valid ({expiration}), skipped"
+                f"Expiration date for user {user} at row {row_idx} is not valid ({expiration}), skipped"
             )
             # Add error
             payments_data_err.AddPaymentError(PaymentErrorTypes.INVALID_DATE_ERR,
                                               row_idx,
                                               email,
-                                              username,
+                                              user,
                                               expiration)
             return
 
         # Add data
-        if payments_data.AddPayment(email, username, expiration_datetime):
-            self.logger.GetLogger().debug(
-                f"{payments_data.Count():4d} - Row {row_idx:4d} | {email} | {username} | {expiration_datetime}"
+        if payments_data.AddPayment(email, user, expiration_datetime):
+            self.logger.GetLogger().info(
+                f"{payments_data.Count():4d} - Row {row_idx:4d} | {email} | {user} | {expiration_datetime}"
             )
         else:
             self.logger.GetLogger().warning(
-                f"Email {email} or username @{username} is present more than one time at row {row_idx}, skipped"
+                f"Email {email} or user {user} is present more than one time at row {row_idx}, skipped"
             )
             # Add error
             payments_data_err.AddPaymentError(PaymentErrorTypes.DUPLICATED_PAYMENT_ERR,
                                               row_idx,
                                               email,
-                                              username)
+                                              user)

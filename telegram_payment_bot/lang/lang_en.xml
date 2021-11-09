@@ -96,6 +96,7 @@ Group: **{chat_title}**
 Members with no username: **{members_count}**
 Members list:
 {members_list}
+
 Please set the username {hours_left} or you'll be removed from the group.
 To set it: **Settings -> Edit Profile -> username**</sentence>
     <!-- Check username command message (email/telegram) -->
@@ -149,10 +150,10 @@ Payment check on joined members is currently disabled.</sentence>
 Found errors: {errors_count}</sentence>
     <!-- Check payment data command message (duplicated error) -->
     <sentence id="CHECK_PAYMENTS_DATA_DUPLICATED_ERR_CMD">
-- Email {email} or username @{username} is present more than one time at row {row_index}</sentence>
+- Email {email} or user {user} is present more than one time at row {row_index}</sentence>
     <!-- Check payment data command message (expiration error) -->
     <sentence id="CHECK_PAYMENTS_DATA_DATE_ERR_CMD">
-- Expiration date for username @{username} at row {row_index} is not valid ({expiration_date})</sentence>
+- Expiration date for user {user} at row {row_index} is not valid ({expiration_date})</sentence>
     <!-- Check payment data command message (all ok) -->
     <sentence id="CHECK_PAYMENTS_DATA_ALL_OK_CMD">✅ Payments data is correct, no error found.</sentence>
 
@@ -170,6 +171,7 @@ Group: **{chat_title}**
 Members whose payment is about to expire {days_left}: **{members_count}**
 Members list:
 {members_list}
+
 A reminder email has been sent to all members.</sentence>
     <!-- Email no payment command message (all ok) -->
     <sentence id="EMAIL_NO_PAYMENT_ALL_OK_CMD">All members paid, no email sent.</sentence>
@@ -187,6 +189,7 @@ Group: **{chat_title}**
 Members whose payment is about to expire {days_left}: **{members_count}**
 Members list:
 {members_list}
+
 Please pay within {last_day} or you'll be removed from the group.</sentence>
     <!-- Check no payment command message (website) -->
     <sentence id="CHECK_NO_PAYMENT_WEBSITE_CMD">\n\nYou can pay directly on the website: {website}</sentence>
@@ -300,6 +303,6 @@ Do not forget to **make me administrator of the group** or I won't work properly
     <sentence id="TOMORROW_MSG">tomorrow</sentence>
     <sentence id="DAY_OF_MONTH_MSG">day {day_of_month} of the month</sentence>
     <sentence id="FEW_DAYS_MSG">few days</sentence>
-    <sentence id="JOINED_MEMBER_KICKED_FOR_PAYMENT_MSG">New member {name} kicked (joined with no payment)</sentence>
-    <sentence id="JOINED_MEMBER_KICKED_FOR_USERNAME_MSG">New member {name} kicked (joined with no username)</sentence>
+    <sentence id="JOINED_MEMBER_KICKED_FOR_PAYMENT_MSG">❗️ New member {name} kicked (joined with no payment)</sentence>
+    <sentence id="JOINED_MEMBER_KICKED_FOR_USERNAME_MSG">❗️ New member {name} kicked (joined with no username)</sentence>
 </translation>
