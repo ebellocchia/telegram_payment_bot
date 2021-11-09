@@ -27,10 +27,10 @@ import pyrogram
 from pyrogram.errors import RPCError
 from telegram_payment_bot.command_data import CommandData
 from telegram_payment_bot.config import Config
+from telegram_payment_bot.helpers import ChatHelper, UserHelper
 from telegram_payment_bot.logger import Logger
 from telegram_payment_bot.message_sender import MessageSender
 from telegram_payment_bot.special_users_list import AuthorizedUsersList
-from telegram_payment_bot.helpers import ChatHelper, UserHelper
 from telegram_payment_bot.translation_loader import TranslationLoader
 
 
@@ -107,7 +107,11 @@ class CommandBase(ABC):
 
     # Get if user is authorized
     def _IsUserAuthorized(self) -> bool:
-        return AuthorizedUsersList(self.config).IsUserPresent(self.cmd_data.User())
+        if not ChatHelper.IsChannel(self.cmd_data.Chat()):
+            return AuthorizedUsersList(self.config).IsUserPresent(self.cmd_data.User())
+        # In channels only admins can write, so we consider the user authorized since there is no way to know the specific user
+        # This is a limitation for channels only
+        return True
 
     # Get if chat is private
     def _IsPrivateChat(self) -> bool:

@@ -31,6 +31,11 @@ import pyrogram
 
 # Chat helper class
 class ChatHelper:
+    # Get if channel
+    @staticmethod
+    def IsChannel(chat: pyrogram.types.Chat) -> bool:
+        return chat["type"] == "channel"
+
     # Get title
     @staticmethod
     def GetTitle(chat: pyrogram.types.Chat) -> str:
@@ -45,6 +50,8 @@ class ChatHelper:
     @staticmethod
     def IsPrivateChat(chat: pyrogram.types.Chat,
                       user: pyrogram.types.User):
+        if ChatHelper.IsChannel(chat):
+            return False
         return chat.id == user.id
 
 
@@ -62,7 +69,10 @@ class MemberHelper:
 class UserHelper:
     # Get user name or ID
     @staticmethod
-    def GetNameOrId(user: pyrogram.types.User) -> str:
+    def GetNameOrId(user: Optional[pyrogram.types.User]) -> str:
+        if user is None:
+            return "Anonymous user"
+
         if user.username is not None:
             return f"@{user.username} ({UserHelper.GetName(user)} - ID: {user.id})"
 
@@ -71,8 +81,10 @@ class UserHelper:
 
     # Get user name
     @staticmethod
-    def GetName(user: pyrogram.types.User) -> Optional[str]:
+    def GetName(user: Optional[pyrogram.types.User]) -> str:
+        if user is None:
+            return "Anonymous user"
+
         if user.first_name is not None:
             return f"{user.first_name} {user.last_name}" if user.last_name is not None else f"{user.first_name}"
-
         return user.last_name
