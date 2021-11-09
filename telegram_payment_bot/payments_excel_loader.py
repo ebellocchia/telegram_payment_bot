@@ -136,7 +136,7 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
 
         # Add data
         if payments_data.AddPayment(email, user, expiration_datetime):
-            self.logger.GetLogger().info(
+            self.logger.GetLogger().debug(
                 f"{payments_data.Count():4d} - Row {row_idx:4d} | {email} | {user} | {expiration_datetime}"
             )
         else:
