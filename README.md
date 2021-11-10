@@ -135,7 +135,7 @@ When users are removed from the group (either because they had no username or th
 This automatically revokes the old invite link and prevents those users to join again using it.
 
 When checking for payments, a user is removed from the group if:
-- He has no Telegram username (only if *payment_use_user_id* is false)
+- He has no Telegram username
 - His Telegram username or user ID is not found in the payments data
 - His payment is expired
 
