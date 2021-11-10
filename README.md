@@ -187,6 +187,12 @@ Test mode can be used to test the bot without any effect to the users of the gro
 
 Moreover, the payment task period will be applied in minutes instead of hours. This allows to quickly check if it is working.
 
+## Channel Limitations
+
+When used in channels:
+- The bot can check for payments periodically but it cannot check users immediately when they join
+- All admins can use the bot, not only authorized users
+
 ## Translation
 
 The messages sent by the bot on Telegram can be translated into different languages (the default language is English) by providing a custom XML file.\
