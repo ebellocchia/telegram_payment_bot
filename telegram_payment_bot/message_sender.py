@@ -24,6 +24,7 @@
 import time
 from typing import List, Union
 import pyrogram
+import pyrogram.errors.exceptions as pyrogram_ex
 from telegram_payment_bot.chat_members import ChatMembersGetter
 from telegram_payment_bot.config import Config
 from telegram_payment_bot.logger import Logger
@@ -80,10 +81,15 @@ class MessageSender:
         # Send to authorized users
         auth_members = ChatMembersGetter(self.client, self.config).GetAuthorizedUsers(chat)
         for auth_member in auth_members:
-            self.__SendSplitMessage(auth_member.user, split_msg)
-            self.logger.GetLogger().info(
-                f"Message sent to authorized user: {UserHelper.GetNameOrId(auth_member.user)}"
-            )
+            try:
+                self.__SendSplitMessage(auth_member.user, split_msg)
+                self.logger.GetLogger().info(
+                    f"Message sent to authorized user: {UserHelper.GetNameOrId(auth_member.user)}"
+                )
+            except pyrogram_ex.bad_request_400.UserIsBlocked:
+                self.logger.GetLogger().error(
+                    f"Unable to send message to authorized user: {UserHelper.GetNameOrId(auth_member.user)}"
+                )
 
     # Send split message
     def __SendSplitMessage(self,
