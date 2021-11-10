@@ -86,7 +86,8 @@ class MessageSender:
                 self.logger.GetLogger().info(
                     f"Message sent to authorized user: {UserHelper.GetNameOrId(auth_member.user)}"
                 )
-            except pyrogram_ex.bad_request_400.UserIsBlocked:
+            except (pyrogram_ex.bad_request_400.PeerIdInvalid,
+                    pyrogram_ex.bad_request_400.UserIsBlocked):
                 self.logger.GetLogger().error(
                     f"Unable to send message to authorized user: {UserHelper.GetNameOrId(auth_member.user)}"
                 )
