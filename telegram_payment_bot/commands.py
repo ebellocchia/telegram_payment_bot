@@ -562,7 +562,6 @@ class PaymentTaskRemoveChatCmd(CommandBase):
 #
 class PaymentTaskRemoveAllChatsCmd(CommandBase):
     # Execute command
-    @GroupChatOnly
     def _ExecuteCommand(self,
                         **kwargs: Any) -> None:
         kwargs["payments_check_scheduler"].RemoveAllChats()
