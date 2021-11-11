@@ -21,6 +21,7 @@
 #
 # Imports
 #
+from enum import Enum, auto, unique
 from typing import Any
 import pyrogram
 from telegram_payment_bot.config import ConfigTypes, Config
@@ -28,6 +29,18 @@ from telegram_payment_bot.logger import Logger
 from telegram_payment_bot.joined_members_checker import JoinedMembersChecker
 from telegram_payment_bot.message_sender import MessageSender
 from telegram_payment_bot.translation_loader import TranslationLoader
+
+
+#
+# Enumerations
+#
+
+# Message types
+@unique
+class MessageTypes(Enum):
+    GROUP_CHAT_CREATED = auto()
+    LEFT_CHAT_MEMBER = auto()
+    NEW_CHAT_MEMBERS = auto()
 
 
 #
@@ -54,15 +67,22 @@ class MessageDispatcher:
     def Dispatch(self,
                  client: pyrogram.Client,
                  message: pyrogram.types.Message,
+                 msg_type: MessageTypes,
                  **kwargs: Any) -> None:
+        if not isinstance(msg_type, MessageTypes):
+            raise TypeError("Message type is not an enumerative of MessageTypes")
+
+        # Log
+        self.logger.GetLogger().info(f"Dispatching message type: {msg_type}")
+
         # New chat created
-        if message.group_chat_created is not None:
+        if msg_type == MessageTypes.GROUP_CHAT_CREATED:
             self.__OnCreatedChat(client, message, **kwargs)
         # A member left the chat
-        if message.left_chat_member is not None:
+        elif msg_type == MessageTypes.LEFT_CHAT_MEMBER:
             self.__OnLeftMember(client, message, **kwargs)
         # A member joined the chat
-        if message.new_chat_members is not None:
+        elif msg_type == MessageTypes.NEW_CHAT_MEMBERS:
             self.__OnJoinedMember(client, message, **kwargs)
 
     # Function called when a new chat is created
@@ -90,7 +110,7 @@ class MessageDispatcher:
                          client,
                          message: pyrogram.types.Message,
                          **kwargs: Any) -> None:
-        # If the member is the bot itself, send the welcome message
+        # If one of the members is the bot itself, send the welcome message
         for member in message.new_chat_members:
             if member.is_self:
                 MessageSender(client, self.config, self.logger).SendMessage(
@@ -99,7 +119,7 @@ class MessageDispatcher:
                 )
                 break
 
-        # Check joined members for payment in any case (there could be more than one)
+        # Check joined members for payment in any case
         if self.config.GetValue(ConfigTypes.PAYMENT_CHECK_ON_JOIN):
             JoinedMembersChecker(client,
                                  self.config,

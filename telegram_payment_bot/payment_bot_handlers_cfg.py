@@ -25,6 +25,7 @@ from pyrogram import filters
 from pyrogram.handlers import MessageHandler
 from telegram_payment_bot.bot_base import HandlersCfgType
 from telegram_payment_bot.command_dispatcher import CommandTypes
+from telegram_payment_bot.message_dispatcher import MessageTypes
 
 
 #
@@ -201,14 +202,27 @@ PaymentBotHandlersCfg: HandlersCfgType = {
         },
 
         #
-        # Generic messages
+        # Update status messages
         #
 
         {
             "callback": (lambda self, client, message: self.HandleMessage(client,
                                                                           message,
+                                                                          MessageTypes.GROUP_CHAT_CREATED)),
+            "filters": filters.group_chat_created,
+        },
+        {
+            "callback": (lambda self, client, message: self.HandleMessage(client,
+                                                                          message,
+                                                                          MessageTypes.NEW_CHAT_MEMBERS)),
+            "filters": filters.new_chat_members,
+        },
+        {
+            "callback": (lambda self, client, message: self.HandleMessage(client,
+                                                                          message,
+                                                                          MessageTypes.LEFT_CHAT_MEMBER,
                                                                           payments_check_scheduler=self.payments_check_scheduler)),
-            "filters": ~filters.private,
+            "filters": filters.left_chat_member,
         },
     ],
 }
