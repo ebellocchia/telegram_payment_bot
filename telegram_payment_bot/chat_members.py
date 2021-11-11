@@ -23,7 +23,6 @@
 #
 from typing import Callable, Optional
 import pyrogram
-from telegram_payment_bot.config import ConfigTypes, Config
 from telegram_payment_bot.helpers import UserHelper
 from telegram_payment_bot.wrapped_list import WrappedList
 
@@ -71,14 +70,11 @@ class ChatMembersList(WrappedList):
 class ChatMembersGetter:
 
     client: pyrogram.Client
-    config: Config
 
     # Constructor
     def __init__(self,
-                 client: pyrogram.Client,
-                 config: Config) -> None:
+                 client: pyrogram.Client) -> None:
         self.client = client
-        self.config = config
 
     # Get the list of chat members by applying the specified filter
     def FilterMembers(self,
@@ -113,12 +109,3 @@ class ChatMembersGetter:
                   chat: pyrogram.types.Chat) -> ChatMembersList:
         return self.FilterMembers(chat,
                                   lambda member: member.status in ["administrator", "creator"])
-
-    # Get authorized users
-    def GetAuthorizedUsers(self,
-                           chat: pyrogram.types.Chat) -> ChatMembersList:
-        return self.FilterMembers(
-            chat,
-            lambda member: (member.user.username is not None and
-                            member.user.username in self.config.GetValue(ConfigTypes.AUTHORIZED_USERS))
-        )

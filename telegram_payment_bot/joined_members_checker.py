@@ -23,10 +23,10 @@
 #
 from typing import List
 import pyrogram
+from telegram_payment_bot.authorized_users_message_sender import AuthorizedUsersMessageSender
 from telegram_payment_bot.config import Config
 from telegram_payment_bot.logger import Logger
 from telegram_payment_bot.members_kicker import MembersKicker
-from telegram_payment_bot.message_sender import MessageSender
 from telegram_payment_bot.helpers import UserHelper
 from telegram_payment_bot.translation_loader import TranslationLoader
 
@@ -43,8 +43,8 @@ class JoinedMembersChecker:
     client: pyrogram.Client
     config: Config
     logger: Logger
-    message_sender: MessageSender
     translator: TranslationLoader
+    auth_users_msg_sender: AuthorizedUsersMessageSender
     member_kicker: MembersKicker
 
     # Constructor
@@ -56,8 +56,8 @@ class JoinedMembersChecker:
         self.client = client
         self.config = config
         self.logger = logger
-        self.message_sender = MessageSender(client, config, logger)
         self.translator = translator
+        self.auth_users_msg_sender = AuthorizedUsersMessageSender(client, config, logger)
         self.member_kicker = MembersKicker(client, config, logger)
 
     # Check new users
@@ -79,7 +79,7 @@ class JoinedMembersChecker:
             self.logger.GetLogger().info(
                 f"New user {UserHelper.GetNameOrId(user)} kicked (joined with no username)"
             )
-            self.message_sender.SendMessageToAuthUsers(
+            self.auth_users_msg_sender.SendMessage(
                 chat,
                 self.translator.GetSentence("JOINED_MEMBER_KICKED_FOR_USERNAME_MSG",
                                             name=UserHelper.GetNameOrId(user))
@@ -89,7 +89,7 @@ class JoinedMembersChecker:
             self.logger.GetLogger().info(
                 f"New user {UserHelper.GetNameOrId(user)} kicked (joined with no payment)"
             )
-            self.message_sender.SendMessageToAuthUsers(
+            self.auth_users_msg_sender.SendMessage(
                 chat,
                 self.translator.GetSentence("JOINED_MEMBER_KICKED_FOR_PAYMENT_MSG",
                                             name=UserHelper.GetNameOrId(user))

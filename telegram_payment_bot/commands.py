@@ -22,6 +22,7 @@
 # Imports
 #
 from typing import Any, Callable
+from telegram_payment_bot.authorized_users_list import AuthorizedUsersList
 from telegram_payment_bot.chat_members import ChatMembersGetter
 from telegram_payment_bot.command_base import CommandBase
 from telegram_payment_bot.command_data import CommandParameterError
@@ -29,7 +30,6 @@ from telegram_payment_bot.config import ConfigTypes
 from telegram_payment_bot.members_kicker import MembersKicker
 from telegram_payment_bot.members_payment_getter import MembersPaymentGetter
 from telegram_payment_bot.members_username_getter import MembersUsernameGetter
-from telegram_payment_bot.special_users_list import AuthorizedUsersList
 from telegram_payment_bot.helpers import ChatHelper, UserHelper
 from telegram_payment_bot.payments_check_scheduler import (
     PaymentsCheckJobAlreadyRunningError, PaymentsCheckJobNotRunningError, PaymentsCheckJobInvalidPeriodError,
@@ -159,7 +159,7 @@ class UsersListCmd(CommandBase):
     def _ExecuteCommand(self,
                         **kwargs: Any) -> None:
         # Get chat members
-        chat_members = ChatMembersGetter(self.client, self.config).GetAll(self.cmd_data.Chat())
+        chat_members = ChatMembersGetter(self.client).GetAll(self.cmd_data.Chat())
         # Send message
         self._SendMessage(
             self.translator.GetSentence("USERS_LIST_CMD",

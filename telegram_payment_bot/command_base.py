@@ -25,12 +25,13 @@ from abc import ABC, abstractmethod
 from typing import Any
 import pyrogram
 from pyrogram.errors import RPCError
+from telegram_payment_bot.authorized_users_list import AuthorizedUsersList
+from telegram_payment_bot.authorized_users_message_sender import AuthorizedUsersMessageSender
 from telegram_payment_bot.command_data import CommandData
 from telegram_payment_bot.config import Config
 from telegram_payment_bot.helpers import ChatHelper, UserHelper
 from telegram_payment_bot.logger import Logger
 from telegram_payment_bot.message_sender import MessageSender
-from telegram_payment_bot.special_users_list import AuthorizedUsersList
 from telegram_payment_bot.translation_loader import TranslationLoader
 
 
@@ -61,7 +62,7 @@ class CommandBase(ABC):
         self.config = config
         self.logger = logger
         self.translator = translator
-        self.message_sender = MessageSender(client, config, logger)
+        self.message_sender = MessageSender(client, logger)
 
     # Execute command
     def Execute(self,
@@ -103,7 +104,9 @@ class CommandBase(ABC):
     # Send message to authorized users
     def _SendMessageToAuthUsers(self,
                                 msg: str) -> None:
-        self.message_sender.SendMessageToAuthUsers(self.cmd_data.Chat(), msg)
+        AuthorizedUsersMessageSender(self.client,
+                                     self.config,
+                                     self.logger).SendMessage(self.cmd_data.Chat(), msg)
 
     # Get if user is authorized
     def _IsUserAuthorized(self) -> bool:

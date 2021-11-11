@@ -23,11 +23,11 @@
 #
 from threading import Lock
 import pyrogram
+from telegram_payment_bot.authorized_users_message_sender import AuthorizedUsersMessageSender
 from telegram_payment_bot.config import Config
 from telegram_payment_bot.helpers import ChatHelper
 from telegram_payment_bot.logger import Logger
 from telegram_payment_bot.members_kicker import MembersKicker
-from telegram_payment_bot.message_sender import MessageSender
 from telegram_payment_bot.translation_loader import TranslationLoader
 from telegram_payment_bot.wrapped_dict import WrappedDict
 
@@ -41,7 +41,7 @@ class PaymentsCheckJobChats(WrappedDict):
     # Convert to string
     def ToString(self) -> str:
         return "\n".join(
-            [f"- {ChatHelper.GetTitle(chat)}" for (_, chat) in self.dict_elements.items()]
+            [f"- {ChatHelper.GetTitle(chat)}" for _, chat in self.dict_elements.items()]
         )
 
     # Convert to string
@@ -58,8 +58,8 @@ class PaymentsCheckJob:
     translator: TranslationLoader
     job_chats_lock: Lock
     period: int
+    auth_users_msg_sender: AuthorizedUsersMessageSender
     job_chats: PaymentsCheckJobChats
-    message_sender: MessageSender
 
     # Constructor
     def __init__(self,
@@ -73,8 +73,8 @@ class PaymentsCheckJob:
         self.translator = translator
         self.job_chats_lock = Lock()
         self.period = 0
+        self.auth_users_msg_sender = AuthorizedUsersMessageSender(client, config, logger)
         self.job_chats = PaymentsCheckJobChats()
-        self.message_sender = MessageSender(client, config, logger)
 
     # Get period
     def GetPeriod(self) -> int:
@@ -159,4 +159,4 @@ class PaymentsCheckJob:
             msg += self.translator.GetSentence("REMOVE_NO_PAYMENT_LIST_CMD",
                                                members_list=str(kicked_members))
 
-            self.message_sender.SendMessageToAuthUsers(curr_chat, msg)
+            self.auth_users_msg_sender.SendMessage(curr_chat, msg)

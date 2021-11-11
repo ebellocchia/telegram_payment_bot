@@ -91,7 +91,7 @@ class MessageDispatcher:
                         message: pyrogram.types.Message,
                         **kwargs: Any) -> None:
         # Send the welcome message
-        MessageSender(client, self.config, self.logger).SendMessage(
+        MessageSender(client, self.logger).SendMessage(
             message.chat,
             self.translator.GetSentence("BOT_WELCOME_MSG")
         )
@@ -113,7 +113,7 @@ class MessageDispatcher:
         # If one of the members is the bot itself, send the welcome message
         for member in message.new_chat_members:
             if member.is_self:
-                MessageSender(client, self.config, self.logger).SendMessage(
+                MessageSender(client, self.logger).SendMessage(
                     message.chat,
                     self.translator.GetSentence("BOT_WELCOME_MSG")
                 )

@@ -24,11 +24,7 @@
 import time
 from typing import List, Union
 import pyrogram
-import pyrogram.errors.exceptions as pyrogram_ex
-from telegram_payment_bot.chat_members import ChatMembersGetter
-from telegram_payment_bot.config import Config
 from telegram_payment_bot.logger import Logger
-from telegram_payment_bot.helpers import UserHelper
 
 
 #
@@ -47,63 +43,42 @@ class MessageSenderConst:
 class MessageSender:
 
     client: pyrogram.Client
-    config: Config
     logger: Logger
 
     # Constructor
     def __init__(self,
                  client: pyrogram.Client,
-                 config: Config,
                  logger: Logger) -> None:
         self.client = client
-        self.config = config
         self.logger = logger
 
     # Send message
     def SendMessage(self,
                     receiver: Union[pyrogram.types.Chat, pyrogram.types.User],
                     msg: str,
-                    **kwargs) -> None:
+                    **kwargs) -> List[pyrogram.types.Message]:
         # Log
         self.logger.GetLogger().info(f"Sending message (length: {len(msg)}):\n{msg}")
         # Split and send message
-        self.__SendSplitMessage(receiver, self.__SplitMessage(msg), **kwargs)
-
-    # Send message to authorized users
-    def SendMessageToAuthUsers(self,
-                               chat: pyrogram.types.Chat,
-                               msg: str) -> None:
-        # Log
-        self.logger.GetLogger().info(f"Sending message to authorized users:\n{msg}")
-        # Split message
-        split_msg = self.__SplitMessage(msg)
-
-        # Send to authorized users
-        auth_members = ChatMembersGetter(self.client, self.config).GetAuthorizedUsers(chat)
-        for auth_member in auth_members:
-            try:
-                self.__SendSplitMessage(auth_member.user, split_msg)
-                self.logger.GetLogger().info(
-                    f"Message sent to authorized user: {UserHelper.GetNameOrId(auth_member.user)}"
-                )
-            except (pyrogram_ex.bad_request_400.PeerIdInvalid,
-                    pyrogram_ex.bad_request_400.UserIsBlocked):
-                self.logger.GetLogger().error(
-                    f"Unable to send message to authorized user: {UserHelper.GetNameOrId(auth_member.user)}"
-                )
+        return self.__SendSplitMessage(receiver, self.__SplitMessage(msg), **kwargs)
 
     # Send split message
     def __SendSplitMessage(self,
                            receiver: Union[pyrogram.types.Chat, pyrogram.types.User],
                            split_msg: List[str],
-                           **kwargs) -> None:
+                           **kwargs) -> List[pyrogram.types.Message]:
+        sent_msgs = []
+
         # Send message
         for msg_part in split_msg:
-            self.client.send_message(receiver.id, msg_part, **kwargs)
+            sent_msgs.append(self.client.send_message(receiver.id, msg_part, **kwargs))
             time.sleep(MessageSenderConst.SEND_MSG_SLEEP_TIME_SEC)
 
+        return sent_msgs
+
     # Split message
-    def __SplitMessage(self, msg: str) -> List[str]:
+    def __SplitMessage(self,
+                       msg: str) -> List[str]:
         msg_parts = []
 
         while len(msg) > 0:

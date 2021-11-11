@@ -73,8 +73,7 @@ class MembersPaymentGetter:
         payments = self.__GetAllPayments()
 
         # Filter chat members
-        chat_members_getter = ChatMembersGetter(self.client, self.config)
-        return chat_members_getter.FilterMembers(
+        return ChatMembersGetter(self.client).FilterMembers(
             chat,
             lambda member: (
                 MemberHelper.IsValidMember(member) and
@@ -94,8 +93,7 @@ class MembersPaymentGetter:
             return ChatMembersList()
 
         # Filter chat members
-        chat_members_getter = ChatMembersGetter(self.client, self.config)
-        return chat_members_getter.FilterMembers(
+        return ChatMembersGetter(self.client).FilterMembers(
             chat,
             lambda member: (
                 MemberHelper.IsValidMember(member) and
@@ -116,8 +114,7 @@ class MembersPaymentGetter:
             return ChatMembersList()
 
         # Filter chat members
-        chat_members_getter = ChatMembersGetter(self.client, self.config)
-        return chat_members_getter.FilterMembers(
+        return ChatMembersGetter(self.client).FilterMembers(
             chat,
             lambda member: (
                 MemberHelper.IsValidMember(member) and
@@ -140,7 +137,7 @@ class MembersPaymentGetter:
                               chat: pyrogram.types.Chat,
                               user: pyrogram.types.User) -> bool:
         # If the user is not in the chat, consider payment as not expired
-        chat_members = ChatMembersGetter(self.client, self.config).GetSingle(chat, user)
+        chat_members = ChatMembersGetter(self.client).GetSingle(chat, user)
         if chat_members is None:
             return False
 

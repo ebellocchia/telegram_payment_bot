@@ -22,42 +22,32 @@
 # Imports
 #
 import pyrogram
-from telegram_payment_bot.config import Config
 from telegram_payment_bot.chat_members import ChatMembersList, ChatMembersGetter
-from telegram_payment_bot.helpers import MemberHelper
+from telegram_payment_bot.config import ConfigTypes, Config
 
 
 #
 # Classes
 #
 
-# Members username getter class
-class MembersUsernameGetter:
+# Authorized users getter class
+class AuthorizedUsersGetter:
 
-    client: pyrogram.Client
     config: Config
+    chat_members_getter: ChatMembersGetter
 
     # Constructor
     def __init__(self,
                  client: pyrogram.Client,
                  config: Config) -> None:
-        self.client = client
         self.config = config
+        self.chat_members_getter = ChatMembersGetter(client)
 
-    # Get all with username
-    def GetAllWithUsername(self,
-                           chat: pyrogram.types.Chat) -> ChatMembersList:
-        # Filter chat members
-        return ChatMembersGetter(self.client).FilterMembers(
+    # Get authorized users
+    def GetUsers(self,
+                 chat: pyrogram.types.Chat) -> ChatMembersList:
+        return self.chat_members_getter.FilterMembers(
             chat,
-            lambda member: MemberHelper.IsValidMember(member) and member.user.username is not None
-        )
-
-    # Get all with no username
-    def GetAllWithNoUsername(self,
-                             chat: pyrogram.types.Chat) -> ChatMembersList:
-        # Filter chat members
-        return ChatMembersGetter(self.client).FilterMembers(
-            chat,
-            lambda member: MemberHelper.IsValidMember(member) and member.user.username is None
+            lambda member: (member.user.username is not None and
+                            member.user.username in self.config.GetValue(ConfigTypes.AUTHORIZED_USERS))
         )
