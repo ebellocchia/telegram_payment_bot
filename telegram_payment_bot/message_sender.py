@@ -22,7 +22,7 @@
 # Imports
 #
 import time
-from typing import List, Union
+from typing import Any, List, Union
 import pyrogram
 from telegram_payment_bot.logger import Logger
 
@@ -56,7 +56,7 @@ class MessageSender:
     def SendMessage(self,
                     receiver: Union[pyrogram.types.Chat, pyrogram.types.User],
                     msg: str,
-                    **kwargs) -> List[pyrogram.types.Message]:
+                    **kwargs: Any) -> List[pyrogram.types.Message]:
         # Log
         self.logger.GetLogger().info(f"Sending message (length: {len(msg)}):\n{msg}")
         # Split and send message
@@ -66,7 +66,7 @@ class MessageSender:
     def __SendSplitMessage(self,
                            receiver: Union[pyrogram.types.Chat, pyrogram.types.User],
                            split_msg: List[str],
-                           **kwargs) -> List[pyrogram.types.Message]:
+                           **kwargs: Any) -> List[pyrogram.types.Message]:
         sent_msgs = []
 
         # Send message
