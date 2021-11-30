@@ -21,29 +21,47 @@
 #
 # Imports
 #
-from telegram_payment_bot.bot.bot_base import BotBase
-from telegram_payment_bot.bot.bot_config_cfg import BotConfigCfg
-from telegram_payment_bot.bot.bot_handlers_cfg import BotHandlersCfg
-from telegram_payment_bot.payment.payments_check_scheduler import PaymentsCheckScheduler
+from abc import ABC, abstractmethod
+from typing import Optional
+from telegram_payment_bot.config.configurable_object import ConfigurableObject
+from telegram_payment_bot.logger.logger import Logger
+from telegram_payment_bot.misc.user import User
+from telegram_payment_bot.payment.payments_data import SinglePayment, PaymentsData, PaymentsDataErrors
 
 
 #
 # Classes
 #
 
-# Payment bot class
-class PaymentBot(BotBase):
+# Payments loader base class
+class PaymentsLoaderBase(ABC):
 
-    payments_check_scheduler: PaymentsCheckScheduler
+    config: ConfigurableObject
+    logger: Logger
 
     # Constructor
     def __init__(self,
-                 config_file: str) -> None:
-        super().__init__(config_file,
-                         BotConfigCfg,
-                         BotHandlersCfg)
-        # Initialize payment check scheduler
-        self.payments_check_scheduler = PaymentsCheckScheduler(self.client,
-                                                               self.config,
-                                                               self.logger,
-                                                               self.translator)
+                 config: ConfigurableObject,
+                 logger: Logger) -> None:
+        self.config = config
+        self.logger = logger
+
+    # Load all payments
+    @abstractmethod
+    def LoadAll(self) -> PaymentsData:
+        pass
+
+    # Load single payment by user
+    def LoadSingleByUser(self,
+                         user: User) -> Optional[SinglePayment]:
+        pass
+
+    # Check for errors
+    @abstractmethod
+    def CheckForErrors(self) -> PaymentsDataErrors:
+        pass
+
+    # Convert column string to index
+    @staticmethod
+    def _ColumnToIndex(col: str) -> int:
+        return ord(col) - ord("A")

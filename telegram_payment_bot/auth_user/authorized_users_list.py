@@ -21,29 +21,33 @@
 #
 # Imports
 #
-from telegram_payment_bot.bot.bot_base import BotBase
-from telegram_payment_bot.bot.bot_config_cfg import BotConfigCfg
-from telegram_payment_bot.bot.bot_handlers_cfg import BotHandlersCfg
-from telegram_payment_bot.payment.payments_check_scheduler import PaymentsCheckScheduler
+import pyrogram
+from telegram_payment_bot.bot.bot_config import BotConfigTypes
+from telegram_payment_bot.config.configurable_object import ConfigurableObject
+from telegram_payment_bot.utils.wrapped_list import WrappedList
 
 
 #
 # Classes
 #
 
-# Payment bot class
-class PaymentBot(BotBase):
-
-    payments_check_scheduler: PaymentsCheckScheduler
-
+# Authorized users list class
+class AuthorizedUsersList(WrappedList):
     # Constructor
     def __init__(self,
-                 config_file: str) -> None:
-        super().__init__(config_file,
-                         BotConfigCfg,
-                         BotHandlersCfg)
-        # Initialize payment check scheduler
-        self.payments_check_scheduler = PaymentsCheckScheduler(self.client,
-                                                               self.config,
-                                                               self.logger,
-                                                               self.translator)
+                 config: ConfigurableObject) -> None:
+        super().__init__()
+        self.AddMultiple(config.GetValue(BotConfigTypes.AUTHORIZED_USERS))
+
+    # Get if a user is present
+    def IsUserPresent(self,
+                      user: pyrogram.types.User) -> bool:
+        return user.username in self.list_elements
+
+    # Convert to string
+    def ToString(self) -> str:
+        return "\n".join([f"- @{username}" for username in self.list_elements])
+
+    # Convert to string
+    def __str__(self) -> str:
+        return self.ToString()

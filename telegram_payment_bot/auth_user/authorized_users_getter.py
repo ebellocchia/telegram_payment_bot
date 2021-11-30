@@ -21,29 +21,34 @@
 #
 # Imports
 #
-from telegram_payment_bot.bot.bot_base import BotBase
-from telegram_payment_bot.bot.bot_config_cfg import BotConfigCfg
-from telegram_payment_bot.bot.bot_handlers_cfg import BotHandlersCfg
-from telegram_payment_bot.payment.payments_check_scheduler import PaymentsCheckScheduler
+import pyrogram
+from telegram_payment_bot.bot.bot_config import BotConfigTypes
+from telegram_payment_bot.config.configurable_object import ConfigurableObject
+from telegram_payment_bot.misc.chat_members import ChatMembersList, ChatMembersGetter
 
 
 #
 # Classes
 #
 
-# Payment bot class
-class PaymentBot(BotBase):
+# Authorized users getter class
+class AuthorizedUsersGetter:
 
-    payments_check_scheduler: PaymentsCheckScheduler
+    config: ConfigurableObject
+    chat_members_getter: ChatMembersGetter
 
     # Constructor
     def __init__(self,
-                 config_file: str) -> None:
-        super().__init__(config_file,
-                         BotConfigCfg,
-                         BotHandlersCfg)
-        # Initialize payment check scheduler
-        self.payments_check_scheduler = PaymentsCheckScheduler(self.client,
-                                                               self.config,
-                                                               self.logger,
-                                                               self.translator)
+                 client: pyrogram.Client,
+                 config: ConfigurableObject) -> None:
+        self.config = config
+        self.chat_members_getter = ChatMembersGetter(client)
+
+    # Get authorized users
+    def GetUsers(self,
+                 chat: pyrogram.types.Chat) -> ChatMembersList:
+        return self.chat_members_getter.FilterMembers(
+            chat,
+            lambda member: (member.user.username is not None and
+                            member.user.username in self.config.GetValue(BotConfigTypes.AUTHORIZED_USERS))
+        )
