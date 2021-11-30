@@ -65,8 +65,7 @@ The list of all possible fields that can be set is shown below.
 |**[payment]**|Configuration for payment|
 |payment_website|Website for payment (default: empty)|
 |payment_check_on_join|Flag to check the payment of new members as soon as they join the group (default: true)|
-|payment_check_period_min|Period in minutes for periodical check. 1 is the minimum value (any value less than 1 will disable the periodical check, default: -1).|
-|payment_check_chat_ids|IDs of groups to be periodical checked, comma separated (default: empty). This assumes that all groups are linked to the same payments.|
+|payment_check_dup_email|Flag to check for duplicated emails in payment data (default: true)|
 |payment_type|Input for payment data: *EXCEL_FILE* for using xls/xlsx file, *GOOGLE_SHEET* for using a Google Sheet|
 |payment_excel_file|Name of the Excel file used for payment data, valid only if *payment_type* is *EXCEL_FILE*|
 |payment_google_sheet_id|ID of the Google Sheet used for payment data, valid only if *payment_type* is *GOOGLE_SHEET*|
@@ -138,6 +137,10 @@ When checking for payments, a user is removed from the group if:
 - He has no Telegram username
 - His Telegram username or user ID is not found in the payments data
 - His payment is expired
+
+If *payment_check_dup_email* is set to true:
+- If multiple rows have the same email address, only the first row will be loaded and all the others will be skipped (therefore, those users won't be considered as valid payments)
+- Rows with duplicated email address will be shown by the */paybot_check_data* command
 
 ## Payment Check Task
 
