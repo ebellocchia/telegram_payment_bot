@@ -91,22 +91,32 @@ class PaymentsEmailer:
 
         # Email members if any
         if expired_payments.Any():
+            emails = set()
+
             # Connect
             self.emailer.Connect()
 
             for payment in expired_payments.Values():
-                # Check email
-                if payment.Email() == "":
+                pay_email = payment.Email()
+
+                # Check empty email
+                if pay_email == "":
                     self.logger.GetLogger().warning(f"No email set for user {payment.User()}, skipped")
+                    continue
+                # Check duplicated emails
+                if pay_email in emails:
+                    self.logger.GetLogger().warning(f"Email {pay_email} is present more than one time, skipped")
                     continue
 
                 # Prepare and send message
-                self.emailer.PrepareMsg(payment.Email())
+                self.emailer.PrepareMsg(pay_email)
                 # Send email
                 self.emailer.Send()
                 self.logger.GetLogger().info(
-                    f"Email successfully sent to: {payment.Email()} ({payment.User()})"
+                    f"Email successfully sent to: {pay_email} ({payment.User()})"
                 )
+                # Add to set
+                emails.add(payment.Email())
                 # Sleep
                 time.sleep(PaymentsEmailerConst.SEND_EMAIL_SLEEP_TIME_SEC)
 

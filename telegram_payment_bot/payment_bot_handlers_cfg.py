@@ -29,7 +29,7 @@ from telegram_payment_bot.message_dispatcher import MessageTypes
 
 
 #
-# Classes
+# Variables
 #
 
 # Payment bot handlers configuration

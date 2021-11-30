@@ -25,6 +25,7 @@ from __future__ import annotations
 import datetime
 from enum import Enum, auto, unique
 from typing import Optional
+from telegram_payment_bot.config import ConfigTypes, Config
 from telegram_payment_bot.user import User
 from telegram_payment_bot.wrapped_dict import WrappedDict
 from telegram_payment_bot.wrapped_list import WrappedList
@@ -37,7 +38,7 @@ from telegram_payment_bot.wrapped_list import WrappedList
 # Payment error types
 @unique
 class PaymentErrorTypes(Enum):
-    DUPLICATED_PAYMENT_ERR = auto()
+    DUPLICATED_DATA_ERR = auto()
     INVALID_DATE_ERR = auto()
 
 
@@ -100,7 +101,6 @@ class PaymentError:
 
     err_type: PaymentErrorTypes
     row: int
-    email: str
     user: User
     expiration_date: Optional[str]
 
@@ -108,12 +108,10 @@ class PaymentError:
     def __init__(self,
                  err_type: PaymentErrorTypes,
                  row: int,
-                 email: str,
                  user: User,
                  expiration_data: Optional[str]):
         self.err_type = err_type
         self.row = row
-        self.email = email
         self.user = user
         self.expiration_date = expiration_data
 
@@ -124,10 +122,6 @@ class PaymentError:
     # Get row
     def Row(self) -> int:
         return self.row
-
-    # Get email
-    def Email(self) -> str:
-        return self.email
 
     # Get user
     def User(self) -> User:
@@ -144,27 +138,34 @@ class PaymentsDataErrors(WrappedList):
     def AddPaymentError(self,
                         err_type: PaymentErrorTypes,
                         row: int,
-                        email: str,
                         user: User,
                         expiration: Optional[str] = None) -> None:
-        self.AddSingle(PaymentError(err_type, row, email, user, expiration))
+        self.AddSingle(PaymentError(err_type, row, user, expiration))
 
 
 # Payments data class
 class PaymentsData(WrappedDict):
+    # Constructor
+    def __init__(self,
+                 config: Config) -> None:
+        super().__init__()
+        self.config = config
+
     # Add payment
     def AddPayment(self,
                    email: str,
                    user: User,
                    expiration: datetime.date) -> bool:
-        added = False
-
-        if (not self.IsUserExistent(user) and
-                (email == "" or not self.IsEmailExistent(email))):
+        # User shall not be existent
+        if not self.IsUserExistent(user):
+            # Check for duplicated email if configured
+            if self.config.GetValue(ConfigTypes.PAYMENT_CHECK_DUP_EMAIL):
+                if email != "" and self.IsEmailExistent(email):
+                    return False
             self.AddSingle(user.GetAsKey(), SinglePayment(email, user, expiration))
-            added = True
+            return True
 
-        return added
+        return False
 
     # Get by email
     def GetByEmail(self,
@@ -214,7 +215,7 @@ class PaymentsData(WrappedDict):
                             in self.dict_elements.items()
                             if payment.IsExpired()}
 
-        payments = PaymentsData()
+        payments = PaymentsData(self.config)
         payments.AddMultiple(expired_payments)
 
         return payments
@@ -226,7 +227,7 @@ class PaymentsData(WrappedDict):
                              in self.dict_elements.items()
                              if payment.IsExpiringInDays(days)}
 
-        payments = PaymentsData()
+        payments = PaymentsData(self.config)
         payments.AddMultiple(expiring_payments)
 
         return payments

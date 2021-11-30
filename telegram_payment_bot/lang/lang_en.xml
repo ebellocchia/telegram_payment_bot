@@ -150,7 +150,7 @@ Payment check on joined members is currently disabled.</sentence>
 Found errors: {errors_count}</sentence>
     <!-- Check payment data command message (duplicated error) -->
     <sentence id="CHECK_PAYMENTS_DATA_DUPLICATED_ERR_CMD">
-- Email {email} or user {user} is present more than one time at row {row_index}</sentence>
+- Row {row_index} contains duplicated data (user or email)</sentence>
     <!-- Check payment data command message (expiration error) -->
     <sentence id="CHECK_PAYMENTS_DATA_DATE_ERR_CMD">
 - Expiration date for user {user} at row {row_index} is not valid ({expiration_date})</sentence>

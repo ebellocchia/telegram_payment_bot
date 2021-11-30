@@ -323,10 +323,8 @@ class CheckPaymentsDataCmd(CommandBase):
                                               errors_count=payments_data_err.Count())
 
             for payment_err in payments_data_err:
-                if payment_err.Type() == PaymentErrorTypes.DUPLICATED_PAYMENT_ERR:
+                if payment_err.Type() == PaymentErrorTypes.DUPLICATED_DATA_ERR:
                     msg += self.translator.GetSentence("CHECK_PAYMENTS_DATA_DUPLICATED_ERR_CMD",
-                                                       email=payment_err.Email(),
-                                                       user=payment_err.User(),
                                                        row_index=payment_err.Row())
                 elif payment_err.Type() == PaymentErrorTypes.INVALID_DATE_ERR:
                     msg += self.translator.GetSentence("CHECK_PAYMENTS_DATA_DATE_ERR_CMD",

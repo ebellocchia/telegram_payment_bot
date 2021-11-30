@@ -44,6 +44,7 @@ class ConfigTypes(Enum):
     # Payment
     PAYMENT_WEBSITE = auto()
     PAYMENT_CHECK_ON_JOIN = auto()
+    PAYMENT_CHECK_DUP_EMAIL = auto()
     PAYMENT_TYPE = auto()
     PAYMENT_EXCEL_FILE = auto()
     PAYMENT_GOOGLE_SHEET_ID = auto()

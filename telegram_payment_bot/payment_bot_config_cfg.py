@@ -25,6 +25,7 @@ import logging
 from typing import Dict
 from telegram_payment_bot.config import ConfigTypes, Config
 from telegram_payment_bot.config_loader import ConfigCfgType
+from telegram_payment_bot.key_value_converter import KeyValueConverter
 from telegram_payment_bot.payment_types import PaymentTypes
 from telegram_payment_bot.utils import Utils
 
@@ -32,42 +33,6 @@ from telegram_payment_bot.utils import Utils
 #
 # Classes
 #
-
-# Configuration data type converter class
-class _ConfigDataTypeConverter:
-    # String to payment type
-    STR_TO_PAYMENT_TYPE: Dict[str, PaymentTypes] = {
-        "EXCEL_FILE": PaymentTypes.EXCEL_FILE,
-        "GOOGLE_SHEET": PaymentTypes.GOOGLE_SHEET,
-    }
-
-    # String to log level
-    STR_TO_LOG_LEVEL: Dict[str, int] = {
-        "DEBUG": logging.DEBUG,
-        "INFO": logging.INFO,
-        "WARNING": logging.WARNING,
-        "ERROR": logging.ERROR,
-        "CRITICAL": logging.CRITICAL,
-    }
-
-    # Convert string to payment type
-    @staticmethod
-    def StrToPaymentType(payment_type: str) -> PaymentTypes:
-        return _ConfigDataTypeConverter.STR_TO_PAYMENT_TYPE[payment_type]
-
-    # Convert string to log level
-    @staticmethod
-    def StrToLogLevel(log_level: str) -> int:
-        return (_ConfigDataTypeConverter.STR_TO_LOG_LEVEL[log_level]
-                if log_level in _ConfigDataTypeConverter.STR_TO_LOG_LEVEL
-                else logging.INFO)
-
-    # Convert log level to string
-    @staticmethod
-    def LogLevelToStr(log_level: int) -> str:
-        idx = list(_ConfigDataTypeConverter.STR_TO_LOG_LEVEL.values()).index(log_level)
-        return list(_ConfigDataTypeConverter.STR_TO_LOG_LEVEL.keys())[idx]
-
 
 # Utility functions for configuration data class
 class _ConfigDataUtils:
@@ -107,6 +72,27 @@ class _ConfigDataUtils:
                 if curr_col == col:
                     return False
         return True
+
+
+#
+# Variables
+#
+
+# Payment type converter
+PaymentTypeConverter = KeyValueConverter({
+    "EXCEL_FILE": PaymentTypes.EXCEL_FILE,
+    "GOOGLE_SHEET": PaymentTypes.GOOGLE_SHEET,
+})
+
+
+# Logging level converter
+LoggingLevelConverter = KeyValueConverter({
+    "DEBUG": logging.DEBUG,
+    "INFO": logging.INFO,
+    "WARNING": logging.WARNING,
+    "ERROR": logging.ERROR,
+    "CRITICAL": logging.CRITICAL,
+})
 
 
 # Payment bot configuration
@@ -166,9 +152,16 @@ PaymentBotConfigCfg: ConfigCfgType = {
             "def_val": True,
         },
         {
+            "type": ConfigTypes.PAYMENT_CHECK_DUP_EMAIL,
+            "name": "payment_check_dup_email",
+            "conv_fct": Utils.StrToBool,
+            "def_val": True,
+        },
+        {
             "type": ConfigTypes.PAYMENT_TYPE,
             "name": "payment_type",
-            "conv_fct": _ConfigDataTypeConverter.StrToPaymentType,
+            "conv_fct": PaymentTypeConverter.KeyToValue,
+            "print_fct": PaymentTypeConverter.ValueToKey,
         },
         {
             "type": ConfigTypes.PAYMENT_EXCEL_FILE,
@@ -281,8 +274,8 @@ PaymentBotConfigCfg: ConfigCfgType = {
         {
             "type": ConfigTypes.LOG_LEVEL,
             "name": "log_level",
-            "conv_fct": _ConfigDataTypeConverter.StrToLogLevel,
-            "print_fct": _ConfigDataTypeConverter.LogLevelToStr,
+            "conv_fct": LoggingLevelConverter.KeyToValue,
+            "print_fct": LoggingLevelConverter.ValueToKey,
             "def_val": logging.INFO,
         },
         {

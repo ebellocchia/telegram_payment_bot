@@ -90,7 +90,7 @@ class User:
     # Get as key
     def GetAsKey(self) -> Union[int, str]:
         if not self.IsValid():
-            raise KeyError("User cannot be used as a key")
+            raise KeyError("An invalid user cannot be used as a key")
 
         return self.user if self.IsUserId() else self.user.lower()
 

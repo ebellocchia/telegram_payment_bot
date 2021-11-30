@@ -149,7 +149,7 @@ Il controllo pagamento sui membri appena entrati è attualmente disattivato.</se
 Errori trovati: **{errors_count}**</sentence>
     <!-- Check payment data command message (duplicated error) -->
     <sentence id="CHECK_PAYMENTS_DATA_DUPLICATED_ERR_CMD">
-- L'email {email} o lo user {user} è presente più di una volta alla riga {row_index}</sentence>
+- La riga {row_index} contiene dati duplicati (utente o email)</sentence>
     <!-- Check payment data command message (expiration error) -->
     <sentence id="CHECK_PAYMENTS_DATA_DATE_ERR_CMD">
 - La data di scadenza per lo user {user} alla riga {row_index} non è valida ({expiration_date})</sentence>

@@ -84,7 +84,7 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
     # Load sheet
     def __LoadSheet(self,
                     sheet: xlrd.sheet.Sheet) -> Tuple[PaymentsData, PaymentsDataErrors]:
-        payments_data = PaymentsData()
+        payments_data = PaymentsData(self.config)
         payments_data_err = PaymentsDataErrors()
 
         # Get column indexes
@@ -141,12 +141,11 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
             )
         else:
             self.logger.GetLogger().warning(
-                f"Email {email} or user {user} is present more than one time at row {row_idx}, skipped"
+                f"Row {row_idx} contains duplicated data, skipped"
             )
             # Add error
-            payments_data_err.AddPaymentError(PaymentErrorTypes.DUPLICATED_PAYMENT_ERR,
+            payments_data_err.AddPaymentError(PaymentErrorTypes.DUPLICATED_DATA_ERR,
                                               row_idx,
-                                              email,
                                               user)
 
     # Get sheet
