@@ -140,7 +140,7 @@ When checking for payments, a user is removed from the group if:
 
 If *payment_check_dup_email* is set to true:
 - If multiple rows have the same email address, only the first row will be loaded and all the others will be skipped (therefore, those users won't be considered as valid payments)
-- Rows with duplicated email address will be shown by the */paybot_check_data* command
+- Rows with duplicated email address will be printed by the */paybot_check_data* command
 
 ## Payment Check Task
 
