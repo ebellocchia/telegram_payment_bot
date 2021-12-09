@@ -78,13 +78,6 @@ class _ConfigDataUtils:
 # Variables
 #
 
-# Payment type converter
-PaymentTypeConverter = KeyValueConverter({
-    "EXCEL_FILE": PaymentTypes.EXCEL_FILE,
-    "GOOGLE_SHEET": PaymentTypes.GOOGLE_SHEET,
-})
-
-
 # Logging level converter
 LoggingLevelConverter = KeyValueConverter({
     "DEBUG": logging.DEBUG,
@@ -160,8 +153,8 @@ BotConfigCfg: ConfigCfgType = {
         {
             "type": BotConfigTypes.PAYMENT_TYPE,
             "name": "payment_type",
-            "conv_fct": PaymentTypeConverter.KeyToValue,
-            "print_fct": PaymentTypeConverter.ValueToKey,
+            "conv_fct": lambda val: PaymentTypes[val.upper()],
+            "print_fct": lambda val: val.name.lower(),
         },
         {
             "type": BotConfigTypes.PAYMENT_EXCEL_FILE,
