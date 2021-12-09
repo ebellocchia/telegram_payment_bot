@@ -95,6 +95,12 @@ BotHandlersCfg: HandlersCfgType = {
                                                                            CommandTypes.INVITE_LINKS_CMD),
             "filters": filters.command(["paybot_invite_link"]),
         },
+        {
+            "callback": lambda self, client, message: self.DispatchCommand(client,
+                                                                           message,
+                                                                           CommandTypes.VERSION_CMD),
+            "filters": filters.command(["paybot_version"]),
+        },
 
         #
         # Username check commands

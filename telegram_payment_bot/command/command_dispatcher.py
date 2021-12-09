@@ -26,7 +26,8 @@ from typing import Any, Dict, Type
 import pyrogram
 from telegram_payment_bot.command.command_base import CommandBase
 from telegram_payment_bot.command.commands import (
-    HelpCmd, AliveCmd, SetTestModeCmd, IsTestModeCmd, AuthUsersCmd, ChatInfoCmd, UsersListCmd, InviteLinkCmd,
+    HelpCmd, AliveCmd, SetTestModeCmd, IsTestModeCmd, AuthUsersCmd,
+    ChatInfoCmd, UsersListCmd, InviteLinkCmd, VersionCmd,
     CheckNoUsernameCmd, RemoveNoUsernameCmd,
     SetCheckPaymentsOnJoinCmd, IsCheckPaymentsOnJoinCmd,
     CheckPaymentsDataCmd, EmailNoPaymentCmd, CheckNoPaymentCmd, RemoveNoPaymentCmd,
@@ -55,6 +56,7 @@ class CommandTypes(Enum):
     CHAT_INFO_CMD = auto()
     USERS_LIST_CMD = auto()
     INVITE_LINKS_CMD = auto()
+    VERSION_CMD = auto()
     # Username
     CHECK_NO_USERNAME_CMD = auto()
     REMOVE_NO_USERNAME_CMD = auto()
@@ -92,6 +94,7 @@ class CommandDispatcherConst:
         CommandTypes.CHAT_INFO_CMD: ChatInfoCmd,
         CommandTypes.USERS_LIST_CMD: UsersListCmd,
         CommandTypes.INVITE_LINKS_CMD: InviteLinkCmd,
+        CommandTypes.VERSION_CMD: VersionCmd,
         # Username
         CommandTypes.CHECK_NO_USERNAME_CMD: CheckNoUsernameCmd,
         CommandTypes.REMOVE_NO_USERNAME_CMD: RemoveNoUsernameCmd,

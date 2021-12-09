@@ -39,6 +39,7 @@ from telegram_payment_bot.payment.payments_data import PaymentErrorTypes
 from telegram_payment_bot.payment.payments_emailer import PaymentsEmailer
 from telegram_payment_bot.payment.payments_loader_factory import PaymentsLoaderFactory
 from telegram_payment_bot.email.smtp_emailer import SmtpEmailerError
+from telegram_payment_bot._version import __version__
 
 
 #
@@ -177,6 +178,19 @@ class InviteLinkCmd(CommandBase):
     def _ExecuteCommand(self,
                         **kwargs: Any) -> None:
         self._NewInviteLink()
+
+
+#
+# Command for showing bot version
+#
+class VersionCmd(CommandBase):
+    # Execute command
+    def _ExecuteCommand(self,
+                        **kwargs: Any) -> None:
+        self._SendMessage(
+            self.translator.GetSentence("VERSION_CMD",
+                                        version=__version__)
+        )
 
 
 #
