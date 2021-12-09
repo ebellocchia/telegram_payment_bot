@@ -107,6 +107,7 @@ List of supported commands:
 - **/paybot_chat_info**: show the chat information (can be run only in group)
 - **/paybot_users_list**: show the users list (can be run only in group)
 - **/paybot_invite_link**: generate a new invite link (can be run only in group)
+- **/paybot_version**: show the bot version
 - **/paybot_check_username *[<HOURS_LEFT>]***: show the list of chat members without a username (can be run only in group)
     - *HOURS_LEFT* (optional): hours left to set the username before being removed (only for printing the message). Hours are automatically converted to days if greater than 47. If less than 1, it'll print "as soon as possible". Default value: 0.
 - **/paybot_remove_username**: remove all the chat members without a username (can be run only in group)
