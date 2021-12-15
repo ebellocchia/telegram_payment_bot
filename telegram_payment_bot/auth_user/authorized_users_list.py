@@ -42,7 +42,7 @@ class AuthorizedUsersList(WrappedList):
     # Get if a user is present
     def IsUserPresent(self,
                       user: pyrogram.types.User) -> bool:
-        return user.username in self.list_elements
+        return user.username is not None and user.username in self.list_elements
 
     # Convert to string
     def ToString(self) -> str:
