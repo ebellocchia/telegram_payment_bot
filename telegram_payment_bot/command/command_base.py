@@ -76,7 +76,7 @@ class CommandBase(ABC):
         self.__LogCommand()
 
         # Check if user is anonymous
-        if self._IsUserAnonymous():
+        if self._IsUserAnonymous() and not self._IsChannel():
             self.logger.GetLogger().warning("An anonymous user tried to execute the command, exiting")
             return
 
@@ -103,7 +103,7 @@ class CommandBase(ABC):
     def _SendMessage(self,
                      msg: str) -> None:
         if self._IsQuietMode():
-            if not ChatHelper.IsChannel(self.cmd_data.Chat()):
+            if not self._IsChannel():
                 self.message_sender.SendMessage(self.cmd_data.User(), msg)
             else:
                 self._SendMessageToAuthUsers(msg)
@@ -117,16 +117,17 @@ class CommandBase(ABC):
                                      self.config,
                                      self.logger).SendMessage(self.cmd_data.Chat(), msg)
 
+    # Get if channel
+    def _IsChannel(self) -> bool:
+        return ChatHelper.IsChannel(self.cmd_data.Chat())
+
     # Get if user is anonymous
     def _IsUserAnonymous(self) -> bool:
         return self.cmd_data.User() is None
 
     # Get if user is authorized
     def _IsUserAuthorized(self) -> bool:
-        if self.cmd_data.User() is None:
-            return False
-
-        if not ChatHelper.IsChannel(self.cmd_data.Chat()):
+        if not self._IsChannel():
             return AuthorizedUsersList(self.config).IsUserPresent(self.cmd_data.User())
         # In channels only admins can write, so we consider the user authorized since there is no way to know the specific user
         # This is a limitation for channels only
