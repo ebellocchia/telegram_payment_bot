@@ -165,7 +165,8 @@ class UsersListCmd(CommandBase):
         self._SendMessage(
             self.translator.GetSentence("USERS_LIST_CMD",
                                         chat_title=ChatHelper.GetTitle(self.cmd_data.Chat()),
-                                        users_list=str(chat_members))
+                                        members_count=chat_members.Count(),
+                                        members_list=str(chat_members))
         )
 
 

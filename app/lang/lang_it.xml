@@ -85,8 +85,9 @@ ID: {chat_id}</sentence>
     <!-- Users list command message -->
     <sentence id="USERS_LIST_CMD">**LISTA UTENTI**
 Gruppo: **{chat_title}**
+Numero membri: **{members_count}**
 Lista membri:
-{users_list}</sentence>
+{members_list}</sentence>
     <!-- Version command message -->
     <sentence id="VERSION_CMD">**Telegram Payment Bot**
 
