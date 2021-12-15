@@ -98,6 +98,22 @@ class WrappedDict(ABC):
     def GetDict(self) -> Dict[typing.Any, typing.Any]:
         return self.dict_elements
 
+    # Get item
+    def __getitem__(self,
+                    key: typing.Any):
+        return self.dict_elements[key]
+
+    # Delete item
+    def __delitem__(self,
+                    key: typing.Any):
+        del self.dict_elements[key]
+
+    # Set item
+    def __setitem__(self,
+                    key: typing.Any,
+                    value: typing.Any):
+        self.dict_elements[key] = value
+
     # Get iterator
     def __iter__(self) -> Iterator[typing.Any]:
         yield from self.dict_elements

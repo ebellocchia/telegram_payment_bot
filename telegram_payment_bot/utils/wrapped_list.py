@@ -23,7 +23,7 @@
 #
 from abc import ABC
 import typing
-from typing import Iterator, List
+from typing import Callable, Iterator, List, Optional
 
 
 #
@@ -75,9 +75,31 @@ class WrappedList(ABC):
     def Empty(self) -> bool:
         return self.Count() == 0
 
+    # Sort
+    def Sort(self,
+             key: Optional[Callable[[typing.Any], typing.Any]] = None,
+             reverse: bool = False) -> None:
+        self.list_elements.sort(key=key, reverse=reverse)
+
     # Get list
     def GetList(self) -> List[typing.Any]:
         return self.list_elements
+
+    # Get item
+    def __getitem__(self,
+                    key: int):
+        return self.list_elements[key]
+
+    # Delete item
+    def __delitem__(self,
+                    key: int):
+        del self.list_elements[key]
+
+    # Set item
+    def __setitem__(self,
+                    key: int,
+                    value: typing.Any):
+        self.list_elements[key] = value
 
     # Get iterator
     def __iter__(self) -> Iterator[typing.Any]:
