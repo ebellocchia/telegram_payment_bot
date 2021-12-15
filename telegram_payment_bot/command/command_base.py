@@ -77,7 +77,7 @@ class CommandBase(ABC):
 
         # Check if user is anonymous
         if self._IsUserAnonymous():
-            self.logger.GetLogger().warning("An anonymous user tried to execute the command")
+            self.logger.GetLogger().warning("An anonymous user tried to execute the command, exiting")
             return
 
         # Check if user is authorized
