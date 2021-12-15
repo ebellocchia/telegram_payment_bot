@@ -75,22 +75,28 @@ class CommandBase(ABC):
         # Log command
         self.__LogCommand()
 
+        # Check if user is anonymous
+        if self._IsUserAnonymous():
+            self.logger.GetLogger().warning("An anonymous user tried to execute the command")
+            return
+
         # Check if user is authorized
-        if self._IsUserAuthorized():
-            # Try to execute command
-            try:
-                self._ExecuteCommand(**kwargs)
-            except RPCError:
-                self._SendMessage(self.translator.GetSentence("GENERIC_ERR_MSG"))
-                self.logger.GetLogger().exception(
-                    f"An error occurred while executing command {self.cmd_data.Name()}"
-                )
-        else:
+        if not self._IsUserAuthorized():
             if self._IsPrivateChat():
                 self._SendMessage(self.translator.GetSentence("AUTH_ONLY_ERR_MSG"))
 
             self.logger.GetLogger().warning(
                 f"User {UserHelper.GetNameOrId(self.cmd_data.User())} tried to execute the command but it's not authorized"
+            )
+            return
+
+        # Try to execute command
+        try:
+            self._ExecuteCommand(**kwargs)
+        except RPCError:
+            self._SendMessage(self.translator.GetSentence("GENERIC_ERR_MSG"))
+            self.logger.GetLogger().exception(
+                f"An error occurred while executing command {self.cmd_data.Name()}"
             )
 
     # Send message
@@ -111,8 +117,15 @@ class CommandBase(ABC):
                                      self.config,
                                      self.logger).SendMessage(self.cmd_data.Chat(), msg)
 
+    # Get if user is anonymous
+    def _IsUserAnonymous(self) -> bool:
+        return self.cmd_data.User() is None
+
     # Get if user is authorized
     def _IsUserAuthorized(self) -> bool:
+        if self.cmd_data.User() is None:
+            return False
+
         if not ChatHelper.IsChannel(self.cmd_data.Chat()):
             return AuthorizedUsersList(self.config).IsUserPresent(self.cmd_data.User())
         # In channels only admins can write, so we consider the user authorized since there is no way to know the specific user
