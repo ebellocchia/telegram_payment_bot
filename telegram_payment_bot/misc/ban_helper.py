@@ -31,8 +31,8 @@ import pyrogram
 
 # Constants for ban helper class
 class BanHelperConst:
-    # Kick time in seconds
-    KICK_TIME_SEC: int = 60
+    # Ban time in seconds
+    BAN_TIME_SEC: int = 60
 
 
 # Ban helper class
@@ -49,7 +49,10 @@ class BanHelper:
     def BanUser(self,
                 chat: pyrogram.types.Chat,
                 user: pyrogram.types.User) -> None:
-        self.client.kick_chat_member(chat.id, user.id)
+        try:
+            self.client.kick_chat_member(chat.id, user.id)
+        except AttributeError:
+            self.client.ban_chat_member(chat.id, user.id)
 
     # Kick user
     def KickUser(self,
@@ -57,7 +60,10 @@ class BanHelper:
                  user: pyrogram.types.User) -> None:
         # Ban only for 1 minute, so they can join again with an invite link if necessary
         # (otherwise they cannot join anymore, unless manually added to the group)
-        self.client.kick_chat_member(chat.id, user.id, int(time.time() + BanHelperConst.KICK_TIME_SEC))
+        try:
+            self.client.kick_chat_member(chat.id, user.id, int(time.time() + BanHelperConst.BAN_TIME_SEC))
+        except AttributeError:
+            self.client.ban_chat_member(chat.id, user.id, int(time.time() + BanHelperConst.BAN_TIME_SEC))
 
     # Unban user
     def UnbanUser(self,
