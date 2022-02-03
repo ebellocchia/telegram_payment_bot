@@ -197,6 +197,7 @@ When used in channels:
 - The bot can check for payments periodically but it cannot check users immediately when they join
 - All admins can use the bot, not only authorized users
 - Commands in quiet mode will send the result to authorized users instead of privately to the user that executed the command
+- Due to a Telegram limitation, only 200 members can be managed
 
 ## Translation
 
