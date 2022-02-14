@@ -186,7 +186,7 @@ The indexes of these columns are set in the configuration file. It is possible t
 ## Test Mode
 
 Test mode can be used to test the bot without any effect to the users of the group. When active:
-- Users are not kicked from the group if they don't have a username or don't have paid, both when running a command and during periodical checks
+- Users are not kicked from the group if they don't have a username or don't have paid, in any case (i.e. when running a command, when joining the group, during periodical checks)
 - Emails are not sent to the users that haven't paid yet
 
 Moreover, the payment task period will be applied in minutes instead of hours. This allows to quickly check if it is working.
