@@ -21,9 +21,10 @@
 #
 # Imports
 #
+from __future__ import annotations
 from abc import ABC
 import typing
-from typing import Callable, Iterator, List, Optional
+from typing import Callable, Iterator, List, Optional, Union
 
 
 #
@@ -46,8 +47,11 @@ class WrappedList(ABC):
 
     # Add multiple elements
     def AddMultiple(self,
-                    elements: List[typing.Any]) -> None:
-        self.list_elements.extend(elements)
+                    elements: Union[List[typing.Any], WrappedList]) -> None:
+        if isinstance(elements, WrappedList):
+            self.list_elements.extend(elements.GetList())
+        else:
+            self.list_elements.extend(elements)
 
     # Remove single element
     def RemoveSingle(self,

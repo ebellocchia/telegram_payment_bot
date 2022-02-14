@@ -21,10 +21,11 @@
 #
 # Imports
 #
+from __future__ import annotations
 from abc import ABC
 import typing
 from collections.abc import KeysView, ValuesView, ItemsView
-from typing import Dict, Iterator
+from typing import Dict, Iterator, Union
 
 
 #
@@ -48,8 +49,11 @@ class WrappedDict(ABC):
 
     # Add multiple elements
     def AddMultiple(self,
-                    elements: Dict[typing.Any, typing.Any]) -> None:
-        self.dict_elements = {**self.dict_elements, **elements}
+                    elements: Union[Dict[typing.Any, typing.Any], WrappedDict]) -> None:
+        if isinstance(elements, WrappedDict):
+            self.dict_elements = {**self.dict_elements, **elements.GetDict()}
+        else:
+            self.dict_elements = {**self.dict_elements, **elements}
 
     # Remove single element
     def RemoveSingle(self,

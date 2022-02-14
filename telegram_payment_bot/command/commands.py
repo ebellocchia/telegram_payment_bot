@@ -26,6 +26,7 @@ from telegram_payment_bot.auth_user.authorized_users_list import AuthorizedUsers
 from telegram_payment_bot.bot.bot_config import BotConfigTypes
 from telegram_payment_bot.command.command_base import CommandBase
 from telegram_payment_bot.command.command_data import CommandParameterError
+from telegram_payment_bot.email.smtp_emailer import SmtpEmailerError
 from telegram_payment_bot.member.members_kicker import MembersKicker
 from telegram_payment_bot.member.members_payment_getter import MembersPaymentGetter
 from telegram_payment_bot.member.members_username_getter import MembersUsernameGetter
@@ -38,7 +39,7 @@ from telegram_payment_bot.payment.payments_check_scheduler import (
 from telegram_payment_bot.payment.payments_data import PaymentErrorTypes
 from telegram_payment_bot.payment.payments_emailer import PaymentsEmailer
 from telegram_payment_bot.payment.payments_loader_factory import PaymentsLoaderFactory
-from telegram_payment_bot.email.smtp_emailer import SmtpEmailerError
+from telegram_payment_bot.utils.wrapped_list import WrappedList
 from telegram_payment_bot._version import __version__
 
 
@@ -264,10 +265,18 @@ class RemoveNoUsernameCmd(CommandBase):
                                         chat_title=ChatHelper.GetTitle(self.cmd_data.Chat()))
         )
 
-        # Kick members if any
-        kicked_members = MembersKicker(self.client,
-                                       self.config,
-                                       self.logger).KickAllWithNoUsername(self.cmd_data.Chat())
+        finished = False
+        kicked_members = WrappedList()
+        # Continue until all members have been kicked
+        # Useful in channels when at maximum 200 members can be kicked at once
+        while not finished:
+            curr_kicked_members = MembersKicker(self.client,
+                                                self.config,
+                                                self.logger).KickAllWithNoUsername(self.cmd_data.Chat())
+            if curr_kicked_members.Any():
+                kicked_members.AddMultiple(curr_kicked_members)
+            else:
+                finished = True
 
         # Build message
         msg = self.translator.GetSentence("REMOVE_NO_USERNAME_COMPLETED_CMD",
@@ -485,17 +494,24 @@ class RemoveNoPaymentCmd(CommandBase):
                                         chat_title=ChatHelper.GetTitle(self.cmd_data.Chat()))
         )
 
-        # Kick members if any
-        kicked_members = MembersKicker(self.client,
-                                       self.config,
-                                       self.logger).KickAllWithExpiredPayment(self.cmd_data.Chat())
+        finished = False
+        kicked_members = WrappedList()
+        # Continue until all members have been kicked
+        # Useful in channels when at maximum 200 members can be kicked at once
+        while not finished:
+            curr_kicked_members = MembersKicker(self.client,
+                                                self.config,
+                                                self.logger).KickAllWithExpiredPayment(self.cmd_data.Chat())
+            if curr_kicked_members.Any():
+                kicked_members.AddMultiple(curr_kicked_members)
+            else:
+                finished = True
 
         # Build message
         msg = self.translator.GetSentence("REMOVE_NO_PAYMENT_COMPLETED_CMD",
                                           members_count=kicked_members.Count())
-        if kicked_members.Any():
-            msg += self.translator.GetSentence("REMOVE_NO_PAYMENT_LIST_CMD",
-                                               members_list=str(kicked_members))
+        msg += self.translator.GetSentence("REMOVE_NO_PAYMENT_LIST_CMD",
+                                           members_list=str(kicked_members))
 
         # Send message
         self._SendMessage(msg)
