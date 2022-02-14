@@ -30,7 +30,7 @@ from telegram_payment_bot.email.smtp_emailer import SmtpEmailerError
 from telegram_payment_bot.member.members_kicker import MembersKicker
 from telegram_payment_bot.member.members_payment_getter import MembersPaymentGetter
 from telegram_payment_bot.member.members_username_getter import MembersUsernameGetter
-from telegram_payment_bot.misc.chat_members import ChatMembersGetter
+from telegram_payment_bot.misc.chat_members import ChatMembersList, ChatMembersGetter
 from telegram_payment_bot.misc.helpers import ChatHelper, UserHelper
 from telegram_payment_bot.payment.payments_check_scheduler import (
     PaymentsCheckJobAlreadyRunningError, PaymentsCheckJobNotRunningError, PaymentsCheckJobInvalidPeriodError,
@@ -39,7 +39,6 @@ from telegram_payment_bot.payment.payments_check_scheduler import (
 from telegram_payment_bot.payment.payments_data import PaymentErrorTypes
 from telegram_payment_bot.payment.payments_emailer import PaymentsEmailer
 from telegram_payment_bot.payment.payments_loader_factory import PaymentsLoaderFactory
-from telegram_payment_bot.utils.wrapped_list import WrappedList
 from telegram_payment_bot._version import __version__
 
 
@@ -266,7 +265,7 @@ class RemoveNoUsernameCmd(CommandBase):
         )
 
         finished = False
-        kicked_members = WrappedList()
+        kicked_members = ChatMembersList()
         # Continue until all members have been kicked
         # Useful in channels when at maximum 200 members can be kicked at once
         while not finished:
@@ -275,6 +274,8 @@ class RemoveNoUsernameCmd(CommandBase):
                                                 self.logger).KickAllWithNoUsername(self.cmd_data.Chat())
             if curr_kicked_members.Any():
                 kicked_members.AddMultiple(curr_kicked_members)
+                # Stop if test mode to avoid infinite looping (members are not really kicked in test mode)
+                finished = self.config.GetValue(BotConfigTypes.APP_TEST_MODE)
             else:
                 finished = True
 
@@ -495,7 +496,7 @@ class RemoveNoPaymentCmd(CommandBase):
         )
 
         finished = False
-        kicked_members = WrappedList()
+        kicked_members = ChatMembersList()
         # Continue until all members have been kicked
         # Useful in channels when at maximum 200 members can be kicked at once
         while not finished:
@@ -504,6 +505,8 @@ class RemoveNoPaymentCmd(CommandBase):
                                                 self.logger).KickAllWithExpiredPayment(self.cmd_data.Chat())
             if curr_kicked_members.Any():
                 kicked_members.AddMultiple(curr_kicked_members)
+                # Stop if test mode to avoid infinite looping (members are not really kicked in test mode)
+                finished = self.config.GetValue(BotConfigTypes.APP_TEST_MODE)
             else:
                 finished = True
 
