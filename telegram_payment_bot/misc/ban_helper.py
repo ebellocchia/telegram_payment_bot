@@ -51,6 +51,7 @@ class BanHelper:
                 user: pyrogram.types.User) -> None:
         try:
             self.client.kick_chat_member(chat.id, user.id)
+        # pyrogram >=1.3.0 changed the method name
         except AttributeError:
             self.client.ban_chat_member(chat.id, user.id)
 
@@ -62,6 +63,7 @@ class BanHelper:
         # (otherwise they cannot join anymore, unless manually added to the group)
         try:
             self.client.kick_chat_member(chat.id, user.id, int(time.time() + BanHelperConst.BAN_TIME_SEC))
+        # pyrogram >=1.3.0 changed the method name
         except AttributeError:
             self.client.ban_chat_member(chat.id, user.id, int(time.time() + BanHelperConst.BAN_TIME_SEC))
 
