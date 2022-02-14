@@ -513,8 +513,9 @@ class RemoveNoPaymentCmd(CommandBase):
         # Build message
         msg = self.translator.GetSentence("REMOVE_NO_PAYMENT_COMPLETED_CMD",
                                           members_count=kicked_members.Count())
-        msg += self.translator.GetSentence("REMOVE_NO_PAYMENT_LIST_CMD",
-                                           members_list=str(kicked_members))
+        if kicked_members.Any():
+            msg += self.translator.GetSentence("REMOVE_NO_PAYMENT_LIST_CMD",
+                                               members_list=str(kicked_members))
 
         # Send message
         self._SendMessage(msg)
