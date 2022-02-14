@@ -35,7 +35,7 @@ welcome to the Telegram Payment Bot.
 🔘 **/paybot_remove_payment** : remove users whose payment is expired - **Only Group**
 
 **Payment Check Task**
-🔘 **/paybot_task_start** __[PERIOD_HOURS]__ : start payment check task with the specified period
+🔘 **/paybot_task_start** __PERIOD_HOURS__ : start payment check task with the specified period
 🔘 **/paybot_task_stop** : stop payment check task
 🔘 **/paybot_task_add_chat** : add the current chat to the payment check task - **Only Group**
 🔘 **/paybot_task_remove_chat** : remove the current chat from the payment check task - **Only Group**

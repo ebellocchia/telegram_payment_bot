@@ -35,7 +35,7 @@ benvenuto nel Telegram Payment Bot.
 🔘 **/paybot_remove_payment** : rimuove gli utenti il cui pagamento sta per scadere - **Solo Gruppo**
 
 **Task Controllo Pagamenti**
-🔘 **/paybot_task_start** __[PERIOD_HOURS]__ : avvia il task di controllo pagamenti con il periodo specificato
+🔘 **/paybot_task_start** __PERIOD_HOURS__ : avvia il task di controllo pagamenti con il periodo specificato
 🔘 **/paybot_task_stop** : ferma il task di controllo pagamenti
 🔘 **/paybot_task_add_chat** : aggiunge la chat corrente al task di controllo pagamenti - **Solo Gruppo**
 🔘 **/paybot_task_remove_chat** : rimuove la chat corrente dal task di controllo pagamenti - **Solo Gruppo**
