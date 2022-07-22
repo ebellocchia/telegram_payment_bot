@@ -82,8 +82,6 @@ class ChatMembersGetter:
                       chat: pyrogram.types.Chat,
                       filter_fct: Optional[Callable[[pyrogram.types.ChatMember], bool]] = None,
                       filter_str: str = "all") -> ChatMembersList:
-        from telegram_payment_bot.misc.helpers import MemberHelper
-
         # Get members
         filtered_members = PyrogramWrapper.GetChatMembers(self.client, chat, filter_str)
         # Filter them if necessary
