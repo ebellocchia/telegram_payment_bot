@@ -21,8 +21,8 @@
 #
 # Imports
 #
-import time
 import pyrogram
+from telegram_payment_bot.utils.pyrogram_wrapper import PyrogramWrapper
 
 
 #
@@ -49,11 +49,7 @@ class BanHelper:
     def BanUser(self,
                 chat: pyrogram.types.Chat,
                 user: pyrogram.types.User) -> None:
-        try:
-            self.client.kick_chat_member(chat.id, user.id)
-        # pyrogram >=1.3.0 changed the method name
-        except AttributeError:
-            self.client.ban_chat_member(chat.id, user.id)
+        PyrogramWrapper.BanChatMember(self.client, chat, user)
 
     # Kick user
     def KickUser(self,
@@ -61,11 +57,7 @@ class BanHelper:
                  user: pyrogram.types.User) -> None:
         # Ban only for 1 minute, so they can join again with an invite link if necessary
         # (otherwise they cannot join anymore, unless manually added to the group)
-        try:
-            self.client.kick_chat_member(chat.id, user.id, int(time.time() + BanHelperConst.BAN_TIME_SEC))
-        # pyrogram >=1.3.0 changed the method name
-        except AttributeError:
-            self.client.ban_chat_member(chat.id, user.id, int(time.time() + BanHelperConst.BAN_TIME_SEC))
+        PyrogramWrapper.BanChatMember(self.client, chat, user, BanHelperConst.BAN_TIME_SEC)
 
     # Unban user
     def UnbanUser(self,

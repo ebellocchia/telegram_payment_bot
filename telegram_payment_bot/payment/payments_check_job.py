@@ -140,8 +140,7 @@ class PaymentsCheckJob:
                             members_kicker: MembersKicker) -> None:
         # Kick all members
         self.logger.GetLogger().info(f"Checking payments for chat {ChatHelper.GetTitleOrId(chat)}...")
-        curr_chat = pyrogram.types.Chat(id=chat.id, type="supergroup")
-        kicked_members = members_kicker.KickAllWithExpiredPayment(curr_chat)
+        kicked_members = members_kicker.KickAllWithExpiredPayment(chat)
 
         # Log kicked members
         self.logger.GetLogger().info(
@@ -159,4 +158,4 @@ class PaymentsCheckJob:
             msg += self.translator.GetSentence("REMOVE_NO_PAYMENT_LIST_CMD",
                                                members_list=str(kicked_members))
 
-            self.auth_users_msg_sender.SendMessage(curr_chat, msg)
+            self.auth_users_msg_sender.SendMessage(chat, msg)

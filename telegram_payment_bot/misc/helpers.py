@@ -23,6 +23,7 @@
 #
 from typing import Optional
 import pyrogram
+from telegram_payment_bot.utils.pyrogram_wrapper import PyrogramWrapper
 
 
 #
@@ -34,7 +35,7 @@ class ChatHelper:
     # Get if channel
     @staticmethod
     def IsChannel(chat: pyrogram.types.Chat) -> bool:
-        return chat["type"] == "channel"
+        return PyrogramWrapper.IsChannel(chat)
 
     # Get title
     @staticmethod
@@ -58,7 +59,7 @@ class MemberHelper:
     # Get if valid member
     @staticmethod
     def IsValidMember(member: pyrogram.types.ChatMember) -> bool:
-        return (member.status == "member" and
+        return (PyrogramWrapper.MemberIsStatus(member, "member") and
                 (member.user.is_self is None or not member.user.is_self) and
                 (member.user.is_bot is None or not member.user.is_bot))
 
