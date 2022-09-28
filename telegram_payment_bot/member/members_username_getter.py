@@ -50,7 +50,11 @@ class MembersUsernameGetter:
         # Filter chat members
         return ChatMembersGetter(self.client).FilterMembers(
             chat,
-            lambda member: MemberHelper.IsValidMember(member) and member.user.username is not None
+            lambda member: (
+                MemberHelper.IsValidMember(member) and
+                member.user is not None and
+                member.user.username is not None
+            )
         )
 
     # Get all with no username
@@ -59,5 +63,9 @@ class MembersUsernameGetter:
         # Filter chat members
         return ChatMembersGetter(self.client).FilterMembers(
             chat,
-            lambda member: MemberHelper.IsValidMember(member) and member.user.username is None
+            lambda member: (
+                MemberHelper.IsValidMember(member) and
+                member.user is not None and
+                member.user.username is None
+            )
         )

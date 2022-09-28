@@ -74,7 +74,7 @@ class MessageSender:
             sent_msgs.append(self.client.send_message(receiver.id, msg_part, **kwargs))
             time.sleep(MessageSenderConst.SEND_MSG_SLEEP_TIME_SEC)
 
-        return sent_msgs
+        return sent_msgs    # type: ignore
 
     # Split message
     def __SplitMessage(self,

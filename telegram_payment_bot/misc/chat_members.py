@@ -86,15 +86,15 @@ class ChatMembersGetter:
         filtered_members = PyrogramWrapper.GetChatMembers(self.client, chat, filter_str)
         # Filter them if necessary
         if filter_fct is not None:
-            filtered_members = list(filter(filter_fct, filtered_members))
+            filtered_members = list(filter(filter_fct, filtered_members))   # type: ignore
         # Order filtered members
-        filtered_members.sort(
+        filtered_members.sort(      # type: ignore
             key=lambda member: member.user.username.lower() if member.user.username is not None else str(member.user.id)
         )
 
         # Build chat members
         chat_members = ChatMembersList()
-        chat_members.AddMultiple(filtered_members)
+        chat_members.AddMultiple(filtered_members)      # type: ignore
 
         return chat_members
 
@@ -107,7 +107,7 @@ class ChatMembersGetter:
     def GetSingle(self,
                   chat: pyrogram.types.Chat,
                   user: pyrogram.types.User) -> ChatMembersList:
-        return self.FilterMembers(chat, lambda member: user.id == member.user.id)
+        return self.FilterMembers(chat, lambda member: member.user is not None and user.id == member.user.id)
 
     # Get admins
     def GetAdmins(self,

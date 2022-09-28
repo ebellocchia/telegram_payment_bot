@@ -104,7 +104,10 @@ class CommandBase(ABC):
                      msg: str) -> None:
         if self._IsQuietMode():
             if not self._IsChannel():
-                self.message_sender.SendMessage(self.cmd_data.User(), msg)
+                cmd_user = self.cmd_data.User()
+                if cmd_user is None:
+                    return
+                self.message_sender.SendMessage(cmd_user, msg)
             else:
                 self._SendMessageToAuthUsers(msg)
         else:
@@ -128,14 +131,18 @@ class CommandBase(ABC):
     # Get if user is authorized
     def _IsUserAuthorized(self) -> bool:
         if not self._IsChannel():
-            return AuthorizedUsersList(self.config).IsUserPresent(self.cmd_data.User())
+            user = self.cmd_data.User()
+            return user is not None and AuthorizedUsersList(self.config).IsUserPresent(user)
         # In channels only admins can write, so we consider the user authorized since there is no way to know the specific user
         # This is a limitation for channels only
         return True
 
     # Get if chat is private
     def _IsPrivateChat(self) -> bool:
-        return ChatHelper.IsPrivateChat(self.cmd_data.Chat(), self.cmd_data.User())
+        cmd_user = self.cmd_data.User()
+        if cmd_user is None:
+            return False
+        return ChatHelper.IsPrivateChat(self.cmd_data.Chat(), cmd_user)
 
     # Get if quiet mode
     def _IsQuietMode(self) -> bool:

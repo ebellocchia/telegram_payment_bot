@@ -25,6 +25,7 @@ import time
 from datetime import datetime, timedelta
 from typing import Iterator
 import pyrogram
+from telegram_payment_bot.utils.utils import Utils
 if int(pyrogram.__version__[0]) == 2:
     from pyrogram.enums import ChatMembersFilter, ChatMemberStatus, ChatType
 else:
@@ -34,7 +35,6 @@ else:
         pass
     class ChatMemberStatus(Enum):
         pass
-from telegram_payment_bot.utils.utils import Utils
 
 
 #
@@ -69,7 +69,7 @@ class PyrogramWrapper:
                        status_str: str) -> bool:
         if PyrogramWrapper.__MajorVersion() == 2:
             return member.status == PyrogramWrapper.__StrToChatMemberStatus(status_str)
-        elif PyrogramWrapper.__MajorVersion() == 1:
+        if PyrogramWrapper.__MajorVersion() == 1:
             return member.status == status_str
         raise RuntimeError("Unsupported pyrogram version")
 
@@ -78,7 +78,7 @@ class PyrogramWrapper:
     def MessageId(message: pyrogram.types.Message) -> int:
         if PyrogramWrapper.__MajorVersion() == 2:
             return message.id
-        elif PyrogramWrapper.__MajorVersion() == 1:
+        if PyrogramWrapper.__MajorVersion() == 1:
             return message.message_id
         raise RuntimeError("Unsupported pyrogram version")
 
@@ -87,7 +87,7 @@ class PyrogramWrapper:
     def IsChannel(chat: pyrogram.types.Chat) -> bool:
         if PyrogramWrapper.__MajorVersion() == 2:
             return chat.type == ChatType.CHANNEL
-        elif PyrogramWrapper.__MajorVersion() == 1:
+        if PyrogramWrapper.__MajorVersion() == 1:
             return chat["type"] == "channel"
         raise RuntimeError("Unsupported pyrogram version")
 
@@ -98,7 +98,7 @@ class PyrogramWrapper:
                        filter_str: str) -> Iterator[pyrogram.types.ChatMember]:
         if PyrogramWrapper.__MajorVersion() == 2:
             return client.get_chat_members(chat.id, filter=PyrogramWrapper.__StrToChatMembersFilter(filter_str))
-        elif PyrogramWrapper.__MajorVersion() == 1:
+        if PyrogramWrapper.__MajorVersion() == 1:
             return client.iter_chat_members(chat.id, filter=filter_str)
         raise RuntimeError("Unsupported pyrogram version")
 

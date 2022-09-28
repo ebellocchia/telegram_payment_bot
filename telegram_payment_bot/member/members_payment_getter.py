@@ -77,6 +77,7 @@ class MembersPaymentGetter:
             chat,
             lambda member: (
                 MemberHelper.IsValidMember(member) and
+                member.user is not None and
                 member.user.username is not None and
                 not payments.IsExpiredByUser(User.FromUserObject(self.config, member.user))
             )
@@ -97,6 +98,7 @@ class MembersPaymentGetter:
             chat,
             lambda member: (
                 MemberHelper.IsValidMember(member) and
+                member.user is not None and
                 (member.user.username is None or
                  payments.IsExpiredByUser(User.FromUserObject(self.config, member.user)))
             )
@@ -118,6 +120,7 @@ class MembersPaymentGetter:
             chat,
             lambda member: (
                 MemberHelper.IsValidMember(member) and
+                member.user is not None and
                 (member.user.username is None or
                  payments.IsExpiringInDaysByUser(User.FromUserObject(self.config, member.user), days))
             )
