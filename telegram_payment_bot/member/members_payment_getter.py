@@ -25,7 +25,7 @@ from typing import Any, Dict, Optional
 
 import pyrogram
 
-from telegram_payment_bot.config.configurable_object import ConfigurableObject
+from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.logger.logger import Logger
 from telegram_payment_bot.misc.chat_members import ChatMembersGetter, ChatMembersList
 from telegram_payment_bot.misc.helpers import MemberHelper
@@ -43,7 +43,7 @@ from telegram_payment_bot.payment.payments_loader_factory import PaymentsLoaderF
 class MembersPaymentGetter:
 
     client: pyrogram.Client
-    config: ConfigurableObject
+    config: ConfigObject
     logger: Logger
     payments_loader: PaymentsLoaderBase
     payments_cache: Optional[PaymentsData]
@@ -52,7 +52,7 @@ class MembersPaymentGetter:
     # Constructor
     def __init__(self,
                  client: pyrogram.Client,
-                 config: ConfigurableObject,
+                 config: ConfigObject,
                  logger: Logger) -> None:
         self.client = client
         self.config = config

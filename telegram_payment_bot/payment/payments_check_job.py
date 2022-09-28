@@ -26,7 +26,7 @@ from threading import Lock
 import pyrogram
 
 from telegram_payment_bot.auth_user.authorized_users_message_sender import AuthorizedUsersMessageSender
-from telegram_payment_bot.config.configurable_object import ConfigurableObject
+from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.logger.logger import Logger
 from telegram_payment_bot.member.members_kicker import MembersKicker
 from telegram_payment_bot.misc.helpers import ChatHelper
@@ -55,7 +55,7 @@ class PaymentsCheckJobChats(WrappedDict):
 class PaymentsCheckJob:
 
     client: pyrogram.Client
-    config: ConfigurableObject
+    config: ConfigObject
     logger: Logger
     translator: TranslationLoader
     job_chats_lock: Lock
@@ -66,7 +66,7 @@ class PaymentsCheckJob:
     # Constructor
     def __init__(self,
                  client: pyrogram.Client,
-                 config: ConfigurableObject,
+                 config: ConfigObject,
                  logger: Logger,
                  translator: TranslationLoader) -> None:
         self.client = client

@@ -26,7 +26,7 @@ import time
 import pyrogram
 
 from telegram_payment_bot.bot.bot_config import BotConfigTypes
-from telegram_payment_bot.config.configurable_object import ConfigurableObject
+from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.logger.logger import Logger
 from telegram_payment_bot.member.members_payment_getter import MembersPaymentGetter
 from telegram_payment_bot.member.members_username_getter import MembersUsernameGetter
@@ -48,7 +48,7 @@ class MembersKickerConst:
 class MembersKicker:
 
     client: pyrogram.Client
-    config: ConfigurableObject
+    config: ConfigObject
     logger: Logger
     ban_helper: BanHelper
     members_payment_getter: MembersPaymentGetter
@@ -57,7 +57,7 @@ class MembersKicker:
     # Constructor
     def __init__(self,
                  client: pyrogram.Client,
-                 config: ConfigurableObject,
+                 config: ConfigObject,
                  logger: Logger) -> None:
         self.client = client
         self.config = config

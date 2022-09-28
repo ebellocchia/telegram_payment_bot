@@ -26,7 +26,7 @@ from typing import List
 import pyrogram
 
 from telegram_payment_bot.auth_user.authorized_users_message_sender import AuthorizedUsersMessageSender
-from telegram_payment_bot.config.configurable_object import ConfigurableObject
+from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.logger.logger import Logger
 from telegram_payment_bot.member.members_kicker import MembersKicker
 from telegram_payment_bot.misc.helpers import UserHelper
@@ -43,7 +43,7 @@ from telegram_payment_bot.translator.translation_loader import TranslationLoader
 class JoinedMembersChecker:
 
     client: pyrogram.Client
-    config: ConfigurableObject
+    config: ConfigObject
     logger: Logger
     translator: TranslationLoader
     auth_users_msg_sender: AuthorizedUsersMessageSender
@@ -52,7 +52,7 @@ class JoinedMembersChecker:
     # Constructor
     def __init__(self,
                  client: pyrogram.Client,
-                 config: ConfigurableObject,
+                 config: ConfigObject,
                  logger: Logger,
                  translator: TranslationLoader) -> None:
         self.client = client

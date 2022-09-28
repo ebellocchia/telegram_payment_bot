@@ -24,7 +24,7 @@
 import pyrogram
 
 from telegram_payment_bot.bot.bot_config import BotConfigTypes
-from telegram_payment_bot.config.configurable_object import ConfigurableObject
+from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.utils.wrapped_list import WrappedList
 
 
@@ -36,7 +36,7 @@ from telegram_payment_bot.utils.wrapped_list import WrappedList
 class AuthorizedUsersList(WrappedList):
     # Constructor
     def __init__(self,
-                 config: ConfigurableObject) -> None:
+                 config: ConfigObject) -> None:
         super().__init__()
         self.AddMultiple(config.GetValue(BotConfigTypes.AUTHORIZED_USERS))
 

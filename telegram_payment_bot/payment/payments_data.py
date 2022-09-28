@@ -28,7 +28,7 @@ from enum import Enum, auto, unique
 from typing import Optional
 
 from telegram_payment_bot.bot.bot_config import BotConfigTypes
-from telegram_payment_bot.config.configurable_object import ConfigurableObject
+from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.misc.user import User
 from telegram_payment_bot.utils.wrapped_dict import WrappedDict
 from telegram_payment_bot.utils.wrapped_list import WrappedList
@@ -149,11 +149,11 @@ class PaymentsDataErrors(WrappedList):
 # Payments data class
 class PaymentsData(WrappedDict):
 
-    config: ConfigurableObject
+    config: ConfigObject
 
     # Constructor
     def __init__(self,
-                 config: ConfigurableObject) -> None:
+                 config: ConfigObject) -> None:
         super().__init__()
         self.config = config
 

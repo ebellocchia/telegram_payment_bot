@@ -28,7 +28,7 @@ from typing import Union
 import pyrogram
 
 from telegram_payment_bot.bot.bot_config import BotConfigTypes
-from telegram_payment_bot.config.configurable_object import ConfigurableObject
+from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.utils.utils import Utils
 
 
@@ -44,7 +44,7 @@ class User:
     # Construct from string
     @classmethod
     def FromString(cls,
-                   config: ConfigurableObject,
+                   config: ConfigObject,
                    user_str: str) -> User:
         if config.GetValue(BotConfigTypes.PAYMENT_USE_USER_ID):
             try:
@@ -61,7 +61,7 @@ class User:
     # Construct from user object
     @classmethod
     def FromUserObject(cls,
-                       config: ConfigurableObject,
+                       config: ConfigObject,
                        user: pyrogram.types.User) -> User:
         if config.GetValue(BotConfigTypes.PAYMENT_USE_USER_ID):
             return cls(user.id)

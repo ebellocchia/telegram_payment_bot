@@ -30,7 +30,7 @@ from pyrogram.errors import RPCError
 from telegram_payment_bot.auth_user.authorized_users_list import AuthorizedUsersList
 from telegram_payment_bot.auth_user.authorized_users_message_sender import AuthorizedUsersMessageSender
 from telegram_payment_bot.command.command_data import CommandData
-from telegram_payment_bot.config.configurable_object import ConfigurableObject
+from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.logger.logger import Logger
 from telegram_payment_bot.message.message_sender import MessageSender
 from telegram_payment_bot.misc.helpers import ChatHelper, UserHelper
@@ -47,7 +47,7 @@ from telegram_payment_bot.translator.translation_loader import TranslationLoader
 class CommandBase(ABC):
 
     client: pyrogram.Client
-    config: ConfigurableObject
+    config: ConfigObject
     logger: Logger
     translator: TranslationLoader
     message: pyrogram.types.Message
@@ -57,7 +57,7 @@ class CommandBase(ABC):
     # Constructor
     def __init__(self,
                  client: pyrogram.Client,
-                 config: ConfigurableObject,
+                 config: ConfigObject,
                  logger: Logger,
                  translator: TranslationLoader) -> None:
         self.client = client

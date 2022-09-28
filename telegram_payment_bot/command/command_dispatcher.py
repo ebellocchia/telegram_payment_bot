@@ -33,7 +33,7 @@ from telegram_payment_bot.command.commands import (
     PaymentTaskRemoveAllChatsCmd, PaymentTaskRemoveChatCmd, PaymentTaskStartCmd, PaymentTaskStopCmd, RemoveNoPaymentCmd,
     RemoveNoUsernameCmd, SetCheckPaymentsOnJoinCmd, SetTestModeCmd, UsersListCmd, VersionCmd
 )
-from telegram_payment_bot.config.configurable_object import ConfigurableObject
+from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.logger.logger import Logger
 from telegram_payment_bot.translator.translation_loader import TranslationLoader
 
@@ -117,13 +117,13 @@ class CommandDispatcherConst:
 # Command dispatcher class
 class CommandDispatcher:
 
-    config: ConfigurableObject
+    config: ConfigObject
     logger: Logger
     translator: TranslationLoader
 
     # Constructor
     def __init__(self,
-                 config: ConfigurableObject,
+                 config: ConfigObject,
                  logger: Logger,
                  translator: TranslationLoader) -> None:
         self.config = config

@@ -24,7 +24,7 @@
 import pyrogram
 
 from telegram_payment_bot.bot.bot_config import BotConfigTypes
-from telegram_payment_bot.config.configurable_object import ConfigurableObject
+from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.misc.chat_members import ChatMembersGetter, ChatMembersList
 
 
@@ -35,13 +35,13 @@ from telegram_payment_bot.misc.chat_members import ChatMembersGetter, ChatMember
 # Authorized users getter class
 class AuthorizedUsersGetter:
 
-    config: ConfigurableObject
+    config: ConfigObject
     chat_members_getter: ChatMembersGetter
 
     # Constructor
     def __init__(self,
                  client: pyrogram.Client,
-                 config: ConfigurableObject) -> None:
+                 config: ConfigObject) -> None:
         self.config = config
         self.chat_members_getter = ChatMembersGetter(client)
 

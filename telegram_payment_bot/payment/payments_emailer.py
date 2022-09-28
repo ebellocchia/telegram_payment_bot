@@ -26,7 +26,7 @@ import time
 import pyrogram
 
 from telegram_payment_bot.bot.bot_config import BotConfigTypes
-from telegram_payment_bot.config.configurable_object import ConfigurableObject
+from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.email.subscription_emailer import SubscriptionEmailer
 from telegram_payment_bot.logger.logger import Logger
 from telegram_payment_bot.member.members_payment_getter import MembersPaymentGetter
@@ -47,7 +47,7 @@ class PaymentsEmailerConst:
 class PaymentsEmailer:
 
     client: pyrogram.Client
-    config: ConfigurableObject
+    config: ConfigObject
     logger: Logger
     emailer: SubscriptionEmailer
     members_payment_getter: MembersPaymentGetter
@@ -55,7 +55,7 @@ class PaymentsEmailer:
     # Constructor
     def __init__(self,
                  client: pyrogram.Client,
-                 config: ConfigurableObject,
+                 config: ConfigObject,
                  logger: Logger) -> None:
         self.client = client
         self.config = config

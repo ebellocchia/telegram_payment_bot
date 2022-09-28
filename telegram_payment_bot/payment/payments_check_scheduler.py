@@ -25,7 +25,7 @@ import pyrogram
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from telegram_payment_bot.bot.bot_config import BotConfigTypes
-from telegram_payment_bot.config.configurable_object import ConfigurableObject
+from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.logger.logger import Logger
 from telegram_payment_bot.misc.helpers import ChatHelper
 from telegram_payment_bot.payment.payments_check_job import PaymentsCheckJob, PaymentsCheckJobChats
@@ -73,7 +73,7 @@ class PaymentsCheckSchedulerConst:
 # Payments check scheduler class
 class PaymentsCheckScheduler:
 
-    config: ConfigurableObject
+    config: ConfigObject
     logger: Logger
     payments_checker_job: PaymentsCheckJob
     scheduler: BackgroundScheduler
@@ -81,7 +81,7 @@ class PaymentsCheckScheduler:
     # Constructor
     def __init__(self,
                  client: pyrogram.Client,
-                 config: ConfigurableObject,
+                 config: ConfigObject,
                  logger: Logger,
                  translator: TranslationLoader) -> None:
         self.config = config

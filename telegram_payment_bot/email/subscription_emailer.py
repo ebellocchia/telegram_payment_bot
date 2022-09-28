@@ -22,7 +22,7 @@
 # Imports
 #
 from telegram_payment_bot.bot.bot_config import BotConfigTypes
-from telegram_payment_bot.config.configurable_object import ConfigurableObject
+from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.email.smtp_emailer import SmtpEmailer
 
 
@@ -37,7 +37,7 @@ class SubscriptionEmailer:
 
     # Constructor
     def __init__(self,
-                 config: ConfigurableObject):
+                 config: ConfigObject):
         self.smtp_emailer = SmtpEmailer()
         self.smtp_emailer.From = config.GetValue(BotConfigTypes.EMAIL_FROM)
         self.smtp_emailer.ReplyTo = config.GetValue(BotConfigTypes.EMAIL_REPLY_TO)

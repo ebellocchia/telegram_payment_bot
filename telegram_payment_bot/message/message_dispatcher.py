@@ -27,7 +27,7 @@ from typing import Any
 import pyrogram
 
 from telegram_payment_bot.bot.bot_config import BotConfigTypes
-from telegram_payment_bot.config.configurable_object import ConfigurableObject
+from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.logger.logger import Logger
 from telegram_payment_bot.member.joined_members_checker import JoinedMembersChecker
 from telegram_payment_bot.message.message_sender import MessageSender
@@ -53,13 +53,13 @@ class MessageTypes(Enum):
 # Message dispatcher class
 class MessageDispatcher:
 
-    config: ConfigurableObject
+    config: ConfigObject
     logger: Logger
     translator: TranslationLoader
 
     # Constructor
     def __init__(self,
-                 config: ConfigurableObject,
+                 config: ConfigObject,
                  logger: Logger,
                  translator: TranslationLoader) -> None:
         self.config = config
