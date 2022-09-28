@@ -22,8 +22,9 @@
 # Imports
 #
 from __future__ import annotations
-from abc import ABC
+
 import typing
+from abc import ABC
 from typing import Callable, Iterator, List, Optional, Union
 
 

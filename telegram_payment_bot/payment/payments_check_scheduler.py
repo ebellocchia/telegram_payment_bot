@@ -23,11 +23,12 @@
 #
 import pyrogram
 from apscheduler.schedulers.background import BackgroundScheduler
+
 from telegram_payment_bot.bot.bot_config import BotConfigTypes
 from telegram_payment_bot.config.configurable_object import ConfigurableObject
 from telegram_payment_bot.logger.logger import Logger
 from telegram_payment_bot.misc.helpers import ChatHelper
-from telegram_payment_bot.payment.payments_check_job import PaymentsCheckJobChats, PaymentsCheckJob
+from telegram_payment_bot.payment.payments_check_job import PaymentsCheckJob, PaymentsCheckJobChats
 from telegram_payment_bot.translator.translation_loader import TranslationLoader
 
 

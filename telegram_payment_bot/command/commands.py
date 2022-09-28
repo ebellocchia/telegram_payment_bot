@@ -22,6 +22,8 @@
 # Imports
 #
 from typing import Any, Callable
+
+from telegram_payment_bot._version import __version__
 from telegram_payment_bot.auth_user.authorized_users_list import AuthorizedUsersList
 from telegram_payment_bot.bot.bot_config import BotConfigTypes
 from telegram_payment_bot.command.command_base import CommandBase
@@ -30,16 +32,15 @@ from telegram_payment_bot.email.smtp_emailer import SmtpEmailerError
 from telegram_payment_bot.member.members_kicker import MembersKicker
 from telegram_payment_bot.member.members_payment_getter import MembersPaymentGetter
 from telegram_payment_bot.member.members_username_getter import MembersUsernameGetter
-from telegram_payment_bot.misc.chat_members import ChatMembersList, ChatMembersGetter
+from telegram_payment_bot.misc.chat_members import ChatMembersGetter, ChatMembersList
 from telegram_payment_bot.misc.helpers import ChatHelper, UserHelper
 from telegram_payment_bot.payment.payments_check_scheduler import (
-    PaymentsCheckJobAlreadyRunningError, PaymentsCheckJobNotRunningError, PaymentsCheckJobInvalidPeriodError,
-    PaymentsCheckJobChatAlreadyPresentError, PaymentsCheckJobChatNotPresentError
+    PaymentsCheckJobAlreadyRunningError, PaymentsCheckJobChatAlreadyPresentError, PaymentsCheckJobChatNotPresentError,
+    PaymentsCheckJobInvalidPeriodError, PaymentsCheckJobNotRunningError
 )
 from telegram_payment_bot.payment.payments_data import PaymentErrorTypes
 from telegram_payment_bot.payment.payments_emailer import PaymentsEmailer
 from telegram_payment_bot.payment.payments_loader_factory import PaymentsLoaderFactory
-from telegram_payment_bot._version import __version__
 
 
 #

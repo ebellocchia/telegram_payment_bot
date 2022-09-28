@@ -23,7 +23,9 @@
 #
 from enum import Enum, auto, unique
 from typing import Any
+
 import pyrogram
+
 from telegram_payment_bot.bot.bot_config import BotConfigTypes
 from telegram_payment_bot.config.configurable_object import ConfigurableObject
 from telegram_payment_bot.logger.logger import Logger

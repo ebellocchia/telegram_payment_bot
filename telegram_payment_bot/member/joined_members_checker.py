@@ -22,7 +22,9 @@
 # Imports
 #
 from typing import List
+
 import pyrogram
+
 from telegram_payment_bot.auth_user.authorized_users_message_sender import AuthorizedUsersMessageSender
 from telegram_payment_bot.config.configurable_object import ConfigurableObject
 from telegram_payment_bot.logger.logger import Logger

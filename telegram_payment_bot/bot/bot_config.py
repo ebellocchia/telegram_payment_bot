@@ -22,7 +22,8 @@
 # Imports
 #
 from enum import auto, unique
-from telegram_payment_bot.config.configurable_object import ConfigurableTypes, ConfigurableObject
+
+from telegram_payment_bot.config.configurable_object import ConfigurableObject, ConfigurableTypes
 
 
 #

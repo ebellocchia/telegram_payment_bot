@@ -22,8 +22,9 @@
 # Imports
 #
 import pyrogram
+
 from telegram_payment_bot.config.configurable_object import ConfigurableObject
-from telegram_payment_bot.misc.chat_members import ChatMembersList, ChatMembersGetter
+from telegram_payment_bot.misc.chat_members import ChatMembersGetter, ChatMembersList
 from telegram_payment_bot.misc.helpers import MemberHelper
 
 

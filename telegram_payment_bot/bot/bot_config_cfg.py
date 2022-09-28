@@ -22,9 +22,10 @@
 # Imports
 #
 import logging
+
 from telegram_payment_bot.bot.bot_config import BotConfigTypes
-from telegram_payment_bot.config.configurable_object import ConfigurableObject
 from telegram_payment_bot.config.config_loader import ConfigCfgType
+from telegram_payment_bot.config.configurable_object import ConfigurableObject
 from telegram_payment_bot.payment.payment_types import PaymentTypes
 from telegram_payment_bot.utils.key_value_converter import KeyValueConverter
 from telegram_payment_bot.utils.utils import Utils

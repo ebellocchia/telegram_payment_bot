@@ -22,9 +22,10 @@
 # Imports
 #
 from __future__ import annotations
-from abc import ABC
+
 import typing
-from collections.abc import KeysView, ValuesView, ItemsView
+from abc import ABC
+from collections.abc import ItemsView, KeysView, ValuesView
 from typing import Dict, Iterator, Union
 
 

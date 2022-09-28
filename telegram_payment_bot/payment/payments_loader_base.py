@@ -23,10 +23,11 @@
 #
 from abc import ABC, abstractmethod
 from typing import Optional
+
 from telegram_payment_bot.config.configurable_object import ConfigurableObject
 from telegram_payment_bot.logger.logger import Logger
 from telegram_payment_bot.misc.user import User
-from telegram_payment_bot.payment.payments_data import SinglePayment, PaymentsData, PaymentsDataErrors
+from telegram_payment_bot.payment.payments_data import PaymentsData, PaymentsDataErrors, SinglePayment
 
 
 #

@@ -22,9 +22,11 @@
 # Imports
 #
 from __future__ import annotations
+
 import datetime
 from enum import Enum, auto, unique
 from typing import Optional
+
 from telegram_payment_bot.bot.bot_config import BotConfigTypes
 from telegram_payment_bot.config.configurable_object import ConfigurableObject
 from telegram_payment_bot.misc.user import User

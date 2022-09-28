@@ -22,8 +22,11 @@
 # Imports
 #
 from __future__ import annotations
+
 from typing import Union
+
 import pyrogram
+
 from telegram_payment_bot.bot.bot_config import BotConfigTypes
 from telegram_payment_bot.config.configurable_object import ConfigurableObject
 from telegram_payment_bot.utils.utils import Utils
