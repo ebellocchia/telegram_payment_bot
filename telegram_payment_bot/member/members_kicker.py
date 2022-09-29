@@ -69,48 +69,26 @@ class MembersKicker:
     # Kick all members with expired payment
     def KickAllWithExpiredPayment(self,
                                   chat: pyrogram.types.Chat) -> ChatMembersList:
-        # Get expired members
         no_payment_members = self.members_payment_getter.GetAllMembersWithExpiredPayment(chat)
-
-        # Kick members if any (only if not test mode)
-        if not self.config.GetValue(BotConfigTypes.APP_TEST_MODE):
-            for member in no_payment_members:
-                self.ban_helper.KickUser(chat, member.user)
-                time.sleep(MembersKickerConst.SLEEP_TIME_SEC)
-        else:
-            self.logger.GetLogger().info("Test mode ON: no member was kicked")
-
+        if no_payment_members.Any():
+            self.__KickMultiple(chat, no_payment_members)
         return no_payment_members
 
     # Kick single member if expired payment
     def KickSingleIfExpiredPayment(self,
                                    chat: pyrogram.types.Chat,
                                    user: pyrogram.types.User) -> bool:
-        # Get expired members
         payment_expired = self.members_payment_getter.IsSingleMemberExpired(chat, user)
-
-        if not self.config.GetValue(BotConfigTypes.APP_TEST_MODE):
-            if payment_expired:
-                self.ban_helper.KickUser(chat, user)
-        else:
-            self.logger.GetLogger().info("Test mode ON: no member was kicked")
-
+        if payment_expired:
+            self.__KickSingle(chat, user)
         return payment_expired
 
     # Kick all members with no username
     def KickAllWithNoUsername(self,
                               chat: pyrogram.types.Chat) -> ChatMembersList:
-        # Get expired members
         no_username_members = self.members_username_getter.GetAllWithNoUsername(chat)
-
-        # Kick members if any (only if not test mode)
-        if not self.config.GetValue(BotConfigTypes.APP_TEST_MODE):
-            for member in no_username_members:
-                self.ban_helper.KickUser(chat, member.user)
-                time.sleep(MembersKickerConst.SLEEP_TIME_SEC)
-        else:
-            self.logger.GetLogger().info("Test mode ON: no member was kicked")
-
+        if no_username_members.Any():
+            self.__KickMultiple(chat, no_username_members)
         return no_username_members
 
     # Kick single member if no username
@@ -118,11 +96,26 @@ class MembersKicker:
                                chat: pyrogram.types.Chat,
                                user: pyrogram.types.User) -> bool:
         no_username = user.username is None
+        if no_username:
+            self.__KickSingle(chat, user)
+        return no_username
 
+    # Kick single
+    def __KickSingle(self,
+                     chat: pyrogram.types.Chat,
+                     user: pyrogram.types.User) -> None:
         if not self.config.GetValue(BotConfigTypes.APP_TEST_MODE):
-            if no_username:
-                self.ban_helper.KickUser(chat, user)
+            self.ban_helper.KickUser(chat, user)
         else:
             self.logger.GetLogger().info("Test mode ON: no member was kicked")
 
-        return no_username
+    # Kick multiple
+    def __KickMultiple(self,
+                       chat: pyrogram.types.Chat,
+                       members: ChatMembersList) -> None:
+        if not self.config.GetValue(BotConfigTypes.APP_TEST_MODE):
+            for member in members:
+                self.ban_helper.KickUser(chat, member.user)
+                time.sleep(MembersKickerConst.SLEEP_TIME_SEC)
+        else:
+            self.logger.GetLogger().info("Test mode ON: no member was kicked")
