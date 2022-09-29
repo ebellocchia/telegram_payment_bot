@@ -193,9 +193,4 @@ class PaymentsCheckScheduler:
     def __BuildCronString(period: int,
                           is_test_mode: bool) -> str:
         max_val = 24 if not is_test_mode else 60
-
-        cron_str = ""
-        for i in range(0, max_val, period):
-            cron_str += f"{i},"
-
-        return cron_str[:-1]
+        return ",".join([str(i) for i in range(0, max_val, period)])
