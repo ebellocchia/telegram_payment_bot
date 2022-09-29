@@ -52,6 +52,7 @@ class PaymentsLoaderBase(ABC):
     def LoadAll(self) -> PaymentsData:
         pass
 
+    @abstractmethod
     # Load single payment by user
     def LoadSingleByUser(self,
                          user: User) -> Optional[SinglePayment]:
