@@ -174,19 +174,22 @@ class PaymentsCheckScheduler:
         self.payments_checker_job.SetPeriod(period)
         # Add job
         is_test_mode = self.config.GetValue(BotConfigTypes.APP_TEST_MODE)
+        cron_str = self.__BuildCronString(period, is_test_mode)
         if is_test_mode:
             self.scheduler.add_job(self.payments_checker_job.DoJob,
                                    "cron",
-                                   minute=self.__BuildCronString(period, is_test_mode),
+                                   minute=cron_str,
                                    id=PaymentsCheckSchedulerConst.JOB_ID)
         else:
             self.scheduler.add_job(self.payments_checker_job.DoJob,
                                    "cron",
-                                   hour=self.__BuildCronString(period, is_test_mode),
+                                   hour=cron_str,
                                    id=PaymentsCheckSchedulerConst.JOB_ID)
         # Log
         per_sym = "minute(s)" if is_test_mode else "hour(s)"
-        self.logger.GetLogger().info(f"Started payments check job (period: {period} {per_sym})")
+        self.logger.GetLogger().info(
+            f"Started payments check job (period: {period} {per_sym}, cron: {cron_str})"
+        )
 
     # Build cron string
     @staticmethod
