@@ -66,7 +66,9 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
             self.logger.GetLogger().info(f"Loading Google Sheet ID \"{sheet_id}\"...")
 
             # Get access to the Google Sheet
-            google_client = pygsheets.authorize(client_secret=cred_file, credentials_directory=cred_path)
+            google_client = pygsheets.authorize(client_secret=cred_file,
+                                                credentials_directory=cred_path,
+                                                local=True)
             google_sheet = google_client.open_by_key(sheet_id)
             worksheet = google_sheet[0]
 
