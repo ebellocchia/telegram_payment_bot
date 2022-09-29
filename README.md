@@ -7,7 +7,7 @@
 
 Telegram bot for handling payments in groups based on *pyrogram* library.\
 Payments data can be loaded either from an *xls*/*xlsx* file or from a Google Sheet (in this way, it can be shared with other admins).\
-It is also possible to extend this to load payments data from other sources (e.g. a remote database) by inheriting and implementing the *PaymentsLoaderBase* class, but I didn't need to do it so far.\
+It is also possible to extend this to load payments data from other sources (e.g. a remote database) by inheriting and implementing the `PaymentsLoaderBase` class, but I didn't need to do it so far.\
 Payments data can be updated either manually by the admins or, better, automatically (e.g. by the website where the payment is made, via a webhook). It depends on the infrastructure you have.
 
 ## Setup
