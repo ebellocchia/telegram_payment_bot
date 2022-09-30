@@ -133,7 +133,7 @@ class PaymentsCheckJob:
 
             # Kick members for each chat
             members_kicker = MembersKicker(self.client, self.config, self.logger)
-            for _, chat in self.job_chats.Items():
+            for chat in self.job_chats.Values():
                 self.__KickMembersInChat(chat, members_kicker)
 
     # Kick members in chat
