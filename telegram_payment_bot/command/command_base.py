@@ -105,13 +105,11 @@ class CommandBase(ABC):
     def _SendMessage(self,
                      msg: str) -> None:
         if self._IsQuietMode():
-            if not self._IsChannel():
-                cmd_user = self.cmd_data.User()
-                if cmd_user is None:
-                    return
-                self.message_sender.SendMessage(cmd_user, msg)
+            cmd_user = self.cmd_data.User()
+            if not self._IsChannel() and cmd_user is not None:
+                self.message_sender.SendMessage(cmd_user, msg, **kwargs)
             else:
-                self._SendMessageToAuthUsers(msg)
+                self._SendMessageToAuthUsers(msg, **kwargs)
         else:
             self.message_sender.SendMessage(self.cmd_data.Chat(), msg)
 
