@@ -1,3 +1,7 @@
+# 0.6.2
+
+- Migrate Google OAuth flow after deprecation
+
 # 0.6.1
 
 - Fix some _mypy_ and _prospector_ warnings
