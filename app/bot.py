@@ -22,7 +22,9 @@
 # Imports
 #
 import argparse
+
 from telegram_payment_bot import PaymentBot, __version__
+
 
 #
 # Variables
