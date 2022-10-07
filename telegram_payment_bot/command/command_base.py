@@ -107,9 +107,9 @@ class CommandBase(ABC):
         if self._IsQuietMode():
             cmd_user = self.cmd_data.User()
             if not self._IsChannel() and cmd_user is not None:
-                self.message_sender.SendMessage(cmd_user, msg, **kwargs)
+                self.message_sender.SendMessage(cmd_user, msg)
             else:
-                self._SendMessageToAuthUsers(msg, **kwargs)
+                self._SendMessageToAuthUsers(msg)
         else:
             self.message_sender.SendMessage(self.cmd_data.Chat(), msg)
 
