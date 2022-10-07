@@ -1,3 +1,7 @@
+# 0.6.3
+
+- Minor bug fix (passing not-existent variable as parameter)
+
 # 0.6.2
 
 - Migrate Google OAuth flow after deprecation
