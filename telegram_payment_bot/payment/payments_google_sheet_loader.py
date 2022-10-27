@@ -114,16 +114,19 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
         user_col_idx = self._ColumnToIndex(self.config.GetValue(BotConfigTypes.PAYMENT_USER_COL))
         expiration_col_idx = self._ColumnToIndex(self.config.GetValue(BotConfigTypes.PAYMENT_EXPIRATION_COL))
 
-        # Read each row
+        # Get all rows
         rows = worksheet.get_all_values(
             include_tailing_empty_rows=False,
             include_tailing_empty=False,
             returnas="matrix"
         )
+
+        # Read each row
         for i, row in enumerate(rows):
             # Skip header (first row)
             if i == 0:
                 continue
+
             try:
                 # Get cell values
                 email = row[email_col_idx].strip()
