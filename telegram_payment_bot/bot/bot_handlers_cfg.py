@@ -166,45 +166,57 @@ BotHandlersCfg: HandlersCfgType = {
         #
 
         {
-            "callback": lambda self, client, message: self.DispatchCommand(client,
-                                                                           message,
-                                                                           CommandTypes.PAYMENT_TASK_START_CMD,
-                                                                           payments_check_scheduler=self.payments_check_scheduler),
+            "callback": lambda self, client, message: self.DispatchCommand(
+                client,
+                message,
+                CommandTypes.PAYMENT_TASK_START_CMD,
+                payments_check_scheduler=self.payments_check_scheduler
+            ),
             "filters": filters.command(["paybot_task_start"]),
         },
         {
-            "callback": lambda self, client, message: self.DispatchCommand(client,
-                                                                           message,
-                                                                           CommandTypes.PAYMENT_TASK_STOP_CMD,
-                                                                           payments_check_scheduler=self.payments_check_scheduler),
+            "callback": lambda self, client, message: self.DispatchCommand(
+                client,
+                message,
+                CommandTypes.PAYMENT_TASK_STOP_CMD,
+                payments_check_scheduler=self.payments_check_scheduler
+            ),
             "filters": filters.command(["paybot_task_stop"]),
         },
         {
-            "callback": lambda self, client, message: self.DispatchCommand(client,
-                                                                           message,
-                                                                           CommandTypes.PAYMENT_TASK_ADD_CHAT_CMD,
-                                                                           payments_check_scheduler=self.payments_check_scheduler),
+            "callback": lambda self, client, message: self.DispatchCommand(
+                client,
+                message,
+                CommandTypes.PAYMENT_TASK_ADD_CHAT_CMD,
+                payments_check_scheduler=self.payments_check_scheduler
+            ),
             "filters": filters.command(["paybot_task_add_chat"]),
         },
         {
-            "callback": lambda self, client, message: self.DispatchCommand(client,
-                                                                           message,
-                                                                           CommandTypes.PAYMENT_TASK_REMOVE_CHAT_CMD,
-                                                                           payments_check_scheduler=self.payments_check_scheduler),
+            "callback": lambda self, client, message: self.DispatchCommand(
+                client,
+                message,
+                CommandTypes.PAYMENT_TASK_REMOVE_CHAT_CMD,
+                payments_check_scheduler=self.payments_check_scheduler
+            ),
             "filters": filters.command(["paybot_task_remove_chat"]),
         },
         {
-            "callback": lambda self, client, message: self.DispatchCommand(client,
-                                                                           message,
-                                                                           CommandTypes.PAYMENT_TASK_REMOVE_ALL_CHATS_CMD,
-                                                                           payments_check_scheduler=self.payments_check_scheduler),
+            "callback": lambda self, client, message: self.DispatchCommand(
+                client,
+                message,
+                CommandTypes.PAYMENT_TASK_REMOVE_ALL_CHATS_CMD,
+                payments_check_scheduler=self.payments_check_scheduler
+            ),
             "filters": filters.command(["paybot_task_remove_all_chats"]),
         },
         {
-            "callback": lambda self, client, message: self.DispatchCommand(client,
-                                                                           message,
-                                                                           CommandTypes.PAYMENT_TASK_INFO_CMD,
-                                                                           payments_check_scheduler=self.payments_check_scheduler),
+            "callback": lambda self, client, message: self.DispatchCommand(
+                client,
+                message,
+                CommandTypes.PAYMENT_TASK_INFO_CMD,
+                payments_check_scheduler=self.payments_check_scheduler
+            ),
             "filters": filters.command(["paybot_task_info"]),
         },
 
@@ -213,22 +225,24 @@ BotHandlersCfg: HandlersCfgType = {
         #
 
         {
-            "callback": (lambda self, client, message: self.HandleMessage(client,
-                                                                          message,
-                                                                          MessageTypes.GROUP_CHAT_CREATED)),
+            "callback": lambda self, client, message: self.HandleMessage(client,
+                                                                         message,
+                                                                         MessageTypes.GROUP_CHAT_CREATED),
             "filters": filters.group_chat_created,
         },
         {
-            "callback": (lambda self, client, message: self.HandleMessage(client,
-                                                                          message,
-                                                                          MessageTypes.NEW_CHAT_MEMBERS)),
+            "callback": lambda self, client, message: self.HandleMessage(client,
+                                                                         message,
+                                                                         MessageTypes.NEW_CHAT_MEMBERS),
             "filters": filters.new_chat_members,
         },
         {
-            "callback": (lambda self, client, message: self.HandleMessage(client,
-                                                                          message,
-                                                                          MessageTypes.LEFT_CHAT_MEMBER,
-                                                                          payments_check_scheduler=self.payments_check_scheduler)),
+            "callback": lambda self, client, message: self.HandleMessage(
+                client,
+                message,
+                MessageTypes.LEFT_CHAT_MEMBER,
+                payments_check_scheduler=self.payments_check_scheduler
+            ),
             "filters": filters.left_chat_member,
         },
     ],
