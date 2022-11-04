@@ -180,7 +180,7 @@ For more information: [create project](https://developers.google.com/workspace/g
 
 Since for allowing the bot to access the Google Sheet a browser window will open, in case of a dedicated server (no GUI) it's easier to generate the *json* file on a PC and then just copy it to the server.
 
-Alternatively, you can create a service account which is pre-authorized. In this case, you don't need to authorize it from the browser window but you only have to share the Google Sheet with the service account gmail.
+Alternatively, you can create a service account, which is pre-authorized. In this case, you don't need to authorize it from the browser window but you only have to share the Google Sheet with the service account gmail.
 
 In both cases (Google Sheet or Excel file), the file shall contain the following columns starting from the second row (the first row is used as header):
 - Email address used for paying (for convenience, since an email address is usually required in payment platforms)
