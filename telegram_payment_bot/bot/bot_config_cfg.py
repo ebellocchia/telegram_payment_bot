@@ -26,6 +26,7 @@ import logging
 from telegram_payment_bot.bot.bot_config import BotConfigTypes
 from telegram_payment_bot.config.config_loader import ConfigCfgType
 from telegram_payment_bot.config.config_object import ConfigObject
+from telegram_payment_bot.google.google_sheet_cred import GoogleSheetCredTypes
 from telegram_payment_bot.payment.payment_types import PaymentTypes
 from telegram_payment_bot.utils.key_value_converter import KeyValueConverter
 from telegram_payment_bot.utils.utils import Utils
@@ -180,6 +181,14 @@ BotConfigCfg: ConfigCfgType = {
             "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.PAYMENT_TYPE) == PaymentTypes.GOOGLE_SHEET,
         },
         {
+            "type": BotConfigTypes.PAYMENT_GOOGLE_CRED_TYPE,
+            "name": "payment_google_cred_type",
+            "def_val": GoogleSheetCredTypes.OAUTH2,
+            "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.PAYMENT_TYPE) == PaymentTypes.GOOGLE_SHEET,
+            "conv_fct": lambda val: GoogleSheetCredTypes[val.upper()],
+            "print_fct": lambda val: val.name.lower(),
+        },
+        {
             "type": BotConfigTypes.PAYMENT_GOOGLE_CRED,
             "name": "payment_google_cred",
             "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.PAYMENT_TYPE) == PaymentTypes.GOOGLE_SHEET,
@@ -194,6 +203,13 @@ BotConfigCfg: ConfigCfgType = {
             "name": "payment_use_user_id",
             "conv_fct": Utils.StrToBool,
             "def_val": False,
+        },
+        {
+            "type": BotConfigTypes.PAYMENT_WORKSHEET_IDX,
+            "name": "payment_worksheet_idx",
+            "conv_fct": Utils.StrToInt,
+            "def_val": 0,
+            "valid_if": lambda cfg, val: val >= 0,
         },
         {
             "type": BotConfigTypes.PAYMENT_EMAIL_COL,

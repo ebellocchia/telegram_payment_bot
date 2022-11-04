@@ -152,8 +152,8 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
                                               user)
 
     # Get sheet
-    @staticmethod
-    def __GetSheet(payment_file: str) -> xlrd.sheet.Sheet:
+    def __GetSheet(self,
+                   payment_file: str) -> xlrd.sheet.Sheet:
         # Open file
         wb = xlrd.open_workbook(payment_file)
-        return wb.sheet_by_index(PaymentsExcelLoaderConst.SHEET_IDX)
+        return wb.sheet_by_index(self.config.GetValue(BotConfigTypes.PAYMENT_WORKSHEET_IDX))

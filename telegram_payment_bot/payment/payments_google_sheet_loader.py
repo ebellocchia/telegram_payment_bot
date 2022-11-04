@@ -23,10 +23,9 @@
 from datetime import datetime
 from typing import Optional, Tuple
 
-import pygsheets
-
 from telegram_payment_bot.bot.bot_config import BotConfigTypes
 from telegram_payment_bot.config.config_object import ConfigObject
+from telegram_payment_bot.google.google_sheet_rows_getter import GoogleSheetRowsGetter
 from telegram_payment_bot.logger.logger import Logger
 from telegram_payment_bot.misc.user import User
 from telegram_payment_bot.payment.payments_data import (
@@ -42,14 +41,14 @@ from telegram_payment_bot.payment.payments_loader_base import PaymentsLoaderBase
 # Payments Google Sheet loader class
 class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
 
-    google_sheet: Optional[pygsheets.Spreadsheet]
+    google_sheet_rows_getter: GoogleSheetRowsGetter
 
     # Constructor
     def __init__(self,
                  config: ConfigObject,
                  logger: Logger) -> None:
         super().__init__(config, logger)
-        self.google_sheet = None
+        self.google_sheet_rows_getter = GoogleSheetRowsGetter(config, logger)
 
     # Load all payments
     def LoadAll(self) -> PaymentsData:
@@ -68,9 +67,7 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
     def __LoadAndCheckAll(self) -> Tuple[PaymentsData, PaymentsDataErrors]:
         try:
             # Load worksheet
-            payments_data, payments_data_err = self.__LoadWorkSheet(
-                self.__GetWorkSheet(0)
-            )
+            payments_data, payments_data_err = self.__LoadWorkSheet()
             # Log
             self.logger.GetLogger().info(
                 f"Google Sheet successfully loaded, number of rows: {payments_data.Count()}"
@@ -78,34 +75,11 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
             return payments_data, payments_data_err
 
         except Exception:
-            self.logger.GetLogger().exception(f"An error occurred while loading Google Sheet")
+            self.logger.GetLogger().exception("An error occurred while loading Google Sheet")
             raise
 
-    # Get worksheet
-    def __GetWorkSheet(self,
-                       worksheet_idx: int) -> pygsheets.Worksheet:
-        if self.google_sheet is None:
-            # Get configuration
-            sheet_id = self.config.GetValue(BotConfigTypes.PAYMENT_GOOGLE_SHEET_ID)
-            cred_file = self.config.GetValue(BotConfigTypes.PAYMENT_GOOGLE_CRED)
-            cred_path = self.config.GetValue(BotConfigTypes.PAYMENT_GOOGLE_CRED_PATH)
-
-            # Log
-            self.logger.GetLogger().info(f"Credential file: {cred_file}")
-            self.logger.GetLogger().info(f"Credential path: {cred_path}")
-            self.logger.GetLogger().info(f"Opening Google Sheet: {sheet_id}...")
-
-            # Get access and open Google Sheet
-            google_client = pygsheets.authorize(client_secret=cred_file,
-                                                credentials_directory=cred_path,
-                                                local=True)
-            self.google_sheet = google_client.open_by_key(sheet_id)
-
-        return self.google_sheet[worksheet_idx]
-
     # Load worksheet
-    def __LoadWorkSheet(self,
-                        worksheet: pygsheets.Worksheet) -> Tuple[PaymentsData, PaymentsDataErrors]:
+    def __LoadWorkSheet(self) -> Tuple[PaymentsData, PaymentsDataErrors]:
         payments_data = PaymentsData(self.config)
         payments_data_err = PaymentsDataErrors()
 
@@ -115,10 +89,8 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
         expiration_col_idx = self._ColumnToIndex(self.config.GetValue(BotConfigTypes.PAYMENT_EXPIRATION_COL))
 
         # Get all rows
-        rows = worksheet.get_all_values(
-            include_tailing_empty_rows=False,
-            include_tailing_empty=False,
-            returnas="matrix"
+        rows = self.google_sheet_rows_getter.GetRows(
+            self.config.GetValue(BotConfigTypes.PAYMENT_WORKSHEET_IDX)
         )
 
         # Read each row
