@@ -67,11 +67,13 @@ The list of all possible fields that can be set is shown below.
 |`payment_check_on_join`|Flag to check the payment of new members as soon as they join the group (default: `true`)|
 |`payment_check_dup_email`|Flag to check for duplicated emails in payment data (default: `true`)|
 |`payment_type`|Input for payment data: `EXCEL_FILE` for using xls/xlsx file, `GOOGLE_SHEET` for using a Google Sheet|
-|`payment_excel_file`|Name of the Excel file used for payment data, valid only if `payment_type` is `EXCEL_FILE`|
-|`payment_google_sheet_id`|ID of the Google Sheet used for payment data, valid only if `payment_type` is `GOOGLE_SHEET`|
-|`payment_google_cred`|Name of the *json* file for the OAuth credentials (default: `credentials.json`), valid only if `payment_type` is `GOOGLE_SHEET`|
-|`payment_google_cred_path`|Path where Google credentials will be saved, valid only if `payment_type` is `GOOGLE_SHEET`|
+|`payment_excel_file`|Name of the Excel file used for payment data, loaded only if `payment_type` is `EXCEL_FILE`|
+|`payment_google_sheet_id`|ID of the Google Sheet used for payment data, loaded only if `payment_type` is `GOOGLE_SHEET`|
+|`payment_google_cred_type`|Credentials type: `OAUTH2` for OAuth2 flow or `SERVICE_ACCOUNT` for service account (default: `OAUTH2`), loaded only if `payment_type` is `GOOGLE_SHEET`|
+|`payment_google_cred`|Name of the *json* credentials file for OAuth2 or service account (default: `credentials.json`), loaded only if `payment_type` is `GOOGLE_SHEET`|
+|`payment_google_cred_path`|Path where Google OAuth2 token file will be saved, loaded only if `payment_type` is `GOOGLE_SHEET` and `payment_google_cred_type` is `OAUTH2`|
 |`payment_use_user_id`|If true, `payment_user_col` will be considered as a user ID (number), otherwise it'll be considered as a username|
+|`payment_worksheet_idx`|Worksheet index (default: `0`)|
 |`payment_email_col`|Table column (letter) containing the email used for paying (default: `A`, maximum: `Z`)|
 |`payment_user_col`|Table column (letter) containing the user (default: `B`, maximum: `Z`). The user can be a username or a user ID (depending on the `payment_use_user_id` flag).|
 |`payment_expiration_col`|Table column (letter) containing the payment expiration date (default: `C`, maximum: `Z`)|
@@ -162,7 +164,7 @@ If you prefer to let the bot check for payment periodically, it'll be better to 
 ## Payment File
 
 The payment file can be either a *xls*/*xlsx* file (*xlrd* library is used) or a Google Sheet.\
-In case a Google Sheet is used:
+In case a Google Sheet is used and the OAuth2 flow is chosen:
 1. Create a project on [Google Cloud Console](https://console.cloud.google.com)
 2. Go to *APIs & Services*, then *Credentials* and select *Configure Consent Screen*
 3. Create a new app and publish it, it doesn't need to be verified (but you can verify it, of course)
@@ -177,6 +179,8 @@ In case a Google Sheet is used:
 For more information: [create project](https://developers.google.com/workspace/guides/create-project), [create credentials](https://developers.google.com/workspace/guides/create-credentials)
 
 Since for allowing the bot to access the Google Sheet a browser window will open, in case of a dedicated server (no GUI) it's easier to generate the *json* file on a PC and then just copy it to the server.
+
+Alternatively, you can create a service account which is pre-authorized. In this case, you don't need to authorize it from the browser window but you only have to share the Google Sheet with the service account gmail.
 
 In both cases (Google Sheet or Excel file), the file shall contain the following columns starting from the second row (the first row is used as header):
 - Email address used for paying (for convenience, since an email address is usually required in payment platforms)
