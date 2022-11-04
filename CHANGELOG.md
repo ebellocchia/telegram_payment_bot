@@ -1,3 +1,8 @@
+# 0.7.0
+
+- Add support for service accounts (`payment_google_cred_type`)
+- Add possibility to specify the worksheet index in config (`payment_worksheet_idx`)
+
 # 0.6.3
 
 - Minor bug fix (passing not-existent variable as parameter)
