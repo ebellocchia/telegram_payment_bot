@@ -27,7 +27,7 @@ import pygsheets
 
 from telegram_payment_bot.bot.bot_config import BotConfigTypes
 from telegram_payment_bot.config.config_object import ConfigObject
-from telegram_payment_bot.google.google_sheet_cred import GoogleSheetCredTypes
+from telegram_payment_bot.google.google_cred_types import GoogleCredTypes
 from telegram_payment_bot.logger.logger import Logger
 
 
@@ -74,14 +74,14 @@ class GoogleSheetOpener:
         self.logger.GetLogger().info(f"Opening Google Sheet ID \"{sheet_id}\"...")
 
         # Authorize and open Google Sheet
-        if cred_type == GoogleSheetCredTypes.OAUTH2:
+        if cred_type == GoogleCredTypes.OAUTH2:
             cred_path = self.config.GetValue(BotConfigTypes.PAYMENT_GOOGLE_CRED_PATH)
             self.logger.GetLogger().info(f"Credential path: {cred_path}")
 
             google_client = pygsheets.authorize(client_secret=cred_file,
                                                 credentials_directory=cred_path,
                                                 local=True)
-        elif cred_type == GoogleSheetCredTypes.SERVICE_ACCOUNT:
+        elif cred_type == GoogleCredTypes.SERVICE_ACCOUNT:
             google_client = pygsheets.authorize(service_file=cred_file)
         else:
             raise ValueError("Invalid credential type")

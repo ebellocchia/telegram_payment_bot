@@ -26,7 +26,7 @@ import logging
 from telegram_payment_bot.bot.bot_config import BotConfigTypes
 from telegram_payment_bot.config.config_loader import ConfigCfgType
 from telegram_payment_bot.config.config_object import ConfigObject
-from telegram_payment_bot.google.google_sheet_cred import GoogleSheetCredTypes
+from telegram_payment_bot.google.google_cred_types import GoogleCredTypes
 from telegram_payment_bot.payment.payment_types import PaymentTypes
 from telegram_payment_bot.utils.key_value_converter import KeyValueConverter
 from telegram_payment_bot.utils.utils import Utils
@@ -183,9 +183,9 @@ BotConfigCfg: ConfigCfgType = {
         {
             "type": BotConfigTypes.PAYMENT_GOOGLE_CRED_TYPE,
             "name": "payment_google_cred_type",
-            "def_val": GoogleSheetCredTypes.OAUTH2,
+            "def_val": GoogleCredTypes.OAUTH2,
             "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.PAYMENT_TYPE) == PaymentTypes.GOOGLE_SHEET,
-            "conv_fct": lambda val: GoogleSheetCredTypes[val.upper()],
+            "conv_fct": lambda val: GoogleCredTypes[val.upper()],
             "print_fct": lambda val: val.name.upper(),
         },
         {

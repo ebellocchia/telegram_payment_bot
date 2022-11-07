@@ -28,8 +28,8 @@ from enum import Enum, auto, unique
 # Enumeratives
 #
 
-# Google Sheet credential types
+# Google credential types
 @unique
-class GoogleSheetCredTypes(Enum):
+class GoogleCredTypes(Enum):
     OAUTH2 = auto()
     SERVICE_ACCOUNT = auto()
