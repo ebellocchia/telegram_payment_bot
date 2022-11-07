@@ -168,7 +168,7 @@ BotConfigCfg: ConfigCfgType = {
             "type": BotConfigTypes.PAYMENT_TYPE,
             "name": "payment_type",
             "conv_fct": lambda val: PaymentTypes[val.upper()],
-            "print_fct": lambda val: val.name.lower(),
+            "print_fct": lambda val: val.name.upper(),
         },
         {
             "type": BotConfigTypes.PAYMENT_EXCEL_FILE,
@@ -186,7 +186,7 @@ BotConfigCfg: ConfigCfgType = {
             "def_val": GoogleSheetCredTypes.OAUTH2,
             "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.PAYMENT_TYPE) == PaymentTypes.GOOGLE_SHEET,
             "conv_fct": lambda val: GoogleSheetCredTypes[val.upper()],
-            "print_fct": lambda val: val.name.lower(),
+            "print_fct": lambda val: val.name.upper(),
         },
         {
             "type": BotConfigTypes.PAYMENT_GOOGLE_CRED,
