@@ -25,7 +25,7 @@ from typing import Optional
 
 import pygsheets
 
-from telegram_payment_bot.bot.bot_config import BotConfigTypes
+from telegram_payment_bot.bot.bot_config_types import BotConfigTypes
 from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.google.google_cred_types import GoogleCredTypes
 from telegram_payment_bot.logger.logger import Logger

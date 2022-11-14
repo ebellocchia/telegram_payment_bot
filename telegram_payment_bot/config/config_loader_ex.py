@@ -19,31 +19,14 @@
 # THE SOFTWARE.
 
 #
-# Imports
-#
-from telegram_payment_bot.bot.bot_base import BotBase
-from telegram_payment_bot.bot.bot_config import BotConfig
-from telegram_payment_bot.bot.bot_handlers_config import BotHandlersConfig
-from telegram_payment_bot.payment.payments_check_scheduler import PaymentsCheckScheduler
-
-
-#
 # Classes
 #
 
-# Payment bot class
-class PaymentBot(BotBase):
+# Configuration field not existent error class
+class ConfigFieldNotExistentError(Exception):
+    pass
 
-    payments_check_scheduler: PaymentsCheckScheduler
 
-    # Constructor
-    def __init__(self,
-                 config_file: str) -> None:
-        super().__init__(config_file,
-                         BotConfig,
-                         BotHandlersConfig)
-        # Initialize payment check scheduler
-        self.payments_check_scheduler = PaymentsCheckScheduler(self.client,
-                                                               self.config,
-                                                               self.logger,
-                                                               self.translator)
+# Configuration field value error class
+class ConfigFieldValueError(Exception):
+    pass

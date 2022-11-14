@@ -25,7 +25,7 @@ from typing import Any, Callable
 
 from telegram_payment_bot._version import __version__
 from telegram_payment_bot.auth_user.authorized_users_list import AuthorizedUsersList
-from telegram_payment_bot.bot.bot_config import BotConfigTypes
+from telegram_payment_bot.bot.bot_config_types import BotConfigTypes
 from telegram_payment_bot.command.command_base import CommandBase
 from telegram_payment_bot.command.command_data import CommandParameterError
 from telegram_payment_bot.email.smtp_emailer import SmtpEmailerError

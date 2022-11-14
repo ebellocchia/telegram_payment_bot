@@ -21,29 +21,37 @@
 #
 # Imports
 #
-from telegram_payment_bot.bot.bot_base import BotBase
-from telegram_payment_bot.bot.bot_config import BotConfig
-from telegram_payment_bot.bot.bot_handlers_config import BotHandlersConfig
-from telegram_payment_bot.payment.payments_check_scheduler import PaymentsCheckScheduler
+import configparser
+
+from telegram_payment_bot.config.config_object import ConfigObject
+from telegram_payment_bot.config.config_section_loader import ConfigSectionLoader
+from telegram_payment_bot.config.config_typing import ConfigSectionsType
 
 
 #
 # Classes
 #
 
-# Payment bot class
-class PaymentBot(BotBase):
+# Configuration sections loader class
+class ConfigSectionsLoader:
 
-    payments_check_scheduler: PaymentsCheckScheduler
+    config_section_loader: ConfigSectionLoader
 
     # Constructor
     def __init__(self,
-                 config_file: str) -> None:
-        super().__init__(config_file,
-                         BotConfig,
-                         BotHandlersConfig)
-        # Initialize payment check scheduler
-        self.payments_check_scheduler = PaymentsCheckScheduler(self.client,
-                                                               self.config,
-                                                               self.logger,
-                                                               self.translator)
+                 config_parser: configparser.ConfigParser) -> None:
+        self.config_section_loader = ConfigSectionLoader(config_parser)
+
+    # Load sections
+    def LoadSections(self,
+                     sections: ConfigSectionsType) -> ConfigObject:
+        config_obj = ConfigObject()
+
+        # For each section
+        for section_name, section in sections.items():
+            # Print section
+            print(f"Section [{section_name}]")
+            # Load fields
+            self.config_section_loader.LoadSection(config_obj, section_name, section)
+
+        return config_obj

@@ -23,7 +23,7 @@
 from datetime import datetime
 from typing import Optional, Tuple
 
-from telegram_payment_bot.bot.bot_config import BotConfigTypes
+from telegram_payment_bot.bot.bot_config_types import BotConfigTypes
 from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.google.google_sheet_rows_getter import GoogleSheetRowsGetter
 from telegram_payment_bot.logger.logger import Logger

@@ -52,7 +52,6 @@ class ConfigObject:
                  config_type: ConfigTypes) -> Any:
         if not isinstance(config_type, ConfigTypes):
             raise TypeError("BotConfig type is not an enumerative of ConfigTypes")
-
         return self.config[config_type]
 
     # Set value
@@ -61,20 +60,9 @@ class ConfigObject:
                  value: Any) -> None:
         if not isinstance(config_type, ConfigTypes):
             raise TypeError("BotConfig type is not an enumerative of ConfigTypes")
-
         self.config[config_type] = value
 
     # Get if value is set
     def IsValueSet(self,
                    config_type: ConfigTypes) -> bool:
         return config_type in self.config
-
-    # Convert to string
-    def ToString(self) -> str:
-        return "\n".join(
-            f"{field}: {val}" for field, val in self.config.values()
-        )
-
-    # Convert to string
-    def __str__(self) -> str:
-        return self.ToString()

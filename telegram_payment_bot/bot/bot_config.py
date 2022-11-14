@@ -21,71 +21,328 @@
 #
 # Imports
 #
-from enum import auto, unique
+import logging
 
-from telegram_payment_bot.config.config_object import ConfigObject, ConfigTypes
-
-
-#
-# Enumerations
-#
-
-# Bot configuration types
-@unique
-class BotConfigTypes(ConfigTypes):
-    API_ID = auto()
-    API_HASH = auto()
-    BOT_TOKEN = auto()
-    SESSION_NAME = auto()
-    # App
-    APP_TEST_MODE = auto()
-    APP_LANG_FILE = auto()
-    # Users
-    AUTHORIZED_USERS = auto()
-    # Support
-    SUPPORT_EMAIL = auto()
-    SUPPORT_TELEGRAM = auto()
-    # Payment
-    PAYMENT_WEBSITE = auto()
-    PAYMENT_CHECK_ON_JOIN = auto()
-    PAYMENT_CHECK_DUP_EMAIL = auto()
-    PAYMENT_TYPE = auto()
-    PAYMENT_EXCEL_FILE = auto()
-    PAYMENT_GOOGLE_SHEET_ID = auto()
-    PAYMENT_GOOGLE_CRED_TYPE = auto()
-    PAYMENT_GOOGLE_CRED = auto()
-    PAYMENT_GOOGLE_CRED_PATH = auto()
-    PAYMENT_USE_USER_ID = auto()
-    PAYMENT_WORKSHEET_IDX = auto()
-    PAYMENT_EMAIL_COL = auto()
-    PAYMENT_USER_COL = auto()
-    PAYMENT_EXPIRATION_COL = auto()
-    PAYMENT_DATE_FORMAT = auto()
-    # Email
-    EMAIL_ENABLED = auto()
-    EMAIL_FROM = auto()
-    EMAIL_REPLY_TO = auto()
-    EMAIL_HOST = auto()
-    EMAIL_USER = auto()
-    EMAIL_PASSWORD = auto()
-    EMAIL_SUBJECT = auto()
-    EMAIL_ALT_BODY = auto()
-    EMAIL_HTML_BODY = auto()
-    # Logging
-    LOG_LEVEL = auto()
-    LOG_CONSOLE_ENABLED = auto()
-    LOG_FILE_ENABLED = auto()
-    LOG_FILE_NAME = auto()
-    LOG_FILE_USE_ROTATING = auto()
-    LOG_FILE_APPEND = auto()
-    LOG_FILE_MAX_BYTES = auto()
-    LOG_FILE_BACKUP_CNT = auto()
+from telegram_payment_bot.bot.bot_config_types import BotConfigTypes
+from telegram_payment_bot.config.config_object import ConfigObject
+from telegram_payment_bot.config.config_typing import ConfigSectionsType
+from telegram_payment_bot.google.google_cred_types import GoogleCredTypes
+from telegram_payment_bot.payment.payment_types import PaymentTypes
+from telegram_payment_bot.utils.key_value_converter import KeyValueConverter
+from telegram_payment_bot.utils.utils import Utils
 
 
 #
 # Classes
 #
 
-# Bot configuration class
-class BotConfig(ConfigObject):
-    pass
+# Utility functions for bot configuration
+class _BotConfigUtils:
+    # Minimum/maximum column values
+    COL_MIN_VAL: str = "A"
+    COL_MAX_VAL: str = "Z"
+
+    # Read file
+    @staticmethod
+    def ReadFile(file_name: str) -> str:
+        with open(file_name, "r", encoding="utf-8") as fin:
+            file_data = fin.read()
+        return file_data
+
+    # Get if column indexes are valid
+    @staticmethod
+    def AreColumnIndexesValid(config: ConfigObject,
+                              curr_col: str) -> bool:
+        # Check value of current column
+        if (len(curr_col) != 1 or
+                curr_col < _BotConfigUtils.COL_MIN_VAL or
+                curr_col > _BotConfigUtils.COL_MAX_VAL):
+            return False
+
+        # Get other indexes that are already available
+        columns = []
+        for column in (BotConfigTypes.PAYMENT_EMAIL_COL,
+                       BotConfigTypes.PAYMENT_USER_COL,
+                       BotConfigTypes.PAYMENT_EXPIRATION_COL):
+            if config.IsValueSet(column):
+                columns.append(config.GetValue(column))
+
+        # Check columns if any
+        if len(columns) > 0:
+            # The current column shall be different from the already present ones
+            for col in columns:
+                if curr_col == col:
+                    return False
+        return True
+
+
+#
+# Variables
+#
+
+# Logging level converter
+LoggingLevelConverter = KeyValueConverter({
+    "DEBUG": logging.DEBUG,
+    "INFO": logging.INFO,
+    "WARNING": logging.WARNING,
+    "ERROR": logging.ERROR,
+    "CRITICAL": logging.CRITICAL,
+})
+
+
+# Bot configuration
+BotConfig: ConfigSectionsType = {
+    # Pyrogram
+    "pyrogram": [
+        {
+            "type": BotConfigTypes.API_ID,
+            "name": "api_id",
+        },
+        {
+            "type": BotConfigTypes.API_HASH,
+            "name": "api_hash",
+        },
+        {
+            "type": BotConfigTypes.BOT_TOKEN,
+            "name": "bot_token",
+        },
+        {
+            "type": BotConfigTypes.SESSION_NAME,
+            "name": "session_name",
+        },
+    ],
+    # App
+    "app": [
+        {
+            "type": BotConfigTypes.APP_TEST_MODE,
+            "name": "app_test_mode",
+            "conv_fct": Utils.StrToBool,
+        },
+        {
+            "type": BotConfigTypes.APP_LANG_FILE,
+            "name": "app_lang_file",
+            "def_val": None,
+        },
+    ],
+    # Users
+    "users": [
+        {
+            "type": BotConfigTypes.AUTHORIZED_USERS,
+            "name": "authorized_users",
+            "conv_fct": lambda val: val.split(","),
+        },
+    ],
+    # Support
+    "support": [
+        {
+            "type": BotConfigTypes.SUPPORT_EMAIL,
+            "name": "support_email",
+            "def_val": "",
+        },
+        {
+            "type": BotConfigTypes.SUPPORT_TELEGRAM,
+            "name": "support_telegram",
+            "def_val": "",
+        },
+    ],
+    # Payment
+    "payment": [
+        {
+            "type": BotConfigTypes.PAYMENT_WEBSITE,
+            "name": "payment_website",
+            "def_val": "",
+        },
+        {
+            "type": BotConfigTypes.PAYMENT_CHECK_ON_JOIN,
+            "name": "payment_check_on_join",
+            "conv_fct": Utils.StrToBool,
+            "def_val": True,
+        },
+        {
+            "type": BotConfigTypes.PAYMENT_CHECK_DUP_EMAIL,
+            "name": "payment_check_dup_email",
+            "conv_fct": Utils.StrToBool,
+            "def_val": True,
+        },
+        {
+            "type": BotConfigTypes.PAYMENT_TYPE,
+            "name": "payment_type",
+            "conv_fct": lambda val: PaymentTypes[val.upper()],
+            "print_fct": lambda val: val.name.upper(),
+        },
+        {
+            "type": BotConfigTypes.PAYMENT_EXCEL_FILE,
+            "name": "payment_excel_file",
+            "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.PAYMENT_TYPE) == PaymentTypes.EXCEL_FILE,
+        },
+        {
+            "type": BotConfigTypes.PAYMENT_GOOGLE_SHEET_ID,
+            "name": "payment_google_sheet_id",
+            "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.PAYMENT_TYPE) == PaymentTypes.GOOGLE_SHEET,
+        },
+        {
+            "type": BotConfigTypes.PAYMENT_GOOGLE_CRED_TYPE,
+            "name": "payment_google_cred_type",
+            "def_val": GoogleCredTypes.OAUTH2,
+            "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.PAYMENT_TYPE) == PaymentTypes.GOOGLE_SHEET,
+            "conv_fct": lambda val: GoogleCredTypes[val.upper()],
+            "print_fct": lambda val: val.name.upper(),
+        },
+        {
+            "type": BotConfigTypes.PAYMENT_GOOGLE_CRED,
+            "name": "payment_google_cred",
+            "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.PAYMENT_TYPE) == PaymentTypes.GOOGLE_SHEET,
+        },
+        {
+            "type": BotConfigTypes.PAYMENT_GOOGLE_CRED_PATH,
+            "name": "payment_google_cred_path",
+            "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.PAYMENT_TYPE) == PaymentTypes.GOOGLE_SHEET,
+        },
+        {
+            "type": BotConfigTypes.PAYMENT_USE_USER_ID,
+            "name": "payment_use_user_id",
+            "conv_fct": Utils.StrToBool,
+            "def_val": False,
+        },
+        {
+            "type": BotConfigTypes.PAYMENT_WORKSHEET_IDX,
+            "name": "payment_worksheet_idx",
+            "conv_fct": Utils.StrToInt,
+            "def_val": 0,
+            "valid_if": lambda cfg, val: val >= 0,
+        },
+        {
+            "type": BotConfigTypes.PAYMENT_EMAIL_COL,
+            "name": "payment_email_col",
+            "conv_fct": lambda val: val.upper(),
+            "def_val": "A",
+            "valid_if": _BotConfigUtils.AreColumnIndexesValid
+        },
+        {
+            "type": BotConfigTypes.PAYMENT_USER_COL,
+            "name": "payment_user_col",
+            "conv_fct": lambda val: val.upper(),
+            "def_val": "B",
+            "valid_if": _BotConfigUtils.AreColumnIndexesValid
+        },
+        {
+            "type": BotConfigTypes.PAYMENT_EXPIRATION_COL,
+            "name": "payment_expiration_col",
+            "conv_fct": lambda val: val.upper(),
+            "def_val": "C",
+            "valid_if": _BotConfigUtils.AreColumnIndexesValid
+        },
+        {
+            "type": BotConfigTypes.PAYMENT_DATE_FORMAT,
+            "name": "payment_date_format",
+            "def_val": "%d/%m/%Y",
+        },
+    ],
+    # Email
+    "email": [
+        {
+            "type": BotConfigTypes.EMAIL_ENABLED,
+            "name": "email_enabled",
+            "conv_fct": Utils.StrToBool,
+            "def_val": False,
+        },
+        {
+            "type": BotConfigTypes.EMAIL_FROM,
+            "name": "email_from",
+            "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.EMAIL_ENABLED),
+        },
+        {
+            "type": BotConfigTypes.EMAIL_REPLY_TO,
+            "name": "email_reply_to",
+            "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.EMAIL_ENABLED),
+        },
+        {
+            "type": BotConfigTypes.EMAIL_HOST,
+            "name": "email_host",
+            "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.EMAIL_ENABLED),
+        },
+        {
+            "type": BotConfigTypes.EMAIL_USER,
+            "name": "email_user",
+            "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.EMAIL_ENABLED),
+        },
+        {
+            "type": BotConfigTypes.EMAIL_PASSWORD,
+            "name": "email_password",
+            "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.EMAIL_ENABLED),
+        },
+        {
+            "type": BotConfigTypes.EMAIL_SUBJECT,
+            "name": "email_subject",
+            "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.EMAIL_ENABLED),
+        },
+        {
+            "type": BotConfigTypes.EMAIL_ALT_BODY,
+            "name": "email_alt_body",
+            "conv_fct": _BotConfigUtils.ReadFile,
+            "print_fct": lambda val: "file successfully loaded",
+            "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.EMAIL_ENABLED),
+        },
+        {
+            "type": BotConfigTypes.EMAIL_HTML_BODY,
+            "name": "email_html_body",
+            "conv_fct": _BotConfigUtils.ReadFile,
+            "print_fct": lambda val: "file successfully loaded",
+            "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.EMAIL_ENABLED),
+        },
+    ],
+    # Logging
+    "logging": [
+        {
+            "type": BotConfigTypes.LOG_LEVEL,
+            "name": "log_level",
+            "conv_fct": LoggingLevelConverter.KeyToValue,
+            "print_fct": LoggingLevelConverter.ValueToKey,
+            "def_val": logging.INFO,
+        },
+        {
+            "type": BotConfigTypes.LOG_CONSOLE_ENABLED,
+            "name": "log_console_enabled",
+            "conv_fct": Utils.StrToBool,
+            "def_val": True,
+        },
+        {
+            "type": BotConfigTypes.LOG_FILE_ENABLED,
+            "name": "log_file_enabled",
+            "conv_fct": Utils.StrToBool,
+            "def_val": False,
+        },
+        {
+            "type": BotConfigTypes.LOG_FILE_NAME,
+            "name": "log_file_name",
+            "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.LOG_FILE_ENABLED),
+        },
+        {
+            "type": BotConfigTypes.LOG_FILE_USE_ROTATING,
+            "name": "log_file_use_rotating",
+            "conv_fct": Utils.StrToBool,
+            "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.LOG_FILE_ENABLED),
+        },
+        {
+            "type": BotConfigTypes.LOG_FILE_APPEND,
+            "name": "log_file_append",
+            "conv_fct": Utils.StrToBool,
+            "load_if": lambda cfg: (cfg.GetValue(BotConfigTypes.LOG_FILE_ENABLED) and
+                                    not cfg.GetValue(BotConfigTypes.LOG_FILE_USE_ROTATING)),
+        },
+        {
+            "type": BotConfigTypes.LOG_FILE_MAX_BYTES,
+            "name": "log_file_max_bytes",
+            "conv_fct": Utils.StrToInt,
+            "load_if": lambda cfg: (cfg.GetValue(BotConfigTypes.LOG_FILE_ENABLED) and
+                                    cfg.GetValue(BotConfigTypes.LOG_FILE_USE_ROTATING)),
+        },
+        {
+            "type": BotConfigTypes.LOG_FILE_BACKUP_CNT,
+            "name": "log_file_backup_cnt",
+            "conv_fct": Utils.StrToInt,
+            "load_if": lambda cfg: (cfg.GetValue(BotConfigTypes.LOG_FILE_ENABLED) and
+                                    cfg.GetValue(BotConfigTypes.LOG_FILE_USE_ROTATING)),
+        },
+    ],
+}

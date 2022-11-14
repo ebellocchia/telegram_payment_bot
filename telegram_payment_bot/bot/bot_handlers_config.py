@@ -24,7 +24,7 @@
 from pyrogram import filters
 from pyrogram.handlers import MessageHandler
 
-from telegram_payment_bot.bot.bot_base import HandlersCfgType
+from telegram_payment_bot.bot.bot_handlers_config_typing import BotHandlersConfigType
 from telegram_payment_bot.command.command_dispatcher import CommandTypes
 from telegram_payment_bot.message.message_dispatcher import MessageTypes
 
@@ -34,7 +34,7 @@ from telegram_payment_bot.message.message_dispatcher import MessageTypes
 #
 
 # Bot handlers configuration
-BotHandlersCfg: HandlersCfgType = {
+BotHandlersConfig: BotHandlersConfigType = {
     # Handlers for MessageHandler
     MessageHandler: [
 

@@ -26,7 +26,7 @@ from typing import Any, Optional, Tuple
 
 import xlrd
 
-from telegram_payment_bot.bot.bot_config import BotConfigTypes
+from telegram_payment_bot.bot.bot_config_types import BotConfigTypes
 from telegram_payment_bot.misc.user import User
 from telegram_payment_bot.payment.payments_data import (
     PaymentErrorTypes, PaymentsData, PaymentsDataErrors, SinglePayment

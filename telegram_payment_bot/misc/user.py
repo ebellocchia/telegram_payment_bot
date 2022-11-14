@@ -27,7 +27,7 @@ from typing import Union
 
 import pyrogram
 
-from telegram_payment_bot.bot.bot_config import BotConfigTypes
+from telegram_payment_bot.bot.bot_config_types import BotConfigTypes
 from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.utils.utils import Utils
 

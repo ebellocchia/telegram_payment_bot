@@ -21,29 +21,28 @@
 #
 # Imports
 #
-from telegram_payment_bot.bot.bot_base import BotBase
-from telegram_payment_bot.bot.bot_config import BotConfig
-from telegram_payment_bot.bot.bot_handlers_config import BotHandlersConfig
-from telegram_payment_bot.payment.payments_check_scheduler import PaymentsCheckScheduler
+import configparser
+
+from telegram_payment_bot.config.config_object import ConfigObject
+from telegram_payment_bot.config.config_sections_loader import ConfigSectionsLoader
+from telegram_payment_bot.config.config_typing import ConfigSectionsType
 
 
 #
 # Classes
 #
 
-# Payment bot class
-class PaymentBot(BotBase):
+# Configuration file sections loader class
+class ConfigFileSectionsLoader:
+    # Load
+    @staticmethod
+    def Load(file_name: str,
+             sections: ConfigSectionsType) -> ConfigObject:
+        print(f"\nLoading configuration file {file_name}...\n")
 
-    payments_check_scheduler: PaymentsCheckScheduler
+        # Read file
+        config_parser = configparser.ConfigParser()
+        config_parser.read(file_name, encoding="utf-8")
 
-    # Constructor
-    def __init__(self,
-                 config_file: str) -> None:
-        super().__init__(config_file,
-                         BotConfig,
-                         BotHandlersConfig)
-        # Initialize payment check scheduler
-        self.payments_check_scheduler = PaymentsCheckScheduler(self.client,
-                                                               self.config,
-                                                               self.logger,
-                                                               self.translator)
+        # Load sections
+        return ConfigSectionsLoader(config_parser).LoadSections(sections)

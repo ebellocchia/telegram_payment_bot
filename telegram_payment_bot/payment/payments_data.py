@@ -27,7 +27,7 @@ import datetime
 from enum import Enum, auto, unique
 from typing import Optional
 
-from telegram_payment_bot.bot.bot_config import BotConfigTypes
+from telegram_payment_bot.bot.bot_config_types import BotConfigTypes
 from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.misc.user import User
 from telegram_payment_bot.utils.wrapped_dict import WrappedDict
