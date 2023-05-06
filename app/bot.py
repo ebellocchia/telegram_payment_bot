@@ -91,5 +91,5 @@ if __name__ == "__main__":
     args = args_parser.Parse()
 
     # Create and run bot
-    payment_bot = PaymentBot(args.config)
-    payment_bot.Run()
+    bot = PaymentBot(args.config)
+    bot.Run()
