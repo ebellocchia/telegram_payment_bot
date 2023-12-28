@@ -1,3 +1,7 @@
+# 0.7.1
+
+- Fix replying to commands in topics
+
 # 0.7.0
 
 - Add support for service accounts (`payment_google_cred_type`)
