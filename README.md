@@ -3,7 +3,6 @@
 [![PyPI version](https://badge.fury.io/py/telegram-payment-bot.svg)](https://badge.fury.io/py/telegram-payment-bot)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/c285797e0a8042f49202947924d1f2ac)](https://app.codacy.com/gh/ebellocchia/telegram_payment_bot/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![CodeFactor](https://www.codefactor.io/repository/github/ebellocchia/telegram_payment_bot/badge)](https://www.codefactor.io/repository/github/ebellocchia/telegram_payment_bot)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/ebellocchia/bip_utils/master/LICENSE)
 
 Telegram bot for handling payments in groups based on *pyrogram* library.\
 Payments data can be loaded either from an *xls*/*xlsx* file or from a Google Sheet (in this way, it can be shared with other admins).\
