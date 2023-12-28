@@ -26,6 +26,7 @@ from typing import Any
 
 import pyrogram
 from pyrogram.errors import RPCError
+from pyrogram.errors.exceptions.bad_request_400 import BadRequest
 
 from telegram_payment_bot.auth_user.authorized_users_list import AuthorizedUsersList
 from telegram_payment_bot.auth_user.authorized_users_message_sender import AuthorizedUsersMessageSender
@@ -111,7 +112,15 @@ class CommandBase(ABC):
             else:
                 self._SendMessageToAuthUsers(msg)
         else:
-            self.message_sender.SendMessage(self.cmd_data.Chat(), msg)
+            try:
+                self.message_sender.SendMessage(
+                    self.cmd_data.Chat(),
+                    msg,
+                    reply_to_message_id=self.message.reply_to_message_id
+                )
+            # Send message privately if topic is closed
+            except BadRequest:
+                self.message_sender.SendMessage(self.cmd_data.User(), msg)
 
     # Send message to authorized users
     def _SendMessageToAuthUsers(self,
