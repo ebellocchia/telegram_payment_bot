@@ -7,6 +7,8 @@
 | [![Codacy grade](https://img.shields.io/codacy/grade/c285797e0a8042f49202947924d1f2ac?label=Codacy%20Grade)](https://app.codacy.com/gh/ebellocchia/telegram_payment_bot/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) [![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/ebellocchia/telegram_payment_bot?label=CodeFactor%20Grade)](https://www.codefactor.io/repository/github/ebellocchia/telegram_payment_bot) |
 | |
 
+## Introduction
+
 Telegram bot for handling payments in groups based on *pyrogram* library.\
 Payments data can be loaded either from an *xls*/*xlsx* file or from a Google Sheet (in this way, it can be shared with other admins).\
 It is also possible to extend this to load payments data from other sources (e.g. a remote database) by inheriting and implementing the `PaymentsLoaderBase` class, but I didn't need to do it so far.\
