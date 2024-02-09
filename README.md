@@ -1,9 +1,11 @@
 # Telegram Payments Bot
 
-[![PyPI version](https://badge.fury.io/py/telegram-payment-bot.svg)](https://badge.fury.io/py/telegram-payment-bot)
-[![Build](https://github.com/ebellocchia/telegram_payment_bot/actions/workflows/build.yml/badge.svg)](https://github.com/ebellocchia/telegram_payment_bot/actions/workflows/build.yml)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/c285797e0a8042f49202947924d1f2ac)](https://app.codacy.com/gh/ebellocchia/telegram_payment_bot/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-[![CodeFactor](https://www.codefactor.io/repository/github/ebellocchia/telegram_payment_bot/badge)](https://www.codefactor.io/repository/github/ebellocchia/telegram_payment_bot)
+| |
+|---|
+| [![PyPI - Version](https://img.shields.io/pypi/v/telegram_payment_bot.svg?logo=pypi&label=PyPI&logoColor=gold)](https://pypi.org/project/telegram_payment_bot/) [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/telegram_payment_bot.svg?logo=python&label=Python&logoColor=gold)](https://pypi.org/project/telegram_payment_bot/) [![GitHub License](https://img.shields.io/github/license/ebellocchia/telegram_payment_bot?label=License)](https://github.com/ebellocchia/telegram_payment_bot?tab=MIT-1-ov-file) |
+| [![Build](https://github.com/ebellocchia/telegram_payment_bot/actions/workflows/build.yml/badge.svg)](https://github.com/ebellocchia/telegram_payment_bot/actions/workflows/build.yml) |
+| [![Codacy grade](https://img.shields.io/codacy/grade/c285797e0a8042f49202947924d1f2ac?label=Codacy%20Grade)](https://app.codacy.com/gh/ebellocchia/telegram_payment_bot/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) [![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/ebellocchia/telegram_payment_bot?label=CodeFactor%20Grade)](https://www.codefactor.io/repository/github/ebellocchia/telegram_payment_bot) |
+| |
 
 Telegram bot for handling payments in groups based on *pyrogram* library.\
 Payments data can be loaded either from an *xls*/*xlsx* file or from a Google Sheet (in this way, it can be shared with other admins).\
