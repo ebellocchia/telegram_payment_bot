@@ -1,3 +1,7 @@
+# 0.7.2
+
+- Update Python versions
+
 # 0.7.1
 
 - Fix replying to commands in topics
