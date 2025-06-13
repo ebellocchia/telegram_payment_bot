@@ -1,6 +1,6 @@
 pygsheets
 xlrd
-pyrotgfork>=2.0.0
+pyrotgfork
 pytgcrypto
 apscheduler
 defusedxml
