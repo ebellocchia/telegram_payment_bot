@@ -1,3 +1,7 @@
+# 0.7.3
+
+- Use `pyrotgfork`, since `pyrogram` was archived
+
 # 0.7.2
 
 - Update Python versions
