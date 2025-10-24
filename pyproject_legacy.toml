@@ -1,5 +1,5 @@
 #
-# pyproject.toml with the old license syntax, compatible the older versions of setuptools
+# pyproject.toml with the old license syntax, compatible with older versions of setuptools
 # Use this for Python 3.7 and 3.8
 #
 [build-system]
