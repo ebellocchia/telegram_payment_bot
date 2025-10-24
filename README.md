@@ -27,6 +27,10 @@ The package requires Python 3, it is not compatible with Python 2.\
 To install it:
     pip install telegram_payment_bot
 
+**NOTE:** for Python 3.7 and 3.8, please use the `pyproject_legacy.toml` file. Just rename it to `pyproject.toml`, overwriting the existent one, and install with *pip* from the local folder:
+
+    pip install .
+
 To run the bot, edit the configuration file by specifying the API ID/hash and bot token. Then, move to the *app* folder and run the *bot.py* script:
 
     cd app
