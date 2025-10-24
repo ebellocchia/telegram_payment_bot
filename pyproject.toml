@@ -13,7 +13,7 @@ maintainers = [
 ]
 description = "Telegram bot for managing payments"
 readme = "README.md"
-license = {text = "MIT"}
+license = "MIT"
 requires-python = ">=3.7"
 keywords = ["telegram", "bot", "telegram bot", "payments", "payments check"]
 classifiers = [
@@ -26,7 +26,6 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
     "Development Status :: 5 - Production/Stable",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Intended Audience :: Developers",
 ]
