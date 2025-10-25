@@ -39,6 +39,8 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://github.com/ebellocchia/telegram_payment_bot"
+Changelog = "https://github.com/ebellocchia/telegram_payment_bot/blob/master/CHANGELOG.md"
+Repository = "https://github.com/ebellocchia/telegram_payment_bot"
 Download = "https://github.com/ebellocchia/telegram_payment_bot/archive/v{version}.tar.gz"
 
 [tool.setuptools]
