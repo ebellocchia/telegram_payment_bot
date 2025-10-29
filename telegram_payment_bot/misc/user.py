@@ -96,7 +96,7 @@ class User:
         if not self.IsValid():
             raise KeyError("An invalid user cannot be used as a key")
 
-        return self.user if self.IsUserId() else self.user.lower()
+        return self.user if self.IsUserId() else self.user.lower()  # type: ignore
 
     # Convert to string
     def ToString(self) -> str:

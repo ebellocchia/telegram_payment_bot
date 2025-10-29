@@ -45,7 +45,7 @@ class _BotConfigUtils:
     # Read file
     @staticmethod
     def ReadFile(file_name: str) -> str:
-        with open(file_name, "r", encoding="utf-8") as fin:
+        with open(file_name, encoding="utf-8") as fin:
             file_data = fin.read()
         return file_data
 

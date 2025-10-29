@@ -28,9 +28,7 @@ from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.google.google_sheet_rows_getter import GoogleSheetRowsGetter
 from telegram_payment_bot.logger.logger import Logger
 from telegram_payment_bot.misc.user import User
-from telegram_payment_bot.payment.payments_data import (
-    PaymentErrorTypes, PaymentsData, PaymentsDataErrors, SinglePayment
-)
+from telegram_payment_bot.payment.payments_data import PaymentErrorTypes, PaymentsData, PaymentsDataErrors, SinglePayment
 from telegram_payment_bot.payment.payments_loader_base import PaymentsLoaderBase
 
 

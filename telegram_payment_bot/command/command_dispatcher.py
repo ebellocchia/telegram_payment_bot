@@ -28,10 +28,29 @@ import pyrogram
 
 from telegram_payment_bot.command.command_base import CommandBase
 from telegram_payment_bot.command.commands import (
-    AliveCmd, AuthUsersCmd, ChatInfoCmd, CheckNoPaymentCmd, CheckNoUsernameCmd, CheckPaymentsDataCmd, EmailNoPaymentCmd,
-    HelpCmd, InviteLinkCmd, IsCheckPaymentsOnJoinCmd, IsTestModeCmd, PaymentTaskAddChatCmd, PaymentTaskInfoCmd,
-    PaymentTaskRemoveAllChatsCmd, PaymentTaskRemoveChatCmd, PaymentTaskStartCmd, PaymentTaskStopCmd, RemoveNoPaymentCmd,
-    RemoveNoUsernameCmd, SetCheckPaymentsOnJoinCmd, SetTestModeCmd, UsersListCmd, VersionCmd
+    AliveCmd,
+    AuthUsersCmd,
+    ChatInfoCmd,
+    CheckNoPaymentCmd,
+    CheckNoUsernameCmd,
+    CheckPaymentsDataCmd,
+    EmailNoPaymentCmd,
+    HelpCmd,
+    InviteLinkCmd,
+    IsCheckPaymentsOnJoinCmd,
+    IsTestModeCmd,
+    PaymentTaskAddChatCmd,
+    PaymentTaskInfoCmd,
+    PaymentTaskRemoveAllChatsCmd,
+    PaymentTaskRemoveChatCmd,
+    PaymentTaskStartCmd,
+    PaymentTaskStopCmd,
+    RemoveNoPaymentCmd,
+    RemoveNoUsernameCmd,
+    SetCheckPaymentsOnJoinCmd,
+    SetTestModeCmd,
+    UsersListCmd,
+    VersionCmd,
 )
 from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.logger.logger import Logger
