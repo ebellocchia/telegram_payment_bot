@@ -166,6 +166,15 @@ The bot shall be an administrator of the group.\
 If you just need to run bot once in a while (e.g. once a week), you can do it manually using the `check_no_payment` and `remove_no_payment` commands. In this case, it's sufficient to run the bot locally on the PC when needed.\
 If you prefer to let the bot check for payment periodically, it'll be better to run it 24h/24h on a VPS.
 
+### Docker
+
+Docker files are also provided, to run the bot in a Docker container.
+In this case, the configuration file can be set by setting the `CONFIG_FILE` variable, for example:
+
+    CONFIG_FILE=conf/config.ini docker compose up -d --build
+
+**NOTE:** Depending on your timezone, you may want to adjust the `TZ=Europe/Rome` variable in `docker-compose.yml`.
+
 ## Payment File
 
 The payment file can be either a *xls*/*xlsx* file (*xlrd* library is used) or a Google Sheet.\
