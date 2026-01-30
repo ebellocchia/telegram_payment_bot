@@ -188,12 +188,13 @@ class SmtpEmailer:
         try:
             if self.auth_type == EmailerAuthenticationTypes.SSL_TLS:
                 self.smtp = smtplib.SMTP_SSL(self.host, 465)
+                self.smtp.login(self.user, self.password)
             elif self.auth_type == EmailerAuthenticationTypes.STARTTLS:
                 self.smtp = smtplib.SMTP(self.host, 587)
                 self.smtp.starttls()
+                self.smtp.login(self.user, self.password)
             else:
                 self.smtp = smtplib.SMTP(self.host)
-            self.smtp.login(self.user, self.password)
         except smtplib.SMTPException as ex:
             raise SmtpEmailerError("Error while connecting") from ex
 
