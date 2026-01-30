@@ -21,9 +21,9 @@
 from typing import Callable, Optional
 
 import pyrogram
+from pyrogram.enums import ChatMembersFilter
 
 from telegram_payment_bot.misc.helpers import UserHelper
-from telegram_payment_bot.utils.pyrogram_wrapper import PyrogramWrapper
 from telegram_payment_bot.utils.wrapped_list import WrappedList
 
 
@@ -121,19 +121,19 @@ class ChatMembersGetter:
     def FilterMembers(self,
                       chat: pyrogram.types.Chat,
                       filter_fct: Optional[Callable[[pyrogram.types.ChatMember], bool]] = None,
-                      filter_str: str = "all") -> ChatMembersList:
+                      filter_type: ChatMembersFilter = ChatMembersFilter.SEARCH) -> ChatMembersList:
         """
         Get the list of chat members by applying the specified filter.
 
         Args:
             chat: The chat to get members from
             filter_fct: Optional filter function to apply to members
-            filter_str: Filter string for member type (e.g., "all", "administrators")
+            filter_type: Pyrogram filter
 
         Returns:
             A sorted and filtered list of chat members
         """
-        filtered_members = list(PyrogramWrapper.GetChatMembers(self.client, chat, filter_str))
+        filtered_members = [member for member in self.client.get_chat_members(chat.id, filter=filter_type)]     # type: ignore
         if filter_fct is not None:
             filtered_members = list(filter(filter_fct, filtered_members))  # type: ignore
         filtered_members.sort(  # type: ignore
@@ -184,4 +184,6 @@ class ChatMembersGetter:
         Returns:
             A list of all chat administrators
         """
-        return self.FilterMembers(chat, lambda member: True, "administrators")
+        return self.FilterMembers(chat,
+                                  lambda member: True,
+                                  ChatMembersFilter.ADMINISTRATORS)

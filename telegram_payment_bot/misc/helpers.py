@@ -21,8 +21,7 @@
 from typing import Optional
 
 import pyrogram
-
-from telegram_payment_bot.utils.pyrogram_wrapper import PyrogramWrapper
+from pyrogram.enums import ChatMemberStatus, ChatType
 
 
 class ChatHelper:
@@ -39,7 +38,7 @@ class ChatHelper:
         Returns:
             True if the chat is a channel, False otherwise
         """
-        return PyrogramWrapper.IsChannel(chat)
+        return chat.type == ChatType.CHANNEL
 
     @staticmethod
     def GetTitle(chat: pyrogram.types.Chat) -> str:
@@ -100,7 +99,7 @@ class MemberHelper:
             True if the member is valid, False otherwise
         """
         return (
-            PyrogramWrapper.MemberIsStatus(member, "member")
+            member.status == ChatMemberStatus.MEMBER
             and member.user is not None
             and (member.user.is_self is None or not member.user.is_self)
             and (member.user.is_bot is None or not member.user.is_bot)

@@ -18,9 +18,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import pyrogram
+from datetime import datetime, timedelta
 
-from telegram_payment_bot.utils.pyrogram_wrapper import PyrogramWrapper
+import pyrogram
 
 
 class BanHelperConst:
@@ -54,7 +54,9 @@ class BanHelper:
             chat: The chat to ban the user from
             user: The user to ban
         """
-        PyrogramWrapper.BanChatMember(self.client, chat, user)
+        self.client.ban_chat_member(chat.id,
+                                    user.id,
+                                    until_date=datetime.now())
 
     def KickUser(self,
                  chat: pyrogram.types.Chat,
@@ -66,7 +68,9 @@ class BanHelper:
             chat: The chat to kick the user from
             user: The user to kick
         """
-        PyrogramWrapper.BanChatMember(self.client, chat, user, BanHelperConst.BAN_TIME_SEC)
+        self.client.ban_chat_member(chat.id,
+                                    user.id,
+                                    until_date=datetime.now() + timedelta(seconds=BanHelperConst.BAN_TIME_SEC))
 
     def UnbanUser(self,
                   chat: pyrogram.types.Chat,
