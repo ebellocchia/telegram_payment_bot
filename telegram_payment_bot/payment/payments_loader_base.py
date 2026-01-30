@@ -19,12 +19,18 @@
 # THE SOFTWARE.
 
 from abc import ABC, abstractmethod
+from datetime import datetime
 from typing import Optional
 
+import xlrd
+
+from telegram_payment_bot.bot.bot_config_types import BotConfigTypes
 from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.logger.logger import Logger
 from telegram_payment_bot.misc.user import User
-from telegram_payment_bot.payment.payments_data import PaymentsData, PaymentsDataErrors, SinglePayment
+from telegram_payment_bot.payment.payments_data import (
+    PaymentsData, PaymentsDataErrors, SinglePayment, PaymentErrorTypes
+)
 
 
 class PaymentsLoaderBase(ABC):
@@ -72,6 +78,53 @@ class PaymentsLoaderBase(ABC):
         Returns:
             PaymentsDataErrors containing any errors found
         """
+
+    def _AddPayment(self,
+                    row_idx: int,
+                    payments_data: PaymentsData,
+                    payments_data_err: PaymentsDataErrors,
+                    email: str,
+                    user: User,
+                    expiration: str) -> None:
+        """Add a payment entry from a row.
+
+        Args:
+            row_idx: Row index (1-based)
+            payments_data: PaymentsData to add to
+            payments_data_err: PaymentsDataErrors to add errors to
+            email: Email address
+            user: User object
+            expiration: Expiration date string
+        """
+        try:
+            if isinstance(expiration, datetime):
+                expiration_datetime = expiration.date()
+            elif isinstance(expiration, (int, float)):
+                expiration_datetime = xlrd.xldate_as_datetime(expiration, 0).date()
+            else:
+                expiration_datetime = datetime.strptime(expiration.strip(),
+                                                        self.config.GetValue(BotConfigTypes.PAYMENT_DATE_FORMAT)).date()
+        except (ValueError, AttributeError):
+            self.logger.GetLogger().warning(
+                f"Expiration date for user {user} at row {row_idx} is not valid ({expiration}), skipped"
+            )
+            payments_data_err.AddPaymentError(PaymentErrorTypes.INVALID_DATE_ERR,
+                                              row_idx,
+                                              user,
+                                              expiration)
+            return
+
+        if payments_data.AddPayment(email, user, expiration_datetime):
+            self.logger.GetLogger().info(
+                f"{payments_data.Count():4d} - Row {row_idx:4d} | {email} | {user} | {expiration_datetime}"
+            )
+        else:
+            self.logger.GetLogger().warning(
+                f"Row {row_idx} contains duplicated data, skipped"
+            )
+            payments_data_err.AddPaymentError(PaymentErrorTypes.DUPLICATED_DATA_ERR,
+                                              row_idx,
+                                              user)
 
     @staticmethod
     def _ColumnToIndex(col: str) -> int:

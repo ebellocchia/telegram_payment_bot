@@ -125,7 +125,7 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
                 expiration = sheet.cell_value(i, expiration_col_idx)
 
                 if user.IsValid():
-                    self.__AddPayment(i + 1, payments_data, payments_data_err, email, user, expiration)
+                    self._AddPayment(i + 1, payments_data, payments_data_err, email, user, expiration)
 
         return payments_data, payments_data_err
 
@@ -155,54 +155,6 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
             expiration = row[expiration_col_idx - 1].value
 
             if user.IsValid():
-                self.__AddPayment(i, payments_data, payments_data_err, email, user, expiration)
+                self._AddPayment(i, payments_data, payments_data_err, email, user, expiration)
 
         return payments_data, payments_data_err
-
-    def __AddPayment(self,
-                     row_idx: int,
-                     payments_data: PaymentsData,
-                     payments_data_err: PaymentsDataErrors,
-                     email: str,
-                     user: User,
-                     expiration: Any) -> None:
-        """Add a payment entry from a row.
-
-        Args:
-            row_idx: Row index (1-based)
-            payments_data: PaymentsData to add to
-            payments_data_err: PaymentsDataErrors to add errors to
-            email: Email address
-            user: User object
-            expiration: Expiration value (number, string, or datetime object)
-        """
-        try:
-            if isinstance(expiration, datetime):
-                expiration_datetime = expiration.date()
-            else:
-                expiration_datetime = xlrd.xldate_as_datetime(expiration, 0).date()
-        except TypeError:
-            try:
-                expiration_datetime = datetime.strptime(expiration.strip(),
-                                                        self.config.GetValue(BotConfigTypes.PAYMENT_DATE_FORMAT)).date()
-            except (ValueError, AttributeError):
-                self.logger.GetLogger().warning(
-                    f"Expiration date for user {user} at row {row_idx} is not valid ({expiration}), skipped"
-                )
-                payments_data_err.AddPaymentError(PaymentErrorTypes.INVALID_DATE_ERR,
-                                                  row_idx,
-                                                  user,
-                                                  expiration)
-                return
-
-        if payments_data.AddPayment(email, user, expiration_datetime):
-            self.logger.GetLogger().debug(
-                f"{payments_data.Count():4d} - Row {row_idx:4d} | {email} | {user} | {expiration_datetime}"
-            )
-        else:
-            self.logger.GetLogger().warning(
-                f"Row {row_idx} contains duplicated data, skipped"
-            )
-            payments_data_err.AddPaymentError(PaymentErrorTypes.DUPLICATED_DATA_ERR,
-                                              row_idx,
-                                              user)
