@@ -41,4 +41,6 @@ venv/
 *.json
 *.pickle
 *.session
+*.session-shm
+*.session-wal
 *.session-journal
