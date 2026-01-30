@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Emanuele Bellocchia
+# Copyright (c) 2026 Emanuele Bellocchia
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-#
-# Imports
-#
 import pyrogram
 
 from telegram_payment_bot.bot.bot_config_types import BotConfigTypes
@@ -28,27 +25,47 @@ from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.utils.wrapped_list import WrappedList
 
 
-#
-# Classes
-#
-
-# Authorized users list class
 class AuthorizedUsersList(WrappedList):
-    # Constructor
+    """List of authorized users."""
+
     def __init__(self,
                  config: ConfigObject) -> None:
+        """
+        Constructor.
+
+        Args:
+            config: Configuration object
+        """
         super().__init__()
         self.AddMultiple(config.GetValue(BotConfigTypes.AUTHORIZED_USERS))
 
-    # Get if a user is present
     def IsUserPresent(self,
                       user: pyrogram.types.User) -> bool:
+        """
+        Check if a user is present in the authorized users list.
+
+        Args:
+            user: Pyrogram user
+
+        Returns:
+            True if user is present, False otherwise
+        """
         return user.username is not None and user.username in self.list_elements
 
-    # Convert to string
     def ToString(self) -> str:
+        """
+        Convert the authorized users list to a formatted string.
+
+        Returns:
+            String with usernames formatted as list items
+        """
         return "\n".join([f"- @{username}" for username in self.list_elements])
 
-    # Convert to string
     def __str__(self) -> str:
+        """
+        Convert the authorized users list to a string.
+
+        Returns:
+            String representation of the list
+        """
         return self.ToString()

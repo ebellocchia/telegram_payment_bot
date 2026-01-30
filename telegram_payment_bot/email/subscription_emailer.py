@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Emanuele Bellocchia
+# Copyright (c) 2026 Emanuele Bellocchia
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,27 +18,21 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-#
-# Imports
-#
 from telegram_payment_bot.bot.bot_config_types import BotConfigTypes
 from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.email.smtp_emailer import SmtpEmailer
 
 
-#
-# Classes
-#
-
-# Subscription emailer class
 class SubscriptionEmailer:
+    """Subscription emailer class."""
 
     smtp_emailer: SmtpEmailer
 
-    # Constructor
     def __init__(self,
                  config: ConfigObject):
+        """Constructor."""
         self.smtp_emailer = SmtpEmailer()
+        self.smtp_emailer.AuthenticationType = config.GetValue(BotConfigTypes.EMAIL_AUTH_TYPE)
         self.smtp_emailer.From = config.GetValue(BotConfigTypes.EMAIL_FROM)
         self.smtp_emailer.ReplyTo = config.GetValue(BotConfigTypes.EMAIL_REPLY_TO)
         self.smtp_emailer.Subject = config.GetValue(BotConfigTypes.EMAIL_SUBJECT)
@@ -48,26 +42,26 @@ class SubscriptionEmailer:
         self.smtp_emailer.User = config.GetValue(BotConfigTypes.EMAIL_USER)
         self.smtp_emailer.Password = config.GetValue(BotConfigTypes.EMAIL_PASSWORD)
 
-    # Prepare message
     def PrepareMsg(self,
                    recipient: str) -> None:
+        """Prepare message."""
         self.smtp_emailer.To = recipient
         self.smtp_emailer.PrepareMsg()
 
-    # Connect
     def Connect(self) -> None:
+        """Connect."""
         self.smtp_emailer.Connect()
 
-    # Disconnect
     def Disconnect(self) -> None:
+        """Disconnect."""
         self.smtp_emailer.Disconnect()
 
-    # Send email
     def Send(self) -> None:
+        """Send email."""
         self.smtp_emailer.Send()
 
-    # Quick send email
     def QuickSend(self,
                   recipient: str) -> None:
+        """Quick send email."""
         self.smtp_emailer.To = recipient
         self.smtp_emailer.QuickSend()

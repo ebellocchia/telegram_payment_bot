@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Emanuele Bellocchia
+# Copyright (c) 2026 Emanuele Bellocchia
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,21 +18,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-#
-# Imports
-#
 from enum import auto, unique
 
 from telegram_payment_bot.config.config_object import ConfigTypes
 
 
-#
-# Enumerations
-#
-
-# Bot configuration types
 @unique
 class BotConfigTypes(ConfigTypes):
+    """Bot configuration types enumeration."""
+
     API_ID = auto()
     API_HASH = auto()
     BOT_TOKEN = auto()
@@ -63,6 +57,7 @@ class BotConfigTypes(ConfigTypes):
     PAYMENT_DATE_FORMAT = auto()
     # Email
     EMAIL_ENABLED = auto()
+    EMAIL_AUTH_TYPE = auto()
     EMAIL_FROM = auto()
     EMAIL_REPLY_TO = auto()
     EMAIL_HOST = auto()

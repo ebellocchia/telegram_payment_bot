@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Emanuele Bellocchia
+# Copyright (c) 2026 Emanuele Bellocchia
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-#
-# Imports
-#
 from threading import Lock
 
 import pyrogram
@@ -34,25 +31,30 @@ from telegram_payment_bot.translator.translation_loader import TranslationLoader
 from telegram_payment_bot.utils.wrapped_dict import WrappedDict
 
 
-#
-# Classes
-#
-
-# Payments check job chats class
 class PaymentsCheckJobChats(WrappedDict):
-    # Convert to string
+    """Collection of chats for the payments check job."""
+
     def ToString(self) -> str:
+        """Convert to string representation.
+
+        Returns:
+            String representation with chat titles
+        """
         return "\n".join(
             [f"- {ChatHelper.GetTitle(chat)}" for _, chat in self.dict_elements.items()]
         )
 
-    # Convert to string
     def __str__(self) -> str:
+        """Convert to string representation.
+
+        Returns:
+            String representation with chat titles
+        """
         return self.ToString()
 
 
-# Payments check job class
 class PaymentsCheckJob:
+    """Job for periodically checking and kicking members with expired payments."""
 
     client: pyrogram.Client
     config: ConfigObject
@@ -63,12 +65,19 @@ class PaymentsCheckJob:
     auth_users_msg_sender: AuthorizedUsersMessageSender
     job_chats: PaymentsCheckJobChats
 
-    # Constructor
     def __init__(self,
                  client: pyrogram.Client,
                  config: ConfigObject,
                  logger: Logger,
                  translator: TranslationLoader) -> None:
+        """Initialize the payments check job.
+
+        Args:
+            client: Pyrogram client instance
+            config: Configuration object
+            logger: Logger instance
+            translator: Translation loader instance
+        """
         self.client = client
         self.config = config
         self.logger = logger
@@ -78,19 +87,33 @@ class PaymentsCheckJob:
         self.auth_users_msg_sender = AuthorizedUsersMessageSender(client, config, logger)
         self.job_chats = PaymentsCheckJobChats()
 
-    # Get period
     def GetPeriod(self) -> int:
+        """Get the job period.
+
+        Returns:
+            Job period in hours
+        """
         return self.period
 
-    # Set period
     def SetPeriod(self,
                   period: int) -> None:
+        """Set the job period.
+
+        Args:
+            period: Job period in hours
+        """
         self.period = period
 
-    # Add chat
     def AddChat(self,
                 chat: pyrogram.types.Chat) -> bool:
-        # Prevent accidental modifications while job is executing
+        """Add a chat to the job.
+
+        Args:
+            chat: Chat to add
+
+        Returns:
+            True if added successfully, False if chat already exists
+        """
         with self.job_chats_lock:
             if self.job_chats.IsKey(chat.id):
                 return False
@@ -98,10 +121,16 @@ class PaymentsCheckJob:
             self.job_chats.AddSingle(chat.id, chat)
             return True
 
-    # Remove chat
     def RemoveChat(self,
                    chat: pyrogram.types.Chat) -> bool:
-        # Prevent accidental modifications while job is executing
+        """Remove a chat from the job.
+
+        Args:
+            chat: Chat to remove
+
+        Returns:
+            True if removed successfully, False if chat not found
+        """
         with self.job_chats_lock:
             if not self.job_chats.IsKey(chat.id):
                 return False
@@ -109,49 +138,50 @@ class PaymentsCheckJob:
             self.job_chats.RemoveSingle(chat.id)
             return True
 
-    # Remove all chats
     def RemoveAllChats(self) -> None:
-        # Prevent accidental modifications while job is executing
+        """Remove all chats from the job."""
         with self.job_chats_lock:
             self.job_chats.Clear()
 
-    # Get chat list
     def GetChats(self) -> PaymentsCheckJobChats:
+        """Get the list of chats in the job.
+
+        Returns:
+            PaymentsCheckJobChats containing all chats
+        """
         return self.job_chats
 
-    # Do job
     def DoJob(self) -> None:
-        # Log
+        """Execute the payments check job."""
         self.logger.GetLogger().info("Payments check job started")
 
-        # Lock
         with self.job_chats_lock:
-            # Exit if no chats
             if self.job_chats.Empty():
                 self.logger.GetLogger().info("No chat to check, exiting...")
                 return
 
-            # Kick members for each chat
             members_kicker = MembersKicker(self.client, self.config, self.logger)
             for chat in self.job_chats.Values():
                 self.__KickMembersInChat(chat, members_kicker)
 
-    # Kick members in chat
     def __KickMembersInChat(self,
                             chat: pyrogram.types.Chat,
                             members_kicker: MembersKicker) -> None:
-        # Kick all members
+        """Kick members with expired payments in a chat.
+
+        Args:
+            chat: Chat to check
+            members_kicker: MembersKicker instance
+        """
         self.logger.GetLogger().info(f"Checking payments for chat {ChatHelper.GetTitleOrId(chat)}...")
         kicked_members = members_kicker.KickAllWithExpiredPayment(chat)
 
-        # Log kicked members
         self.logger.GetLogger().info(
             f"Kicked members for chat {ChatHelper.GetTitleOrId(chat)}: {kicked_members.Count()}"
         )
         if kicked_members.Any():
             self.logger.GetLogger().info(str(kicked_members))
 
-            # Inform authorized users
             msg = self.translator.GetSentence("REMOVE_NO_PAYMENT_NOTICE_CMD",
                                               chat_title=ChatHelper.GetTitle(chat))
             msg += "\n\n"

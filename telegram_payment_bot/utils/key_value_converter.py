@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Emanuele Bellocchia
+# Copyright (c) 2021-2026 Emanuele Bellocchia
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,33 +18,47 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-#
-# Imports
-#
 from typing import Any, Dict
 
 
-#
-# Classes
-#
-
-# Key-Value converter class
 class KeyValueConverter:
+    """Key-Value converter for bidirectional dictionary lookups."""
 
     kv_dict: Dict[str, Any]
 
-    # Constructor
     def __init__(self,
                  kv_dict: Dict[str, Any]) -> None:
+        """
+        Constructor.
+
+        Args:
+            kv_dict: Dictionary for key-value conversion
+        """
         self.kv_dict = kv_dict
 
-    # Convert key to value
     def KeyToValue(self,
                    key: str) -> Any:
+        """
+        Convert key to value.
+
+        Args:
+            key: Key to look up
+
+        Returns:
+            Value associated with the key
+        """
         return self.kv_dict[key]
 
-    # Convert value to key
     def ValueToKey(self,
                    value: Any) -> str:
+        """
+        Convert value to key.
+
+        Args:
+            value: Value to look up
+
+        Returns:
+            Key associated with the value
+        """
         idx = list(self.kv_dict.values()).index(value)
         return list(self.kv_dict.keys())[idx]

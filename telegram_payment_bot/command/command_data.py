@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Emanuele Bellocchia
+# Copyright (c) 2026 Emanuele Bellocchia
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-#
-# Imports
-#
 from typing import Any, Callable, Optional, Union
 
 import pyrogram
@@ -29,53 +26,105 @@ from telegram_payment_bot.utils.utils import Utils
 from telegram_payment_bot.utils.wrapped_list import WrappedList
 
 
-#
-# Classes
-#
-
-# Command parameter error class
 class CommandParameterError(Exception):
-    pass
+    """Exception raised for command parameter errors."""
 
 
-# Command parameters list class
 class CommandParametersList(WrappedList):
-    # Get parameter as bool
+    """List of command parameters."""
+
     def GetAsBool(self,
                   idx: int,
                   def_val: Optional[bool] = None) -> bool:
+        """
+        Get parameter as boolean.
+
+        Args:
+            idx: Parameter index
+            def_val: Default value if parameter not found
+
+        Returns:
+            Parameter value as boolean
+        """
         return self.__GetGenericParam(Utils.StrToBool, idx, def_val)
 
-    # Get parameter as int
     def GetAsInt(self,
                  idx: int,
                  def_val: Optional[int] = None) -> int:
+        """
+        Get parameter as integer.
+
+        Args:
+            idx: Parameter index
+            def_val: Default value if parameter not found
+
+        Returns:
+            Parameter value as integer
+        """
         return self.__GetGenericParam(Utils.StrToInt, idx, def_val)
 
-    # Get parameter as string
     def GetAsString(self,
                     idx: int,
                     def_val: Optional[str] = None) -> str:
+        """
+        Get parameter as string.
+
+        Args:
+            idx: Parameter index
+            def_val: Default value if parameter not found
+
+        Returns:
+            Parameter value as string
+        """
         return self.__GetGenericParam(str, idx, def_val)
 
-    # Check if last parameter is the specified value
     def IsLast(self,
                value: Union[int, str]) -> bool:
+        """
+        Check if last parameter is the specified value.
+
+        Args:
+            value: Value to check
+
+        Returns:
+            True if value is the last parameter, False otherwise
+        """
         try:
             return value == self.list_elements[self.Count() - 1]
         except IndexError:
             return False
 
-    # Check if value is present
     def IsValue(self,
                 value: Union[int, str]) -> bool:
+        """
+        Check if value is present in parameters.
+
+        Args:
+            value: Value to check
+
+        Returns:
+            True if value is present, False otherwise
+        """
         return value in self.list_elements
 
-    # Get generic parameter
     def __GetGenericParam(self,
                           conv_fct: Callable[[str], Any],
                           idx: int,
                           def_val: Optional[Any]) -> Any:
+        """
+        Get generic parameter with conversion function.
+
+        Args:
+            conv_fct: Conversion function to apply
+            idx: Parameter index
+            def_val: Default value if parameter not found
+
+        Returns:
+            Converted parameter value
+
+        Raises:
+            CommandParameterError: If parameter is invalid and no default value provided
+        """
         try:
             return conv_fct(self.list_elements[idx])
         except (ValueError, IndexError) as ex:
@@ -84,17 +133,25 @@ class CommandParametersList(WrappedList):
             raise CommandParameterError(f"Invalid command parameter #{idx}") from ex
 
 
-# Command data
 class CommandData:
+    """Data extracted from a command message."""
 
     cmd_name: str
     cmd_params: CommandParametersList
     cmd_chat: pyrogram.types.Chat
     cmd_user: Optional[pyrogram.types.User]
 
-    # Constructor
     def __init__(self,
                  message: pyrogram.types.Message) -> None:
+        """
+        Constructor.
+
+        Args:
+            message: Telegram message containing the command
+
+        Raises:
+            ValueError: If message is not a valid command
+        """
         if message.command is None or message.chat is None:
             raise ValueError("Invalid command")
 
@@ -104,18 +161,38 @@ class CommandData:
         self.cmd_chat = message.chat
         self.cmd_user = message.from_user
 
-    # Get name
     def Name(self) -> str:
+        """
+        Get command name.
+
+        Returns:
+            Command name
+        """
         return self.cmd_name
 
-    # Get chat
     def Chat(self) -> pyrogram.types.Chat:
+        """
+        Get command chat.
+
+        Returns:
+            Telegram chat where command was executed
+        """
         return self.cmd_chat
 
-    # Get user
     def User(self) -> Optional[pyrogram.types.User]:
+        """
+        Get command user.
+
+        Returns:
+            User who executed the command, None if anonymous
+        """
         return self.cmd_user
 
-    # Get parameters
     def Params(self) -> CommandParametersList:
+        """
+        Get command parameters.
+
+        Returns:
+            List of command parameters
+        """
         return self.cmd_params

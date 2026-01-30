@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Emanuele Bellocchia
+# Copyright (c) 2021-2026 Emanuele Bellocchia
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,9 +20,6 @@
 
 # Old wrapper, not needed anymore with pyrotgfork
 
-#
-# Imports
-#
 import time
 from datetime import datetime, timedelta
 from typing import Iterator
@@ -37,25 +34,30 @@ if int(pyrogram.__version__[0]) == 2:
 else:
     from enum import Enum
 
-    # Fake enums
     class ChatMembersFilter(Enum):      # type: ignore
-        pass
+        """Fake enum for Pyrogram v1 compatibility."""
+
     class ChatMemberStatus(Enum):       # type: ignore
-        pass
+        """Fake enum for Pyrogram v1 compatibility."""
 
 
-#
-# Classes
-#
-
-# Wrapper for pyrogram for handling different versions
 class PyrogramWrapper:
-    # Ban chat member
+    """Wrapper for pyrogram for handling different versions."""
+
     @staticmethod
     def BanChatMember(client: pyrogram.Client,
                       chat: pyrogram.types.Chat,
                       user: pyrogram.types.User,
                       time_sec: int = 0) -> None:
+        """
+        Ban chat member.
+
+        Args:
+            client: Pyrogram client
+            chat: Chat object
+            user: User to ban
+            time_sec: Ban duration in seconds (0 for permanent)
+        """
         if PyrogramWrapper.__MajorVersion() == 2:
             client.ban_chat_member(chat.id,
                                    user.id,
@@ -70,39 +72,86 @@ class PyrogramWrapper:
                                         user.id,
                                         until_date=int(time.time() + time_sec))
 
-    # Get if member is status
     @staticmethod
     def MemberIsStatus(member: pyrogram.types.ChatMember,
                        status_str: str) -> bool:
+        """
+        Check if member has a specific status.
+
+        Args:
+            member: Chat member object
+            status_str: Status string to check
+
+        Returns:
+            True if member has the status, False otherwise
+
+        Raises:
+            RuntimeError: If pyrogram version is unsupported
+        """
         if PyrogramWrapper.__MajorVersion() == 2:
             return member.status == PyrogramWrapper.__StrToChatMemberStatus(status_str)
         if PyrogramWrapper.__MajorVersion() == 1:
             return member.status == status_str
         raise RuntimeError("Unsupported pyrogram version")
 
-    # Get message id
     @staticmethod
     def MessageId(message: pyrogram.types.Message) -> int:
+        """
+        Get message ID.
+
+        Args:
+            message: Message object
+
+        Returns:
+            Message ID
+
+        Raises:
+            RuntimeError: If pyrogram version is unsupported
+        """
         if PyrogramWrapper.__MajorVersion() == 2:
             return message.id
         if PyrogramWrapper.__MajorVersion() == 1:
             return message.message_id
         raise RuntimeError("Unsupported pyrogram version")
 
-    # Get if channel
     @staticmethod
     def IsChannel(chat: pyrogram.types.Chat) -> bool:
+        """
+        Check if chat is a channel.
+
+        Args:
+            chat: Chat object
+
+        Returns:
+            True if chat is a channel, False otherwise
+
+        Raises:
+            RuntimeError: If pyrogram version is unsupported
+        """
         if PyrogramWrapper.__MajorVersion() == 2:
             return chat.type == ChatType.CHANNEL
         if PyrogramWrapper.__MajorVersion() == 1:
             return chat["type"] == "channel"
         raise RuntimeError("Unsupported pyrogram version")
 
-    # Get if channel
     @staticmethod
     def GetChatMembers(client: pyrogram.Client,
                        chat: pyrogram.types.Chat,
                        filter_str: str) -> Iterator[pyrogram.types.ChatMember]:
+        """
+        Get chat members.
+
+        Args:
+            client: Pyrogram client
+            chat: Chat object
+            filter_str: Filter string for member types
+
+        Returns:
+            Iterator of chat members
+
+        Raises:
+            RuntimeError: If pyrogram version is unsupported
+        """
         if PyrogramWrapper.__MajorVersion() == 2:
             return client.get_chat_members(chat.id, filter=PyrogramWrapper.__StrToChatMembersFilter(filter_str))
         if PyrogramWrapper.__MajorVersion() == 1:
@@ -111,6 +160,15 @@ class PyrogramWrapper:
 
     @staticmethod
     def __StrToChatMembersFilter(filter_str: str) -> ChatMembersFilter:
+        """
+        Convert string to ChatMembersFilter enum.
+
+        Args:
+            filter_str: Filter string
+
+        Returns:
+            ChatMembersFilter enum value
+        """
         str_to_enum = {
             "all": ChatMembersFilter.SEARCH,
             "banned": ChatMembersFilter.BANNED,
@@ -123,6 +181,15 @@ class PyrogramWrapper:
 
     @staticmethod
     def __StrToChatMemberStatus(status_str: str) -> ChatMemberStatus:
+        """
+        Convert string to ChatMemberStatus enum.
+
+        Args:
+            status_str: Status string
+
+        Returns:
+            ChatMemberStatus enum value
+        """
         str_to_enum = {
             "owner": ChatMemberStatus.OWNER,
             "administrator": ChatMemberStatus.ADMINISTRATOR,
@@ -134,12 +201,22 @@ class PyrogramWrapper:
 
         return str_to_enum[status_str]
 
-    # Get major version
     @staticmethod
     def __MajorVersion() -> int:
+        """
+        Get major version of pyrogram.
+
+        Returns:
+            Major version number
+        """
         return Utils.StrToInt(pyrogram.__version__[0])
 
-    # Get minor version
     @staticmethod
     def __MinorVersion() -> int:
+        """
+        Get minor version of pyrogram.
+
+        Returns:
+            Minor version number
+        """
         return Utils.StrToInt(pyrogram.__version__[2])

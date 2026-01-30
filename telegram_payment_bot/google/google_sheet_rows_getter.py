@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Emanuele Bellocchia
+# Copyright (c) 2021-2026 Emanuele Bellocchia
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-#
-# Imports
-#
 from typing import List
 
 from telegram_payment_bot.config.config_object import ConfigObject
@@ -28,24 +25,34 @@ from telegram_payment_bot.google.google_sheet_opener import GoogleSheetOpener
 from telegram_payment_bot.logger.logger import Logger
 
 
-#
-# Classes
-#
-
-# Google Sheet rows getter class
 class GoogleSheetRowsGetter:
+    """Google Sheet rows getter."""
 
     google_sheet_opener: GoogleSheetOpener
 
-    # Constructor
     def __init__(self,
                  config: ConfigObject,
                  logger: Logger) -> None:
+        """
+        Constructor.
+
+        Args:
+            config: Configuration object
+            logger: Logger object
+        """
         self.google_sheet_opener = GoogleSheetOpener(config, logger)
 
-    # Open worksheet
     def GetRows(self,
                 worksheet_idx: int) -> List[List[str]]:
+        """
+        Get all rows from a worksheet.
+
+        Args:
+            worksheet_idx: Worksheet index
+
+        Returns:
+            List of rows, where each row is a list of strings
+        """
         worksheet = self.google_sheet_opener.OpenWorksheet(worksheet_idx)
         return worksheet.get_all_values(
             include_tailing_empty_rows=False,

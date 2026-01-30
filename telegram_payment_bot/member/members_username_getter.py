@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Emanuele Bellocchia
+# Copyright (c) 2026 Emanuele Bellocchia
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-#
-# Imports
-#
 import pyrogram
 
 from telegram_payment_bot.config.config_object import ConfigObject
@@ -28,27 +25,34 @@ from telegram_payment_bot.misc.chat_members import ChatMembersGetter, ChatMember
 from telegram_payment_bot.misc.helpers import MemberHelper
 
 
-#
-# Classes
-#
-
-# Members username getter class
 class MembersUsernameGetter:
+    """Getter for chat members based on username criteria."""
 
     client: pyrogram.Client
     config: ConfigObject
 
-    # Constructor
     def __init__(self,
                  client: pyrogram.Client,
                  config: ConfigObject) -> None:
+        """Initialize the members username getter.
+
+        Args:
+            client: Pyrogram client instance
+            config: Configuration object
+        """
         self.client = client
         self.config = config
 
-    # Get all with username
     def GetAllWithUsername(self,
                            chat: pyrogram.types.Chat) -> ChatMembersList:
-        # Filter chat members
+        """Get all valid members that have a username.
+
+        Args:
+            chat: Chat to get members from
+
+        Returns:
+            List of chat members with usernames
+        """
         return ChatMembersGetter(self.client).FilterMembers(
             chat,
             lambda member: (
@@ -58,10 +62,16 @@ class MembersUsernameGetter:
             )
         )
 
-    # Get all with no username
     def GetAllWithNoUsername(self,
                              chat: pyrogram.types.Chat) -> ChatMembersList:
-        # Filter chat members
+        """Get all valid members that do not have a username.
+
+        Args:
+            chat: Chat to get members from
+
+        Returns:
+            List of chat members without usernames
+        """
         return ChatMembersGetter(self.client).FilterMembers(
             chat,
             lambda member: (

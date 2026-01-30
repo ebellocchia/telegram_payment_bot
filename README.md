@@ -84,6 +84,7 @@ The list of all possible fields that can be set is shown below.
 |`payment_date_format`|Date format in payments data (default: `%d/%m/%Y`)|
 |**[email]**|Configuration for email that reminds users to pay|
 |`email_enabled`|Email enable flag (default: `false`). If false, all the next fields will be skipped.|
+|`email_auth_type`|Email authentication type: `NONE`, `SSL_TLS` or `STARTTLS`|
 |`email_from`|Email sender|
 |`email_reply_to`|Email reply-to|
 |`email_host`|Host for sending email|

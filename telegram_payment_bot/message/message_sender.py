@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Emanuele Bellocchia
+# Copyright (c) 2021-2026 Emanuele Bellocchia
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-#
-# Imports
-#
 import time
 from typing import Any, List, Union
 
@@ -29,46 +26,67 @@ import pyrogram
 from telegram_payment_bot.logger.logger import Logger
 
 
-#
-# Classes
-#
-
-# Constants for message sender class
 class MessageSenderConst:
-    # Maximum message length
+    """Constants for message sender."""
+
     MSG_MAX_LEN: int = 4096
-    # Sleep time for sending messages
     SEND_MSG_SLEEP_TIME_SEC: float = 0.1
 
 
-# Message sender class
 class MessageSender:
+    """Message sender for Telegram."""
 
     client: pyrogram.Client
     logger: Logger
 
-    # Constructor
     def __init__(self,
                  client: pyrogram.Client,
                  logger: Logger) -> None:
+        """
+        Constructor.
+
+        Args:
+            client: Pyrogram client
+            logger: Logger object
+        """
         self.client = client
         self.logger = logger
 
-    # Send message
     def SendMessage(self,
                     receiver: Union[pyrogram.types.Chat, pyrogram.types.User],
                     msg: str,
                     **kwargs: Any) -> List[pyrogram.types.Message]:
+        """
+        Send a message to a receiver, splitting if necessary.
+
+        Args:
+            receiver: Chat or user to send the message to
+            msg: Message text to send
+            **kwargs: Additional arguments to pass to send_message
+
+        Returns:
+            List of sent message objects
+        """
         # Log
         self.logger.GetLogger().debug(f"Sending message (length: {len(msg)}):\n{msg}")
         # Split and send message
         return self.__SendSplitMessage(receiver, self.__SplitMessage(msg), **kwargs)
 
-    # Send split message
     def __SendSplitMessage(self,
                            receiver: Union[pyrogram.types.Chat, pyrogram.types.User],
                            split_msg: List[str],
                            **kwargs: Any) -> List[pyrogram.types.Message]:
+        """
+        Send a message that has been split into multiple parts.
+
+        Args:
+            receiver: Chat or user to send the message to
+            split_msg: List of message parts
+            **kwargs: Additional arguments to pass to send_message
+
+        Returns:
+            List of sent message objects
+        """
         sent_msgs = []
 
         # Send message
@@ -78,9 +96,17 @@ class MessageSender:
 
         return sent_msgs    # type: ignore
 
-    # Split message
     def __SplitMessage(self,
                        msg: str) -> List[str]:
+        """
+        Split a message into parts if it exceeds the maximum length.
+
+        Args:
+            msg: Message to split
+
+        Returns:
+            List of message parts
+        """
         msg_parts = []
 
         while len(msg) > 0:

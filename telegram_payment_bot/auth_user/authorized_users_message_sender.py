@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Emanuele Bellocchia
+# Copyright (c) 2026 Emanuele Bellocchia
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-#
-# Imports
-#
 import pyrogram
 import pyrogram.errors.exceptions as pyrogram_ex
 
@@ -31,41 +28,46 @@ from telegram_payment_bot.message.message_sender import MessageSender
 from telegram_payment_bot.misc.helpers import UserHelper
 
 
-#
-# Classes
-#
-
-# Authorized users message sender class
 class AuthorizedUsersMessageSender:
+    """Message sender for authorized users."""
 
     logger: Logger
     auth_users_getter: AuthorizedUsersGetter
     message_sender: MessageSender
 
-    # Constructor
     def __init__(self,
                  client: pyrogram.Client,
                  config: ConfigObject,
                  logger: Logger) -> None:
+        """
+        Constructor.
+
+        Args:
+            client: Pyrogram client
+            config: Configuration object
+            logger: Logger instance
+        """
         self.logger = logger
         self.auth_users_getter = AuthorizedUsersGetter(client, config)
         self.message_sender = MessageSender(client, logger)
 
-    # Send message
     def SendMessage(self,
                     chat: pyrogram.types.Chat,
                     msg: str,
                     **kwargs) -> None:
+        """
+        Send a message to all authorized users in the chat.
+
+        Args:
+            chat: Telegram chat
+            msg: Message to send
+            **kwargs: Additional keyword arguments for message sending
+        """
         # Send to authorized users
         for auth_member in self.auth_users_getter.GetUsers(chat):
             try:
                 self.message_sender.SendMessage(auth_member.user, msg, **kwargs)
-                self.logger.GetLogger().info(
-                    f"Message sent to authorized user: {UserHelper.GetNameOrId(auth_member.user)}"
-                )
+                self.logger.GetLogger().info(f"Message sent to authorized user: {UserHelper.GetNameOrId(auth_member.user)}")
             # It may happen if the user has never talked to the bot or blocked it
-            except (pyrogram_ex.bad_request_400.PeerIdInvalid,
-                    pyrogram_ex.bad_request_400.UserIsBlocked):
-                self.logger.GetLogger().error(
-                    f"Unable to send message to authorized user: {UserHelper.GetNameOrId(auth_member.user)}"
-                )
+            except (pyrogram_ex.bad_request_400.PeerIdInvalid, pyrogram_ex.bad_request_400.UserIsBlocked):
+                self.logger.GetLogger().error(f"Unable to send message to authorized user: {UserHelper.GetNameOrId(auth_member.user)}")

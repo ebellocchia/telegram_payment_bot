@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Emanuele Bellocchia
+# Copyright (c) 2021-2026 Emanuele Bellocchia
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,15 +18,24 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-#
-# Classes
-#
 
-# Wrapper for utility functions
 class Utils:
-    # Convert string to bool
+    """Wrapper for utility functions."""
+
     @staticmethod
     def StrToBool(s: str) -> bool:
+        """
+        Convert string to boolean.
+
+        Args:
+            s: String to convert
+
+        Returns:
+            Boolean value
+
+        Raises:
+            ValueError: If string is not a valid boolean representation
+        """
         s = s.lower()
         if s in ["true", "on", "yes", "y"]:
             return True
@@ -34,12 +43,28 @@ class Utils:
             return False
         raise ValueError("Invalid string")
 
-    # Convert string to float
     @staticmethod
     def StrToFloat(s: str) -> float:
+        """
+        Convert string to float.
+
+        Args:
+            s: String to convert
+
+        Returns:
+            Float value
+        """
         return float(s)
 
-    # Convert string to integer
     @staticmethod
     def StrToInt(s: str) -> int:
+        """
+        Convert string to integer.
+
+        Args:
+            s: String to convert
+
+        Returns:
+            Integer value
+        """
         return int(s)

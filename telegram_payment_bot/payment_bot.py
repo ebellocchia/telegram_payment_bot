@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Emanuele Bellocchia
+# Copyright (c) 2021-2026 Emanuele Bellocchia
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,27 +18,25 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-#
-# Imports
-#
 from telegram_payment_bot.bot.bot_base import BotBase
 from telegram_payment_bot.bot.bot_config import BotConfig
 from telegram_payment_bot.bot.bot_handlers_config import BotHandlersConfig
 from telegram_payment_bot.payment.payments_check_scheduler import PaymentsCheckScheduler
 
 
-#
-# Classes
-#
-
-# Payment bot class
 class PaymentBot(BotBase):
+    """Payment bot for managing Telegram group payments."""
 
     payments_check_scheduler: PaymentsCheckScheduler
 
-    # Constructor
     def __init__(self,
                  config_file: str) -> None:
+        """
+        Constructor.
+
+        Args:
+            config_file: Path to the configuration file
+        """
         super().__init__(config_file,
                          BotConfig,
                          BotHandlersConfig)

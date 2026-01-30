@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Emanuele Bellocchia
+# Copyright (c) 2026 Emanuele Bellocchia
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-#
-# Imports
-#
 from abc import ABC, abstractmethod
 from typing import Optional
 
@@ -30,40 +27,60 @@ from telegram_payment_bot.misc.user import User
 from telegram_payment_bot.payment.payments_data import PaymentsData, PaymentsDataErrors, SinglePayment
 
 
-#
-# Classes
-#
-
-# Payments loader base class
 class PaymentsLoaderBase(ABC):
+    """Base class for payment data loaders."""
 
     config: ConfigObject
     logger: Logger
 
-    # Constructor
     def __init__(self,
                  config: ConfigObject,
                  logger: Logger) -> None:
+        """Initialize the payments loader.
+
+        Args:
+            config: Configuration object
+            logger: Logger instance
+        """
         self.config = config
         self.logger = logger
 
-    # Load all payments
     @abstractmethod
     def LoadAll(self) -> PaymentsData:
-        pass
+        """Load all payment data.
+
+        Returns:
+            PaymentsData containing all payments
+        """
 
     @abstractmethod
-    # Load single payment by user
     def LoadSingleByUser(self,
                          user: User) -> Optional[SinglePayment]:
-        pass
+        """Load a single payment by user.
 
-    # Check for errors
+        Args:
+            user: User to load payment for
+
+        Returns:
+            SinglePayment for the user, or None if not found
+        """
+
     @abstractmethod
     def CheckForErrors(self) -> PaymentsDataErrors:
-        pass
+        """Check for errors in the payment data.
 
-    # Convert column string to index
+        Returns:
+            PaymentsDataErrors containing any errors found
+        """
+
     @staticmethod
     def _ColumnToIndex(col: str) -> int:
+        """Convert column letter to zero-based index.
+
+        Args:
+            col: Column letter (e.g., 'A', 'B')
+
+        Returns:
+            Zero-based column index
+        """
         return ord(col) - ord("A")

@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Emanuele Bellocchia
+# Copyright (c) 2026 Emanuele Bellocchia
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-#
-# Imports
-#
 from telegram_payment_bot.bot.bot_config_types import BotConfigTypes
 from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.logger.logger import Logger
@@ -30,30 +27,37 @@ from telegram_payment_bot.payment.payments_google_sheet_loader import PaymentsGo
 from telegram_payment_bot.payment.payments_loader_base import PaymentsLoaderBase
 
 
-#
-# Classes
-#
-
-# Exception in case of payment type error
 class PaymentTypeError(Exception):
-    pass
+    """Exception raised when an invalid payment type is specified."""
 
 
-# Payments loader factory class
 class PaymentsLoaderFactory:
+    """Factory for creating payments loader instances based on configuration."""
 
     config: ConfigObject
     logger: Logger
 
-    # Constructor
     def __init__(self,
                  config: ConfigObject,
                  logger: Logger) -> None:
+        """Initialize the payments loader factory.
+
+        Args:
+            config: Configuration object
+            logger: Logger instance
+        """
         self.config = config
         self.logger = logger
 
-    # Create loader
     def CreateLoader(self) -> PaymentsLoaderBase:
+        """Create a payments loader based on the configured payment type.
+
+        Returns:
+            PaymentsLoaderBase instance for the configured payment type
+
+        Raises:
+            PaymentTypeError: If the payment type is invalid
+        """
         payment_type = self.config.GetValue(BotConfigTypes.PAYMENT_TYPE)
         if payment_type == PaymentTypes.EXCEL_FILE:
             return PaymentsExcelLoader(self.config, self.logger)

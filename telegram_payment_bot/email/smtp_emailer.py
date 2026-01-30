@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Emanuele Bellocchia
+# Copyright (c) 2026 Emanuele Bellocchia
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,27 +18,22 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-#
-# Imports
-#
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from typing import Optional
 
+from telegram_payment_bot.email.emailer_auth_types import EmailerAuthenticationTypes
 
-#
-# Classes
-#
 
-# SMTP emailer error class
 class SmtpEmailerError(Exception):
-    pass
+    """SMTP emailer error class."""
 
 
-# SMTP emailer class
 class SmtpEmailer:
+    """SMTP emailer class."""
 
+    auth_type: EmailerAuthenticationTypes
     html_msg: str
     plain_msg: str
     subject: str
@@ -51,8 +46,9 @@ class SmtpEmailer:
     msg: Optional[MIMEMultipart]
     smtp: Optional[smtplib.SMTP]
 
-    # Constructor
     def __init__(self):
+        """Constructor."""
+        self.auth_type = EmailerAuthenticationTypes.NONE
         self.html_msg = ""
         self.plain_msg = ""
         self.subject = ""
@@ -65,107 +61,118 @@ class SmtpEmailer:
         self.msg = None
         self.smtp = None
 
-    # HTML message getter
+    @property
+    def AuthenticationType(self) -> EmailerAuthenticationTypes:
+        """Authentication type getter."""
+        return self.auth_type
+
+    @AuthenticationType.setter
+    def AuthenticationType(self,
+                           auth_type: EmailerAuthenticationTypes) -> None:
+        """Authentication type setter."""
+        self.auth_type = auth_type
+
     @property
     def HtmlMsg(self) -> str:
+        """HTML message getter."""
         return self.html_msg
 
-    # HTML message setter
     @HtmlMsg.setter
     def HtmlMsg(self,
                 html_msg: str) -> None:
+        """HTML message setter."""
         self.html_msg = html_msg
 
-    # Plain message getter
     @property
     def PlainMsg(self) -> str:
+        """Plain message getter."""
         return self.plain_msg
 
-    # Plain message setter
     @PlainMsg.setter
     def PlainMsg(self,
                  plain_msg: str) -> None:
+        """Plain message setter."""
         self.plain_msg = plain_msg
 
-    # Sender getter
     @property
     def From(self) -> str:
+        """Sender getter."""
         return self.sender
 
-    # Sender setter
     @From.setter
     def From(self,
              sender: str) -> None:
+        """Sender setter."""
         self.sender = sender
 
-    # Recipient getter
     @property
     def To(self) -> str:
+        """Recipient getter."""
         return self.recipient
 
-    # Recipient setter
     @To.setter
     def To(self,
            recipient: str) -> None:
+        """Recipient setter."""
         self.recipient = recipient
 
-    # Reply-to getter
     @property
     def ReplyTo(self) -> str:
+        """Reply-to getter."""
         return self.reply_to
 
-    # Reply-to setter
     @ReplyTo.setter
     def ReplyTo(self,
                 reply_to: str) -> None:
+        """Reply-to setter."""
         self.reply_to = reply_to
 
-    # Subject getter
     @property
     def Subject(self) -> str:
+        """Subject getter."""
         return self.subject
 
-    # Subject setter
     @Subject.setter
     def Subject(self,
                 subject: str) -> None:
+        """Subject setter."""
         self.subject = subject
 
-    # Host getter
     @property
     def Host(self) -> str:
+        """Host getter."""
         return self.host
 
-    # Host setter
     @Host.setter
     def Host(self,
              host: str) -> None:
+        """Host setter."""
         self.host = host
 
-    # User getter
     @property
     def User(self) -> str:
+        """User getter."""
         return self.user
 
-    # User setter
     @User.setter
     def User(self,
              user: str) -> None:
+        """User setter."""
         self.user = user
 
-    # Password getter
     @property
     def Password(self) -> str:
+        """Password getter."""
         return self.password
 
-    # Password setter
     @Password.setter
     def Password(self,
                  password: str) -> None:
+        """Password setter."""
         self.password = password
 
-    # Prepare message
     def PrepareMsg(self) -> None:
+        """Prepare message."""
         self.msg = MIMEMultipart("alternative")
         # Set header
         self.msg["From"] = self.sender
@@ -176,17 +183,22 @@ class SmtpEmailer:
         self.msg.attach(MIMEText(self.plain_msg, "plain"))
         self.msg.attach(MIMEText(self.html_msg, "html"))
 
-    # Connect
     def Connect(self) -> None:
+        """Connect."""
         try:
-            self.smtp = smtplib.SMTP(self.host)
-            if self.user != "":
-                self.smtp.login(self.user, self.password)
+            if self.auth_type == EmailerAuthenticationTypes.SSL_TLS:
+                self.smtp = smtplib.SMTP_SSL(self.host, 465)
+            elif self.auth_type == EmailerAuthenticationTypes.STARTTLS:
+                self.smtp = smtplib.SMTP(self.host, 587)
+                self.smtp.starttls()
+            else:
+                self.smtp = smtplib.SMTP(self.host)
+            self.smtp.login(self.user, self.password)
         except smtplib.SMTPException as ex:
             raise SmtpEmailerError("Error while connecting") from ex
 
-    # Disconnect
     def Disconnect(self) -> None:
+        """Disconnect."""
         if self.smtp is None:
             raise SmtpEmailerError("Disconnect called before connecting")
 
@@ -196,8 +208,8 @@ class SmtpEmailer:
         except smtplib.SMTPException as ex:
             raise SmtpEmailerError("Error while disconnecting") from ex
 
-    # Send email
     def Send(self) -> None:
+        """Send email."""
         if self.msg is None:
             raise SmtpEmailerError("Send called before preparing message")
         if self.smtp is None:
@@ -208,8 +220,8 @@ class SmtpEmailer:
         except smtplib.SMTPException as ex:
             raise SmtpEmailerError("Error while sending email") from ex
 
-    # Quick send email
     def QuickSend(self) -> None:
+        """Quick send email."""
         self.PrepareMsg()
         self.Connect()
         self.Send()

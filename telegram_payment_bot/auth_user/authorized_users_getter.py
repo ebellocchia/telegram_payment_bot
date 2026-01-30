@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Emanuele Bellocchia
+# Copyright (c) 2026 Emanuele Bellocchia
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-#
-# Imports
-#
 import pyrogram
 
 from telegram_payment_bot.bot.bot_config_types import BotConfigTypes
@@ -28,31 +25,41 @@ from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.misc.chat_members import ChatMembersGetter, ChatMembersList
 
 
-#
-# Classes
-#
-
-# Authorized users getter class
 class AuthorizedUsersGetter:
+    """Getter for authorized users from a chat."""
 
     config: ConfigObject
     chat_members_getter: ChatMembersGetter
 
-    # Constructor
     def __init__(self,
                  client: pyrogram.Client,
                  config: ConfigObject) -> None:
+        """
+        Constructor.
+
+        Args:
+            client: Pyrogram client
+            config: Configuration object
+        """
         self.config = config
         self.chat_members_getter = ChatMembersGetter(client)
 
-    # Get authorized users
     def GetUsers(self,
                  chat: pyrogram.types.Chat) -> ChatMembersList:
+        """
+        Get all authorized users from the specified chat.
+
+        Args:
+            chat: Telegram chat
+
+        Returns:
+            List of authorized chat members
+        """
         return self.chat_members_getter.FilterMembers(
             chat,
             lambda member: (
-                member.user is not None and
-                member.user.username is not None and
-                member.user.username in self.config.GetValue(BotConfigTypes.AUTHORIZED_USERS)
-            )
+                member.user is not None
+                and member.user.username is not None
+                and member.user.username in self.config.GetValue(BotConfigTypes.AUTHORIZED_USERS)
+            ),
         )

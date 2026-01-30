@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Emanuele Bellocchia
+# Copyright (c) 2026 Emanuele Bellocchia
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,81 +18,79 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-#
-# Imports
-#
 import logging
 
 from telegram_payment_bot.bot.bot_config_types import BotConfigTypes
 from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.config.config_typing import ConfigSectionsType
+from telegram_payment_bot.email.emailer_auth_types import EmailerAuthenticationTypes
 from telegram_payment_bot.google.google_cred_types import GoogleCredTypes
 from telegram_payment_bot.payment.payment_types import PaymentTypes
 from telegram_payment_bot.utils.key_value_converter import KeyValueConverter
 from telegram_payment_bot.utils.utils import Utils
 
 
-#
-# Classes
-#
-
-# Utility functions for bot configuration
 class _BotConfigUtils:
-    # Minimum/maximum column values
+    """Utility functions for bot configuration."""
+
     COL_MIN_VAL: str = "A"
     COL_MAX_VAL: str = "Z"
 
-    # Read file
     @staticmethod
     def ReadFile(file_name: str) -> str:
+        """
+        Read file contents.
+
+        Args:
+            file_name: File name to read
+
+        Returns:
+            File contents as string
+        """
         with open(file_name, encoding="utf-8") as fin:
             file_data = fin.read()
         return file_data
 
-    # Get if column indexes are valid
     @staticmethod
     def AreColumnIndexesValid(config: ConfigObject,
                               curr_col: str) -> bool:
-        # Check value of current column
-        if (len(curr_col) != 1 or
-                curr_col < _BotConfigUtils.COL_MIN_VAL or
-                curr_col > _BotConfigUtils.COL_MAX_VAL):
+        """
+        Check if column indexes are valid.
+
+        Args:
+            config: Configuration object
+            curr_col: Current column to validate
+
+        Returns:
+            True if column indexes are valid, False otherwise
+        """
+        if len(curr_col) != 1 or curr_col < _BotConfigUtils.COL_MIN_VAL or curr_col > _BotConfigUtils.COL_MAX_VAL:
             return False
 
-        # Get other indexes that are already available
         columns = []
-        for column in (BotConfigTypes.PAYMENT_EMAIL_COL,
-                       BotConfigTypes.PAYMENT_USER_COL,
-                       BotConfigTypes.PAYMENT_EXPIRATION_COL):
+        for column in (BotConfigTypes.PAYMENT_EMAIL_COL, BotConfigTypes.PAYMENT_USER_COL, BotConfigTypes.PAYMENT_EXPIRATION_COL):
             if config.IsValueSet(column):
                 columns.append(config.GetValue(column))
 
-        # Check columns if any
         if len(columns) > 0:
-            # The current column shall be different from the already present ones
             for col in columns:
                 if curr_col == col:
                     return False
         return True
 
 
-#
-# Variables
-#
-
-# Logging level converter
-LoggingLevelConverter = KeyValueConverter({
-    "DEBUG": logging.DEBUG,
-    "INFO": logging.INFO,
-    "WARNING": logging.WARNING,
-    "ERROR": logging.ERROR,
-    "CRITICAL": logging.CRITICAL,
-})
+LoggingLevelConverter = KeyValueConverter(
+    {
+        "DEBUG": logging.DEBUG,
+        "INFO": logging.INFO,
+        "WARNING": logging.WARNING,
+        "ERROR": logging.ERROR,
+        "CRITICAL": logging.CRITICAL,
+    }
+)
 
 
-# Bot configuration
 BotConfig: ConfigSectionsType = {
-    # Pyrogram
     "pyrogram": [
         {
             "type": BotConfigTypes.API_ID,
@@ -111,7 +109,6 @@ BotConfig: ConfigSectionsType = {
             "name": "session_name",
         },
     ],
-    # App
     "app": [
         {
             "type": BotConfigTypes.APP_TEST_MODE,
@@ -124,7 +121,6 @@ BotConfig: ConfigSectionsType = {
             "def_val": None,
         },
     ],
-    # Users
     "users": [
         {
             "type": BotConfigTypes.AUTHORIZED_USERS,
@@ -132,7 +128,6 @@ BotConfig: ConfigSectionsType = {
             "conv_fct": lambda val: val.split(","),
         },
     ],
-    # Support
     "support": [
         {
             "type": BotConfigTypes.SUPPORT_EMAIL,
@@ -145,7 +140,6 @@ BotConfig: ConfigSectionsType = {
             "def_val": "",
         },
     ],
-    # Payment
     "payment": [
         {
             "type": BotConfigTypes.PAYMENT_WEBSITE,
@@ -216,21 +210,21 @@ BotConfig: ConfigSectionsType = {
             "name": "payment_email_col",
             "conv_fct": lambda val: val.upper(),
             "def_val": "A",
-            "valid_if": _BotConfigUtils.AreColumnIndexesValid
+            "valid_if": _BotConfigUtils.AreColumnIndexesValid,
         },
         {
             "type": BotConfigTypes.PAYMENT_USER_COL,
             "name": "payment_user_col",
             "conv_fct": lambda val: val.upper(),
             "def_val": "B",
-            "valid_if": _BotConfigUtils.AreColumnIndexesValid
+            "valid_if": _BotConfigUtils.AreColumnIndexesValid,
         },
         {
             "type": BotConfigTypes.PAYMENT_EXPIRATION_COL,
             "name": "payment_expiration_col",
             "conv_fct": lambda val: val.upper(),
             "def_val": "C",
-            "valid_if": _BotConfigUtils.AreColumnIndexesValid
+            "valid_if": _BotConfigUtils.AreColumnIndexesValid,
         },
         {
             "type": BotConfigTypes.PAYMENT_DATE_FORMAT,
@@ -238,13 +232,19 @@ BotConfig: ConfigSectionsType = {
             "def_val": "%d/%m/%Y",
         },
     ],
-    # Email
     "email": [
         {
             "type": BotConfigTypes.EMAIL_ENABLED,
             "name": "email_enabled",
             "conv_fct": Utils.StrToBool,
             "def_val": False,
+        },
+        {
+            "type": BotConfigTypes.EMAIL_AUTH_TYPE,
+            "name": "email_auth_type",
+            "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.EMAIL_ENABLED),
+            "conv_fct": lambda val: EmailerAuthenticationTypes[val.upper()],
+            "print_fct": lambda val: val.name.upper(),
         },
         {
             "type": BotConfigTypes.EMAIL_FROM,
@@ -291,7 +291,6 @@ BotConfig: ConfigSectionsType = {
             "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.EMAIL_ENABLED),
         },
     ],
-    # Logging
     "logging": [
         {
             "type": BotConfigTypes.LOG_LEVEL,
@@ -327,22 +326,21 @@ BotConfig: ConfigSectionsType = {
             "type": BotConfigTypes.LOG_FILE_APPEND,
             "name": "log_file_append",
             "conv_fct": Utils.StrToBool,
-            "load_if": lambda cfg: (cfg.GetValue(BotConfigTypes.LOG_FILE_ENABLED) and
-                                    not cfg.GetValue(BotConfigTypes.LOG_FILE_USE_ROTATING)),
+            "load_if": lambda cfg: (
+                cfg.GetValue(BotConfigTypes.LOG_FILE_ENABLED) and not cfg.GetValue(BotConfigTypes.LOG_FILE_USE_ROTATING)
+            ),
         },
         {
             "type": BotConfigTypes.LOG_FILE_MAX_BYTES,
             "name": "log_file_max_bytes",
             "conv_fct": Utils.StrToInt,
-            "load_if": lambda cfg: (cfg.GetValue(BotConfigTypes.LOG_FILE_ENABLED) and
-                                    cfg.GetValue(BotConfigTypes.LOG_FILE_USE_ROTATING)),
+            "load_if": lambda cfg: (cfg.GetValue(BotConfigTypes.LOG_FILE_ENABLED) and cfg.GetValue(BotConfigTypes.LOG_FILE_USE_ROTATING)),
         },
         {
             "type": BotConfigTypes.LOG_FILE_BACKUP_CNT,
             "name": "log_file_backup_cnt",
             "conv_fct": Utils.StrToInt,
-            "load_if": lambda cfg: (cfg.GetValue(BotConfigTypes.LOG_FILE_ENABLED) and
-                                    cfg.GetValue(BotConfigTypes.LOG_FILE_USE_ROTATING)),
+            "load_if": lambda cfg: (cfg.GetValue(BotConfigTypes.LOG_FILE_ENABLED) and cfg.GetValue(BotConfigTypes.LOG_FILE_USE_ROTATING)),
         },
     ],
 }

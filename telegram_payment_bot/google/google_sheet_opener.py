@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Emanuele Bellocchia
+# Copyright (c) 2021-2026 Emanuele Bellocchia
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-#
-# Imports
-#
 from typing import Optional
 
 import pygsheets
@@ -31,35 +28,45 @@ from telegram_payment_bot.google.google_cred_types import GoogleCredTypes
 from telegram_payment_bot.logger.logger import Logger
 
 
-#
-# Classes
-#
-
-# Google Sheet opener class
 class GoogleSheetOpener:
+    """Google Sheet opener."""
 
     config: ConfigObject
     logger: Logger
     gsheet: ConfigObject
     worksheet: Optional[pygsheets.Spreadsheet]
 
-    # Constructor
     def __init__(self,
                  config: ConfigObject,
                  logger: Logger) -> None:
+        """
+        Constructor.
+
+        Args:
+            config: Configuration object
+            logger: Logger object
+        """
         self.config = config
         self.logger = logger
         self.google_sheet = None
 
-    # Open worksheet
     def OpenWorksheet(self,
                       worksheet_idx: int) -> pygsheets.Worksheet:
+        """
+        Open a worksheet by index.
+
+        Args:
+            worksheet_idx: Worksheet index
+
+        Returns:
+            The worksheet object
+        """
         self.__OpenGoogleSheet()
         assert self.google_sheet is not None
         return self.google_sheet[worksheet_idx]
 
-    # Open Google Sheet
     def __OpenGoogleSheet(self) -> None:
+        """Open Google Sheet using configured credentials."""
         if self.google_sheet is not None:
             return
 

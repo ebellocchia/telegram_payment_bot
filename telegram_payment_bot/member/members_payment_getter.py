@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Emanuele Bellocchia
+# Copyright (c) 2026 Emanuele Bellocchia
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-#
-# Imports
-#
 from typing import Any, Dict, Optional
 
 import pyrogram
@@ -35,12 +32,8 @@ from telegram_payment_bot.payment.payments_loader_base import PaymentsLoaderBase
 from telegram_payment_bot.payment.payments_loader_factory import PaymentsLoaderFactory
 
 
-#
-# Classes
-#
-
-# Members payment getter class
 class MembersPaymentGetter:
+    """Getter for chat members and emails based on payment status."""
 
     client: pyrogram.Client
     config: ConfigObject
@@ -49,11 +42,17 @@ class MembersPaymentGetter:
     payments_cache: Optional[PaymentsData]
     single_payment_cache: Optional[Dict[str, Any]]
 
-    # Constructor
     def __init__(self,
                  client: pyrogram.Client,
                  config: ConfigObject,
                  logger: Logger) -> None:
+        """Initialize the members payment getter.
+
+        Args:
+            client: Pyrogram client instance
+            config: Configuration object
+            logger: Logger instance
+        """
         self.client = client
         self.config = config
         self.logger = logger
@@ -63,18 +62,23 @@ class MembersPaymentGetter:
 
         self.ReloadPayment()
 
-    # Reload payment
     def ReloadPayment(self):
+        """Reload payment data by clearing the cache."""
         self.payments_cache = None
         self.single_payment_cache = None
 
-    # Get all members with OK payment
     def GetAllMembersWithOkPayment(self,
                                    chat: pyrogram.types.Chat) -> ChatMembersList:
-        # Get all payments
+        """Get all members with valid (non-expired) payments.
+
+        Args:
+            chat: Chat to get members from
+
+        Returns:
+            List of chat members with valid payments
+        """
         payments = self.__GetAllPayments()
 
-        # Filter chat members
         return ChatMembersGetter(self.client).FilterMembers(
             chat,
             lambda member: (
@@ -85,17 +89,21 @@ class MembersPaymentGetter:
             )
         )
 
-    # Get all members with expired payment
     def GetAllMembersWithExpiredPayment(self,
                                         chat: pyrogram.types.Chat) -> ChatMembersList:
-        # Get all payments
+        """Get all members with expired payments or no username.
+
+        Args:
+            chat: Chat to get members from
+
+        Returns:
+            List of chat members with expired payments
+        """
         payments = self.__GetAllPayments()
 
-        # For safety: if no data was loaded, no user is expired
         if payments.Empty():
             return ChatMembersList()
 
-        # Filter chat members
         return ChatMembersGetter(self.client).FilterMembers(
             chat,
             lambda member: (
@@ -106,18 +114,23 @@ class MembersPaymentGetter:
             )
         )
 
-    # Get all members with expiring payment
     def GetAllMembersWithExpiringPayment(self,
                                          chat: pyrogram.types.Chat,
                                          days: int) -> ChatMembersList:
-        # Get all payments
+        """Get all members with payments expiring within specified days.
+
+        Args:
+            chat: Chat to get members from
+            days: Number of days to check for expiration
+
+        Returns:
+            List of chat members with expiring payments
+        """
         payments = self.__GetAllPayments()
 
-        # For safety: if no data was loaded, no user is expired
         if payments.Empty():
             return ChatMembersList()
 
-        # Filter chat members
         return ChatMembersGetter(self.client).FilterMembers(
             chat,
             lambda member: (
@@ -128,41 +141,66 @@ class MembersPaymentGetter:
             )
         )
 
-    # Get all emails with expired payment
     def GetAllEmailsWithExpiredPayment(self) -> PaymentsData:
+        """Get all emails with expired payments.
+
+        Returns:
+            PaymentsData containing expired payments
+        """
         return self.__GetAllPayments().FilterExpired()
 
-    # Get all emails with expiring payment in the specified number of days
     def GetAllEmailsWithExpiringPayment(self,
                                         days: int) -> PaymentsData:
+        """Get all emails with payments expiring within specified days.
+
+        Args:
+            days: Number of days to check for expiration
+
+        Returns:
+            PaymentsData containing expiring payments
+        """
         return self.__GetAllPayments().FilterExpiringInDays(days)
 
-    # Get if single member is expired
     def IsSingleMemberExpired(self,
                               chat: pyrogram.types.Chat,
                               user: pyrogram.types.User) -> bool:
-        # If the user is not in the chat, consider payment as not expired
+        """Check if a single member's payment is expired.
+
+        Args:
+            chat: Chat to check membership in
+            user: User to check
+
+        Returns:
+            True if the payment is expired, False otherwise
+        """
         chat_members = ChatMembersGetter(self.client).GetSingle(chat, user)
         if chat_members is None:
             return False
 
-        # Get single payment
         single_payment = self.__GetSinglePayment(user)
-        # If the user is not in the payment data, consider payment as expired
         return single_payment.IsExpired() if single_payment is not None else True
 
-    # Get all payments
     def __GetAllPayments(self) -> PaymentsData:
-        # Load only the first time
+        """Get all payments, loading them if not cached.
+
+        Returns:
+            PaymentsData containing all payments
+        """
         if self.payments_cache is None:
             self.payments_cache = self.payments_loader.LoadAll()
 
         return self.payments_cache
 
-    # Get single payment
     def __GetSinglePayment(self,
                            user: pyrogram.types.User) -> Optional[SinglePayment]:
-        # Load only the first time
+        """Get a single user's payment, loading it if not cached.
+
+        Args:
+            user: User to get payment for
+
+        Returns:
+            SinglePayment for the user, or None if not found
+        """
         if self.single_payment_cache is None or self.single_payment_cache["user_id"] != user.id:
             self.single_payment_cache = {
                 "payment": self.payments_loader.LoadSingleByUser(User.FromUserObject(self.config, user)),

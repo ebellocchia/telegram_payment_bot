@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Emanuele Bellocchia
+# Copyright (c) 2021-2026 Emanuele Bellocchia
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,9 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-#
-# Imports
-#
 from enum import Enum, auto, unique
 from typing import Any
 
@@ -34,44 +31,54 @@ from telegram_payment_bot.message.message_sender import MessageSender
 from telegram_payment_bot.translator.translation_loader import TranslationLoader
 
 
-#
-# Enumerations
-#
-
-# Message types
 @unique
 class MessageTypes(Enum):
+    """Message types enumeration."""
     GROUP_CHAT_CREATED = auto()
     LEFT_CHAT_MEMBER = auto()
     NEW_CHAT_MEMBERS = auto()
 
 
-#
-# Classes
-#
-
-# Message dispatcher class
 class MessageDispatcher:
+    """Message dispatcher for handling different message types."""
 
     config: ConfigObject
     logger: Logger
     translator: TranslationLoader
 
-    # Constructor
     def __init__(self,
                  config: ConfigObject,
                  logger: Logger,
                  translator: TranslationLoader) -> None:
+        """
+        Constructor.
+
+        Args:
+            config: Configuration object
+            logger: Logger object
+            translator: Translation loader object
+        """
         self.config = config
         self.logger = logger
         self.translator = translator
 
-    # Dispatch command
     def Dispatch(self,
                  client: pyrogram.Client,
                  message: pyrogram.types.Message,
                  msg_type: MessageTypes,
                  **kwargs: Any) -> None:
+        """
+        Dispatch a message based on its type.
+
+        Args:
+            client: Pyrogram client
+            message: Message object
+            msg_type: Type of message to dispatch
+            **kwargs: Additional arguments
+
+        Raises:
+            TypeError: If msg_type is not a MessageTypes enum
+        """
         if not isinstance(msg_type, MessageTypes):
             raise TypeError("Message type is not an enumerative of MessageTypes")
 
@@ -88,11 +95,18 @@ class MessageDispatcher:
         elif msg_type == MessageTypes.NEW_CHAT_MEMBERS:
             self.__OnJoinedMember(client, message, **kwargs)
 
-    # Function called when a new chat is created
     def __OnCreatedChat(self,
                         client,
                         message: pyrogram.types.Message,
                         **kwargs: Any) -> None:
+        """
+        Handle when a new chat is created.
+
+        Args:
+            client: Pyrogram client
+            message: Message object
+            **kwargs: Additional arguments
+        """
         if message.chat is None:
             return
 
@@ -102,20 +116,34 @@ class MessageDispatcher:
             self.translator.GetSentence("BOT_WELCOME_MSG")
         )
 
-    # Function called when a member left the chat
     def __OnLeftMember(self,
                        client,
                        message: pyrogram.types.Message,
                        **kwargs: Any) -> None:
+        """
+        Handle when a member left the chat.
+
+        Args:
+            client: Pyrogram client
+            message: Message object
+            **kwargs: Additional arguments
+        """
         # If the member is the bot itself, remove the chat from the scheduler
         if message.left_chat_member is not None and message.left_chat_member.is_self:
             kwargs["payments_check_scheduler"].ChatLeft(message.chat)
 
-    # Function called when a member joined the chat
     def __OnJoinedMember(self,
                          client,
                          message: pyrogram.types.Message,
                          **kwargs: Any) -> None:
+        """
+        Handle when a member joined the chat.
+
+        Args:
+            client: Pyrogram client
+            message: Message object
+            **kwargs: Additional arguments
+        """
         if message.new_chat_members is None or message.chat is None:
             return
 

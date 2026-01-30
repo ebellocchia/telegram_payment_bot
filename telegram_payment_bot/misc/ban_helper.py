@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Emanuele Bellocchia
+# Copyright (c) 2026 Emanuele Bellocchia
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,50 +18,64 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-#
-# Imports
-#
 import pyrogram
 
 from telegram_payment_bot.utils.pyrogram_wrapper import PyrogramWrapper
 
 
-#
-# Classes
-#
-
-# Constants for ban helper class
 class BanHelperConst:
-    # Ban time in seconds
+    """Constants for ban helper class."""
+
     BAN_TIME_SEC: int = 60
 
 
-# Ban helper class
 class BanHelper:
+    """Helper class for banning, kicking, and unbanning users from chats."""
 
     client: pyrogram.Client
 
-    # Constructor
     def __init__(self,
                  client: pyrogram.Client) -> None:
+        """
+        Initialize the ban helper.
+
+        Args:
+            client: The Pyrogram client instance
+        """
         self.client = client
 
-    # Ban user
     def BanUser(self,
                 chat: pyrogram.types.Chat,
                 user: pyrogram.types.User) -> None:
+        """
+        Ban a user from a chat permanently.
+
+        Args:
+            chat: The chat to ban the user from
+            user: The user to ban
+        """
         PyrogramWrapper.BanChatMember(self.client, chat, user)
 
-    # Kick user
     def KickUser(self,
                  chat: pyrogram.types.Chat,
                  user: pyrogram.types.User) -> None:
-        # Ban only for 1 minute, so they can join again with an invite link if necessary
-        # (otherwise they cannot join anymore, unless manually added to the group)
+        """
+        Kick a user from a chat temporarily.
+
+        Args:
+            chat: The chat to kick the user from
+            user: The user to kick
+        """
         PyrogramWrapper.BanChatMember(self.client, chat, user, BanHelperConst.BAN_TIME_SEC)
 
-    # Unban user
     def UnbanUser(self,
                   chat: pyrogram.types.Chat,
                   user: pyrogram.types.User) -> None:
+        """
+        Unban a user from a chat.
+
+        Args:
+            chat: The chat to unban the user from
+            user: The user to unban
+        """
         self.client.unban_chat_member(chat.id, user.id)
