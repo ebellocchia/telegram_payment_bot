@@ -177,7 +177,7 @@ In this case, the configuration file can be set by setting the `CONFIG_FILE` var
 
 ## Payment File
 
-The payment file can be either a *xls*/*xlsx* file (*xlrd* library is used) or a Google Sheet.\
+The payment file can be either a *xls*/*xlsx* file or a Google Sheet.\
 In case a Google Sheet is used and the OAuth2 flow is chosen:
 1. Create a project on [Google Cloud Console](https://console.cloud.google.com)
 2. Go to *APIs & Services*, then *Credentials* and select *Configure Consent Screen*
