@@ -66,7 +66,7 @@ class AuthorizedUsersMessageSender:
         # Send to authorized users
         for auth_member in self.auth_users_getter.GetUsers(chat):
             try:
-                self.message_sender.SendMessage(auth_member.user, msg, **kwargs)
+                self.message_sender.SendMessage(auth_member.user, 0, msg, **kwargs)
                 self.logger.GetLogger().info(f"Message sent to authorized user: {UserHelper.GetNameOrId(auth_member.user)}")
             # It may happen if the user has never talked to the bot or blocked it
             except (pyrogram_ex.bad_request_400.PeerIdInvalid, pyrogram_ex.bad_request_400.UserIsBlocked):

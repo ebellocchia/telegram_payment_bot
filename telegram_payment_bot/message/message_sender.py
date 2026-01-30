@@ -54,6 +54,7 @@ class MessageSender:
 
     def SendMessage(self,
                     receiver: Union[pyrogram.types.Chat, pyrogram.types.User],
+                    topic_id: int,
                     msg: str,
                     **kwargs: Any) -> List[pyrogram.types.Message]:
         """
@@ -61,6 +62,7 @@ class MessageSender:
 
         Args:
             receiver: Chat or user to send the message to
+            topic_id: Topic to send the message to
             msg: Message text to send
             **kwargs: Additional arguments to pass to send_message
 
@@ -70,10 +72,11 @@ class MessageSender:
         # Log
         self.logger.GetLogger().debug(f"Sending message (length: {len(msg)}):\n{msg}")
         # Split and send message
-        return self.__SendSplitMessage(receiver, self.__SplitMessage(msg), **kwargs)
+        return self.__SendSplitMessage(receiver, topic_id, self.__SplitMessage(msg), **kwargs)
 
     def __SendSplitMessage(self,
                            receiver: Union[pyrogram.types.Chat, pyrogram.types.User],
+                           topic_id: int,
                            split_msg: List[str],
                            **kwargs: Any) -> List[pyrogram.types.Message]:
         """
@@ -81,6 +84,7 @@ class MessageSender:
 
         Args:
             receiver: Chat or user to send the message to
+            topic_id: Topic to send the message to
             split_msg: List of message parts
             **kwargs: Additional arguments to pass to send_message
 
@@ -91,7 +95,7 @@ class MessageSender:
 
         # Send message
         for msg_part in split_msg:
-            sent_msgs.append(self.client.send_message(receiver.id, msg_part, **kwargs))
+            sent_msgs.append(self.client.send_message(receiver.id, msg_part, message_thread_id=topic_id, **kwargs))
             time.sleep(MessageSenderConst.SEND_MSG_SLEEP_TIME_SEC)
 
         return sent_msgs    # type: ignore
