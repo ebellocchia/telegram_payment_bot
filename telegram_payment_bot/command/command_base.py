@@ -112,15 +112,11 @@ class CommandBase(ABC):
             else:
                 self._SendMessageToAuthUsers(msg)
         else:
-            try:
-                self.message_sender.SendMessage(
-                    self.cmd_data.Chat(),
-                    msg,
-                    reply_to_message_id=self.message.reply_to_message_id
-                )
-            # Send message privately if topic is closed
-            except BadRequest:
-                self.message_sender.SendMessage(self.cmd_data.User(), msg)
+            self.message_sender.SendMessage(
+                self.cmd_data.Chat(),
+                msg,
+                reply_to_message_id=self.message.reply_to_message_id
+            )
 
     # Send message to authorized users
     def _SendMessageToAuthUsers(self,
