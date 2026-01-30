@@ -1,5 +1,6 @@
 pygsheets
 xlrd
+openpyxl
 pyrotgfork
 tgcrypto
 apscheduler

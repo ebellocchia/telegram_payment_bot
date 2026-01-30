@@ -21,6 +21,7 @@
 from datetime import datetime
 from typing import Any, Optional, Tuple
 
+import openpyxl
 import xlrd
 
 from telegram_payment_bot.bot.bot_config_types import BotConfigTypes
@@ -78,31 +79,38 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
         payment_file = self.config.GetValue(BotConfigTypes.PAYMENT_EXCEL_FILE)
 
         try:
-            self.logger.GetLogger().info(f"Loading file \"{payment_file}\"...")
+            self.logger.GetLogger().info(f"Loading file '{payment_file}'...")
 
-            sheet = self.__GetSheet(payment_file)
-            payments_data, payments_data_err = self.__LoadSheet(sheet)
+            if payment_file.lower().endswith(".xlsx"):
+                payments_data, payments_data_err = self.__LoadXlsxFile(payment_file)
+            elif payment_file.lower().endswith(".xls"):
+                payments_data, payments_data_err = self.__LoadXlsFile(payment_file)
+            else:
+                raise ValueError(f"Invalid payment file '{payment_file}'")
 
             self.logger.GetLogger().info(
-                f"File \"{payment_file}\" successfully loaded, number of rows: {payments_data.Count()}"
+                f"File '{payment_file}' successfully loaded, number of rows: {payments_data.Count()}"
             )
 
             return payments_data, payments_data_err
 
         except Exception:
-            self.logger.GetLogger().exception(f"An error occurred while loading file \"{payment_file}\"")
+            self.logger.GetLogger().exception(f"An error occurred while loading file '{payment_file}'")
             raise
 
-    def __LoadSheet(self,
-                    sheet: xlrd.sheet.Sheet) -> Tuple[PaymentsData, PaymentsDataErrors]:
-        """Load payment data from an Excel sheet.
+    def __LoadXlsFile(self,
+                      payment_file: str) -> Tuple[PaymentsData, PaymentsDataErrors]:
+        """Load payment data from an Excel sheet (xls).
 
         Args:
-            sheet: Excel sheet to load from
+            payment_file: Payment file name
 
         Returns:
             Tuple of (PaymentsData, PaymentsDataErrors)
         """
+        wb = xlrd.open_workbook(payment_file)
+        sheet = wb.sheet_by_index(self.config.GetValue(BotConfigTypes.PAYMENT_WORKSHEET_IDX))
+
         payments_data = PaymentsData(self.config)
         payments_data_err = PaymentsDataErrors()
 
@@ -121,6 +129,36 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
 
         return payments_data, payments_data_err
 
+    def __LoadXlsxFile(self,
+                       payment_file: str) -> Tuple[PaymentsData, PaymentsDataErrors]:
+        """Load payment data from an Excel sheet (xlsx).
+
+        Args:
+            payment_file: Payment file name
+
+        Returns:
+            Tuple of (PaymentsData, PaymentsDataErrors)
+        """
+        wb = openpyxl.load_workbook(payment_file, data_only=True)
+        sheet = wb.worksheets[self.config.GetValue(BotConfigTypes.PAYMENT_WORKSHEET_IDX)]
+
+        payments_data = PaymentsData(self.config)
+        payments_data_err = PaymentsDataErrors()
+
+        email_col_idx = self._ColumnToIndex(self.config.GetValue(BotConfigTypes.PAYMENT_EMAIL_COL)) + 1
+        user_col_idx = self._ColumnToIndex(self.config.GetValue(BotConfigTypes.PAYMENT_USER_COL)) + 1
+        expiration_col_idx = self._ColumnToIndex(self.config.GetValue(BotConfigTypes.PAYMENT_EXPIRATION_COL)) + 1
+
+        for i, row in enumerate(sheet.iter_rows(min_row=2), start=2):
+            email = str(row[email_col_idx - 1].value or "").strip()
+            user = User.FromString(self.config, str(row[user_col_idx - 1].value or "").strip())
+            expiration = row[expiration_col_idx - 1].value
+
+            if user.IsValid():
+                self.__AddPayment(i, payments_data, payments_data_err, email, user, expiration)
+
+        return payments_data, payments_data_err
+
     def __AddPayment(self,
                      row_idx: int,
                      payments_data: PaymentsData,
@@ -136,15 +174,18 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
             payments_data_err: PaymentsDataErrors to add errors to
             email: Email address
             user: User object
-            expiration: Expiration value (number or string)
+            expiration: Expiration value (number, string, or datetime object)
         """
         try:
-            expiration_datetime = xlrd.xldate_as_datetime(expiration, 0).date()
+            if isinstance(expiration, datetime):
+                expiration_datetime = expiration.date()
+            else:
+                expiration_datetime = xlrd.xldate_as_datetime(expiration, 0).date()
         except TypeError:
             try:
                 expiration_datetime = datetime.strptime(expiration.strip(),
                                                         self.config.GetValue(BotConfigTypes.PAYMENT_DATE_FORMAT)).date()
-            except ValueError:
+            except (ValueError, AttributeError):
                 self.logger.GetLogger().warning(
                     f"Expiration date for user {user} at row {row_idx} is not valid ({expiration}), skipped"
                 )
@@ -165,16 +206,3 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
             payments_data_err.AddPaymentError(PaymentErrorTypes.DUPLICATED_DATA_ERR,
                                               row_idx,
                                               user)
-
-    def __GetSheet(self,
-                   payment_file: str) -> xlrd.sheet.Sheet:
-        """Get the Excel sheet from the payment file.
-
-        Args:
-            payment_file: Path to the Excel file
-
-        Returns:
-            xlrd.sheet.Sheet instance
-        """
-        wb = xlrd.open_workbook(payment_file)
-        return wb.sheet_by_index(self.config.GetValue(BotConfigTypes.PAYMENT_WORKSHEET_IDX))
