@@ -119,7 +119,9 @@ class SinglePayment:
         Returns:
             String representation
         """
-        return f"{self.email} ({self.user}): {self.expiration_date.strftime('%Y-%m-%d')}"
+        if self.email:
+            return f"{self.email} ({self.user}): {self.expiration_date.strftime('%Y-%m-%d')}"
+        return f"{self.user}: {self.expiration_date.strftime('%Y-%m-%d')}"
 
     def __str__(self) -> str:
         """Convert to string representation.
