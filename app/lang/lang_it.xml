@@ -12,35 +12,35 @@ benvenuto nel Telegram Payment Bot.
 ℹ️ Qui trovi la lista dei comandi supportati.
 
 **Generici**
-🔘 **/help** : mostra questo messaggio
-🔘 **/alive** : mostra se il bot è attivo
-🔘 **/paybot_set_test_mode** __true/false__ : attiva/disattiva la modalità di test
-🔘 **/paybot_is_test_mode** : mostra se la modalità di test è attiva
-🔘 **/paybot_auth_users** : mostra la lista degli utenti autorizzati a usare il bot
-🔘 **/paybot_chat_info** : mostra le informazioni sulla chat - **Solo Gruppo**
-🔘 **/paybot_users_list** : mostra la lista di tutti gli utenti del gruppo - **Solo Gruppo**
-🔘 **/paybot_invite_link** : genera un nuovo link di invito - **Solo Gruppo**
-🔘 **/paybot_version** : mostra la versione del bot
+• **/help** : mostra questo messaggio
+• **/alive** : mostra se il bot è attivo
+• **/paybot_set_test_mode** __true/false__ : attiva/disattiva la modalità di test
+• **/paybot_is_test_mode** : mostra se la modalità di test è attiva
+• **/paybot_auth_users** : mostra la lista degli utenti autorizzati a usare il bot
+• **/paybot_chat_info** : mostra le informazioni sulla chat - **Solo Gruppo**
+• **/paybot_users_list** : mostra la lista di tutti gli utenti del gruppo - **Solo Gruppo**
+• **/paybot_invite_link** : genera un nuovo link di invito - **Solo Gruppo**
+• **/paybot_version** : mostra la versione del bot
 
 **Username**
-🔘 **/paybot_check_username** __[HOURS_LEFT]__ : mostra gli utenti senza username - **Solo Gruppo**
-🔘 **/paybot_remove_username** : rimuove gli utenti senza username - **Solo Gruppo**
+• **/paybot_check_username** __[HOURS_LEFT]__ : mostra gli utenti senza username - **Solo Gruppo**
+• **/paybot_remove_username** : rimuove gli utenti senza username - **Solo Gruppo**
 
 **Pagamenti**
-🔘 **/paybot_set_check_on_join** __true/false__ : attiva/disattiva il controllo dei pagamenti sui membri appena entrati nel gruppo
-🔘 **/paybot_is_check_on_join** : mostra se il controllo dei pagamenti sui membri appena entrati nel gruppo è attivo
-🔘 **/paybot_check_data** : mostra se i dati di pagamento contengono degli errori
-🔘 **/paybot_email_payment** __[DAYS_LEFT]__ : invia una email agli utenti il cui pagamento sta per scadere
-🔘 **/paybot_check_payment** __[DAYS_LEFT] [LAST_DAY]__ : mostra gli utenti il cui pagamento sta per scadere - **Solo Gruppo**
-🔘 **/paybot_remove_payment** : rimuove gli utenti il cui pagamento sta per scadere - **Solo Gruppo**
+• **/paybot_set_check_on_join** __true/false__ : attiva/disattiva il controllo dei pagamenti sui membri appena entrati nel gruppo
+• **/paybot_is_check_on_join** : mostra se il controllo dei pagamenti sui membri appena entrati nel gruppo è attivo
+• **/paybot_check_data** : mostra se i dati di pagamento contengono degli errori
+• **/paybot_email_payment** __[DAYS_LEFT]__ : invia una email agli utenti il cui pagamento sta per scadere
+• **/paybot_check_payment** __[DAYS_LEFT] [LAST_DAY]__ : mostra gli utenti il cui pagamento sta per scadere - **Solo Gruppo**
+• **/paybot_remove_payment** : rimuove gli utenti il cui pagamento sta per scadere - **Solo Gruppo**
 
 **Task Controllo Pagamenti**
-🔘 **/paybot_task_start** __PERIOD_HOURS__ : avvia il task di controllo pagamenti con il periodo specificato
-🔘 **/paybot_task_stop** : ferma il task di controllo pagamenti
-🔘 **/paybot_task_add_chat** : aggiunge la chat corrente al task di controllo pagamenti - **Solo Gruppo**
-🔘 **/paybot_task_remove_chat** : rimuove la chat corrente dal task di controllo pagamenti - **Solo Gruppo**
-🔘 **/paybot_task_remove_all_chats** : rimuove tutte le chat dal task di controllo pagamenti
-🔘 **/paybot_task_info** : mostra le informazioni del task di controllo pagamenti
+• **/paybot_task_start** __PERIOD_HOURS__ : avvia il task di controllo pagamenti con il periodo specificato
+• **/paybot_task_stop** : ferma il task di controllo pagamenti
+• **/paybot_task_add_chat** : aggiunge la chat corrente al task di controllo pagamenti - **Solo Gruppo**
+• **/paybot_task_remove_chat** : rimuove la chat corrente dal task di controllo pagamenti - **Solo Gruppo**
+• **/paybot_task_remove_all_chats** : rimuove tutte le chat dal task di controllo pagamenti
+• **/paybot_task_info** : mostra le informazioni del task di controllo pagamenti
 
 I comandi che possono essere eseguiti solo nella chat di gruoppo sono specificati in grassetto.
 I parametri tra parentesi quadre sono opzionali.

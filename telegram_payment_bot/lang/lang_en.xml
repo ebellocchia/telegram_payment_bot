@@ -12,35 +12,35 @@ welcome to the Telegram Payment Bot.
 ℹ️ Here is the list of supported commands.
 
 **Generic**
-🔘 **/help** : show this message
-🔘 **/alive** : show if bot is active
-🔘 **/paybot_set_test_mode** __true/false__ : enable/disable test mode
-🔘 **/paybot_is_test_mode** : show if test mode is enabled
-🔘 **/paybot_auth_users** : show the list of users authorized to use the bot
-🔘 **/paybot_chat_info** : show the chat information - **Only Group**
-🔘 **/paybot_users_list** : show the list of all users in group - **Only Group**
-🔘 **/paybot_invite_link** : generate a new invite link - **Only Group**
-🔘 **/paybot_version** : show the bot version
+• **/help** : show this message
+• **/alive** : show if bot is active
+• **/paybot_set_test_mode** __true/false__ : enable/disable test mode
+• **/paybot_is_test_mode** : show if test mode is enabled
+• **/paybot_auth_users** : show the list of users authorized to use the bot
+• **/paybot_chat_info** : show the chat information - **Only Group**
+• **/paybot_users_list** : show the list of all users in group - **Only Group**
+• **/paybot_invite_link** : generate a new invite link - **Only Group**
+• **/paybot_version** : show the bot version
 
 **Username**
-🔘 **/paybot_check_username** __[HOURS_LEFT]__ : show users with no username - **Only Group**
-🔘 **/paybot_remove_username** : remove users with no username - **Only Group**
+• **/paybot_check_username** __[HOURS_LEFT]__ : show users with no username - **Only Group**
+• **/paybot_remove_username** : remove users with no username - **Only Group**
 
 **Payments**
-🔘 **/paybot_set_check_on_join** __true/false__ : enable/disable payment check when a new member joins
-🔘 **/paybot_is_check_on_join** : show if payment check when a new member joins is enabled
-🔘 **/paybot_check_data** : show if payments data contains some errors
-🔘 **/paybot_email_payment** __[DAYS_LEFT]__ : send a reminder email to users whose payments is about to expire
-🔘 **/paybot_check_payment** __[DAYS_LEFT] [LAST_DAY]__ : show users whose payments is about to expire - **Only Group**
-🔘 **/paybot_remove_payment** : remove users whose payment is expired - **Only Group**
+• **/paybot_set_check_on_join** __true/false__ : enable/disable payment check when a new member joins
+• **/paybot_is_check_on_join** : show if payment check when a new member joins is enabled
+• **/paybot_check_data** : show if payments data contains some errors
+• **/paybot_email_payment** __[DAYS_LEFT]__ : send a reminder email to users whose payments is about to expire
+• **/paybot_check_payment** __[DAYS_LEFT] [LAST_DAY]__ : show users whose payments is about to expire - **Only Group**
+• **/paybot_remove_payment** : remove users whose payment is expired - **Only Group**
 
 **Payment Check Task**
-🔘 **/paybot_task_start** __PERIOD_HOURS__ : start payment check task with the specified period
-🔘 **/paybot_task_stop** : stop payment check task
-🔘 **/paybot_task_add_chat** : add the current chat to the payment check task - **Only Group**
-🔘 **/paybot_task_remove_chat** : remove the current chat from the payment check task - **Only Group**
-🔘 **/paybot_task_remove_all_chats** : remove all chats from the payment check task
-🔘 **/paybot_task_info** : show payment check task information
+• **/paybot_task_start** __PERIOD_HOURS__ : start payment check task with the specified period
+• **/paybot_task_stop** : stop payment check task
+• **/paybot_task_add_chat** : add the current chat to the payment check task - **Only Group**
+• **/paybot_task_remove_chat** : remove the current chat from the payment check task - **Only Group**
+• **/paybot_task_remove_all_chats** : remove all chats from the payment check task
+• **/paybot_task_info** : show payment check task information
 
 Commands that can be executed only in chat group are specified in bold text.
 Parameters in square brakets are optional.
