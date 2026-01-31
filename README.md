@@ -22,7 +22,7 @@ Payments data can be either updated manually by the admins or, better, automatic
 
 ### Create Telegram app
 
-In order to use the bot, in addition to the bot token you also need an APP ID and hash.\
+In order to use the bot, in addition to the bot token you also need an API ID and hash.\
 To get them, create an app using the following website: [https://my.telegram.org/apps](https://my.telegram.org/apps).
 
 ### Installation
