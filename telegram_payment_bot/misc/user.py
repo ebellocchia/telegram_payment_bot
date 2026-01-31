@@ -93,15 +93,6 @@ class User:
         """
         self.user = user
 
-    def IsUserId(self) -> bool:
-        """
-        Check if the user is represented by an ID.
-
-        Returns:
-            True if the user is represented by an ID, False otherwise
-        """
-        return isinstance(self.user, int)
-
     def IsUsername(self) -> bool:
         """
         Check if the user is represented by a username.
@@ -142,7 +133,7 @@ class User:
         if not self.IsValid():
             raise KeyError("An invalid user cannot be used as a key")
 
-        return self.user if self.IsUserId() else self.user.lower()  # type: ignore
+        return self.user if isinstance(self.user, int) else self.user.lower()
 
     def ToString(self) -> str:
         """
