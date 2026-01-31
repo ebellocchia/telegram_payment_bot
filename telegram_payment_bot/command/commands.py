@@ -75,7 +75,8 @@ class HelpCmd(CommandBase):
         Args:
             **kwargs: Additional keyword arguments
         """
-        await self._SendMessage(self.translator.GetSentence("HELP_CMD", name=UserHelper.GetName(self.cmd_data.User())))
+        await self._SendMessage(self.translator.GetSentence("HELP_CMD",
+                                                            name=UserHelper.GetName(self.cmd_data.User())))
 
 
 class AliveCmd(CommandBase):
@@ -600,7 +601,7 @@ class PaymentTaskAddChatCmd(CommandBase):
             **kwargs: Additional keyword arguments
         """
         try:
-            kwargs["payments_check_scheduler"].AddChat(self.cmd_data.Chat())
+            await kwargs["payments_check_scheduler"].AddChat(self.cmd_data.Chat())
             await self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_ADD_CHAT_OK_CMD"))
         except PaymentsCheckJobChatAlreadyPresentError:
             await self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_ADD_CHAT_ERR_CMD"))
@@ -619,7 +620,7 @@ class PaymentTaskRemoveChatCmd(CommandBase):
             **kwargs: Additional keyword arguments
         """
         try:
-            kwargs["payments_check_scheduler"].RemoveChat(self.cmd_data.Chat())
+            await kwargs["payments_check_scheduler"].RemoveChat(self.cmd_data.Chat())
             await self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_REMOVE_CHAT_OK_CMD"))
         except PaymentsCheckJobChatNotPresentError:
             await self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_REMOVE_CHAT_ERR_CMD"))
@@ -636,7 +637,7 @@ class PaymentTaskRemoveAllChatsCmd(CommandBase):
         Args:
             **kwargs: Additional keyword arguments
         """
-        kwargs["payments_check_scheduler"].RemoveAllChats()
+        await kwargs["payments_check_scheduler"].RemoveAllChats()
         await self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_REMOVE_ALL_CHATS_CMD"))
 
 
