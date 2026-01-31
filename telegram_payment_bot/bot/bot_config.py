@@ -19,6 +19,7 @@
 # THE SOFTWARE.
 
 import logging
+from reprlib import Repr
 
 from telegram_payment_bot.bot.bot_config_types import BotConfigTypes
 from telegram_payment_bot.config.config_object import ConfigObject
@@ -37,6 +38,12 @@ class _BotConfigUtils:
     COL_MAX_VAL: str = "Z"
 
     @staticmethod
+    def Repr(val, max_string=100):
+        r = Repr()
+        r.maxstring = max_string
+        return r.repr(val)
+
+    @staticmethod
     def ReadFile(file_name: str) -> str:
         """
         Read file contents.
@@ -48,8 +55,7 @@ class _BotConfigUtils:
             File contents as string
         """
         with open(file_name, encoding="utf-8") as fin:
-            file_data = fin.read()
-        return file_data
+            return fin.read()
 
     @staticmethod
     def AreColumnIndexesValid(config: ConfigObject,
@@ -280,14 +286,14 @@ BotConfig: ConfigSectionsType = {
             "type": BotConfigTypes.EMAIL_ALT_BODY,
             "name": "email_alt_body",
             "conv_fct": _BotConfigUtils.ReadFile,
-            "print_fct": lambda val: "file successfully loaded",
+            "print_fct": lambda val: _BotConfigUtils.Repr(val),
             "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.EMAIL_ENABLED),
         },
         {
             "type": BotConfigTypes.EMAIL_HTML_BODY,
             "name": "email_html_body",
             "conv_fct": _BotConfigUtils.ReadFile,
-            "print_fct": lambda val: "file successfully loaded",
+            "print_fct": lambda val: _BotConfigUtils.Repr(val),
             "load_if": lambda cfg: cfg.GetValue(BotConfigTypes.EMAIL_ENABLED),
         },
     ],
