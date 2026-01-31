@@ -133,15 +133,15 @@ class ChatMembersGetter:
         Returns:
             A sorted and filtered list of chat members
         """
-        filtered_members = [member async for member in self.client.get_chat_members(chat.id, filter=filter_type)]     # type: ignore
+        filtered_members = [member async for member in self.client.get_chat_members(chat.id, filter=filter_type)]
         if filter_fct is not None:
-            filtered_members = list(filter(filter_fct, filtered_members))  # type: ignore
-        filtered_members.sort(  # type: ignore
+            filtered_members = list(filter(filter_fct, filtered_members))
+        filtered_members.sort(
             key=lambda member: member.user.username.lower() if member.user.username is not None else str(member.user.id)
         )
 
         chat_members = ChatMembersList()
-        chat_members.AddMultiple(filtered_members)  # type: ignore
+        chat_members.AddMultiple(filtered_members)
 
         return chat_members
 
