@@ -1,3 +1,9 @@
+# 0.8.0
+
+- Migrate to full async/await client
+- Add different authentication types to email (`NONE`, `SSL_TLS`, `STARTTLS`)
+- Add support to xlsx files
+
 # 0.7.3
 
 - Use `pyrotgfork`, since `pyrogram` was archived
