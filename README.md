@@ -9,10 +9,14 @@
 
 ## Introduction
 
-Telegram bot for handling payments in groups based on *pyrogram* library.\
-Payments data can be loaded either from an *xls*/*xlsx* file or from a Google Sheet (in this way, it can be shared with other admins).\
-It is also possible to extend this to load payments data from other sources (e.g. a remote database) by inheriting and implementing the `PaymentsLoaderBase` class, but I didn't need to do it so far.\
-Payments data can be updated either manually by the admins or, better, automatically (e.g. by the website where the payment is made, via a webhook). It depends on the infrastructure you have.
+Telegram bot for handling payments in groups based on the *pyrogram* library.
+
+Payments can be either loaded from a *xls*/*xlsx* file or, better, from a Google Sheet. The advantages of the Google Sheet are:
+- It can be easily shared with other people or admins.
+- It can be automatically written by the service handling payments. For example: if users pay from a website, the website can automatically write the payments to the Google Sheet.
+
+It is also possible to extend this to load payments data from other sources (e.g. a remote database) by inheriting and implementing the `PaymentsLoaderBase` class.\
+Payments data can be either updated manually by the admins or, better, automatically (e.g. by the website where the payment is made). It depends on the infrastructure you have.
 
 ## Setup
 
@@ -33,7 +37,7 @@ To run the bot, edit the configuration file by specifying the API ID/hash and bo
     cd app
     python bot_start.py
 
-When run with no parameter, *conf/config.ini* will be the default configuration file (in this way it can be used for different groups).\
+When run with no parameters, *conf/config.ini* will be the default configuration file (in this way it can be used for different groups).\
 To specify a different configuration file:
 
     python bot_start.py -c another_conf.ini
@@ -59,7 +63,7 @@ The list of all possible fields that can be set is shown below.
 |`api_hash`|API hash from [https://my.telegram.org/apps](https://my.telegram.org/apps)|
 |`bot_token`|Bot token from BotFather|
 |**[app]**|Configuration for app|
-|`app_is_test_mode`|True to activate test mode false otherwise|
+|`app_is_test_mode`|True to activate test mode, false otherwise|
 |`app_lang_file`|Language file in XML format (default: English)|
 |**[users]**|Configuration for users|
 |`authorized_users`|List of Telegram usernames that are authorized to use the bot, comma separated|
@@ -83,7 +87,7 @@ The list of all possible fields that can be set is shown below.
 |`payment_expiration_col`|Table column (letter) containing the payment expiration date (default: `C`, maximum: `Z`)|
 |`payment_date_format`|Date format in payments data (default: `%d/%m/%Y`)|
 |**[email]**|Configuration for email that reminds users to pay|
-|`email_enabled`|Email enable flag (default: `false`). If false, all the next fields will be skipped.|
+|`email_enabled`|Email enabled flag (default: `false`). If false, all the next fields will be skipped.|
 |`email_auth_type`|Email authentication type: `NONE`, `SSL_TLS` or `STARTTLS`|
 |`email_from`|Email sender|
 |`email_reply_to`|Email reply-to|
@@ -139,7 +143,7 @@ Add `quiet` or `q` as last parameter to send the bot response in a private chat 
 
 Users removed from the group are just kicked and not banned, so they can re-join later via invite links if necessary.\
 When users are removed from the group (either because they had no username or they didn't pay), a new invite link is generated and sent to all authorized users in a private chat.\
-This automatically revokes the old invite link and prevents those users to join again using it.
+This automatically revokes the old invite link and prevents those users from joining again using it.
 
 When checking for payments, a user is removed from the group if:
 - He has no Telegram username
@@ -153,7 +157,7 @@ If `payment_check_dup_email` is set to true:
 ## Payment Check Task
 
 It's suggested to run a background task to check for payments periodically. It can be started/stopped with the `paybot_task_start`/`paybot_task_stop` commands.\
-The task can check multiple groups in one time (sharing the same payments data, of course). The groups can be added/removed with the `paybot_task_add_chat`/`paybot_task_remove_chat` commands (either while the task is running or stopped).\
+The task can check multiple groups at once (sharing the same payments data, of course). The groups can be added/removed with the `paybot_task_add_chat`/`paybot_task_remove_chat` commands (either while the task is running or stopped).\
 If no group was added, the task will simply run without checking any group.
 
 The period of the task always starts from midnight (if you use a VPS, be sure to set the correct time), for example:
@@ -162,7 +166,7 @@ The period of the task always starts from midnight (if you use a VPS, be sure to
 
 ## Run the Bot
 
-The bot shall be an administrator of the group.\
+The bot must be an administrator of the group.\
 If you just need to run bot once in a while (e.g. once a week), you can do it manually using the `check_no_payment` and `remove_no_payment` commands. In this case, it's sufficient to run the bot locally on the PC when needed.\
 If you prefer to let the bot check for payment periodically, it'll be better to run it 24h/24h on a VPS.
 
@@ -194,9 +198,10 @@ For more information: [create project](https://developers.google.com/workspace/g
 
 Since for allowing the bot to access the Google Sheet a browser window will open, in case of a dedicated server (no GUI) it's easier to generate the *json* file on a PC and then just copy it to the server.
 
-Alternatively, you can create a service account, which is pre-authorized. In this case, you don't need to authorize it from the browser window but you only have to share the Google Sheet with the service account gmail.
+A better alternative is to create a service account, which is pre-authorized.
+In this case, you don't need to authorize it from a browser window; you only have to share the Google Sheet with the service account gmail.
 
-In both cases (Google Sheet or Excel file), the file shall contain the following columns starting from the second row (the first row is used as header):
+In both cases (Google Sheet or Excel file), the file must contain the following columns starting from the second row (the first row is used as header):
 - Email address used for paying (for convenience, since an email address is usually required in payment platforms)
 - Telegram user ID or username
 - Expiration date of the payment in the format specified by `payment_date_format`
@@ -205,8 +210,8 @@ The indexes of these columns are set in the configuration file. It is possible t
 
 ## Test Mode
 
-Test mode can be used to test the bot without any effect to the users of the group. When active:
-- Users are not kicked from the group if they don't have a username or don't have paid, in any case (i.e. when running a command, when joining the group, during periodical checks)
+Test mode can be used to test the bot without any effect on the users of the group. When active:
+- Users are not kicked from the group if they don't have a username or haven't paid, in any case (i.e. when running a command, when joining the group, during periodical checks)
 - Emails are not sent to the users that haven't paid yet
 
 Moreover, the payment task period will be applied in minutes instead of hours. This allows to quickly check if it is working.
@@ -223,7 +228,7 @@ When used in channels:
 
 The messages sent by the bot on Telegram can be translated into different languages (the default language is English) by providing a custom XML file.\
 The XML file path is specified in the configuration file (`app_lang_file` field).\
-An example XML file in italian is provided in the folder *app/lang*.
+An example XML file in Italian is provided in the folder *app/lang*.
 
 # License
 
