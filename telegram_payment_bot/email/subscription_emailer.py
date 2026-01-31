@@ -48,20 +48,20 @@ class SubscriptionEmailer:
         self.smtp_emailer.To = recipient
         self.smtp_emailer.PrepareMsg()
 
-    def Connect(self) -> None:
+    async def Connect(self) -> None:
         """Connect."""
-        self.smtp_emailer.Connect()
+        await self.smtp_emailer.Connect()
 
-    def Disconnect(self) -> None:
+    async def Disconnect(self) -> None:
         """Disconnect."""
-        self.smtp_emailer.Disconnect()
+        await self.smtp_emailer.Disconnect()
 
-    def Send(self) -> None:
+    async def Send(self) -> None:
         """Send email."""
-        self.smtp_emailer.Send()
+        await self.smtp_emailer.Send()
 
-    def QuickSend(self,
-                  recipient: str) -> None:
+    async def QuickSend(self,
+                        recipient: str) -> None:
         """Quick send email."""
         self.smtp_emailer.To = recipient
-        self.smtp_emailer.QuickSend()
+        await self.smtp_emailer.QuickSend()

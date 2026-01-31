@@ -18,10 +18,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from typing import Optional
+
+import aiosmtplib
 
 from telegram_payment_bot.email.emailer_auth_types import EmailerAuthenticationTypes
 
@@ -44,7 +45,7 @@ class SmtpEmailer:
     user: str
     password: str
     msg: Optional[MIMEMultipart]
-    smtp: Optional[smtplib.SMTP]
+    smtp: Optional[aiosmtplib.SMTP]
 
     def __init__(self):
         """Constructor."""
@@ -183,33 +184,36 @@ class SmtpEmailer:
         self.msg.attach(MIMEText(self.plain_msg, "plain"))
         self.msg.attach(MIMEText(self.html_msg, "html"))
 
-    def Connect(self) -> None:
+    async def Connect(self) -> None:
         """Connect."""
         try:
             if self.auth_type == EmailerAuthenticationTypes.SSL_TLS:
-                self.smtp = smtplib.SMTP_SSL(self.host, 465)
-                self.smtp.login(self.user, self.password)
+                self.smtp = aiosmtplib.SMTP(hostname=self.host, port=465, use_tls=True)
+                await self.smtp.connect()
+                await self.smtp.login(self.user, self.password)
             elif self.auth_type == EmailerAuthenticationTypes.STARTTLS:
-                self.smtp = smtplib.SMTP(self.host, 587)
-                self.smtp.starttls()
-                self.smtp.login(self.user, self.password)
+                self.smtp = aiosmtplib.SMTP(hostname=self.host, port=587)
+                await self.smtp.connect()
+                await self.smtp.starttls()
+                await self.smtp.login(self.user, self.password)
             else:
-                self.smtp = smtplib.SMTP(self.host)
-        except smtplib.SMTPException as ex:
+                self.smtp = aiosmtplib.SMTP(hostname=self.host)
+                await self.smtp.connect()
+        except aiosmtplib.SMTPException as ex:
             raise SmtpEmailerError("Error while connecting") from ex
 
-    def Disconnect(self) -> None:
+    async def Disconnect(self) -> None:
         """Disconnect."""
         if self.smtp is None:
             raise SmtpEmailerError("Disconnect called before connecting")
 
         try:
-            self.smtp.quit()
+            await self.smtp.quit()
             self.smtp = None
-        except smtplib.SMTPException as ex:
+        except aiosmtplib.SMTPException as ex:
             raise SmtpEmailerError("Error while disconnecting") from ex
 
-    def Send(self) -> None:
+    async def Send(self) -> None:
         """Send email."""
         if self.msg is None:
             raise SmtpEmailerError("Send called before preparing message")
@@ -217,13 +221,13 @@ class SmtpEmailer:
             raise SmtpEmailerError("Send called before connecting")
 
         try:
-            self.smtp.sendmail(self.sender, self.recipient, self.msg.as_string())
-        except smtplib.SMTPException as ex:
+            await self.smtp.sendmail(self.sender, self.recipient, self.msg.as_string())
+        except aiosmtplib.SMTPException as ex:
             raise SmtpEmailerError("Error while sending email") from ex
 
-    def QuickSend(self) -> None:
+    async def QuickSend(self) -> None:
         """Quick send email."""
         self.PrepareMsg()
-        self.Connect()
-        self.Send()
-        self.Disconnect()
+        await self.Connect()
+        await self.Send()
+        await self.Disconnect()

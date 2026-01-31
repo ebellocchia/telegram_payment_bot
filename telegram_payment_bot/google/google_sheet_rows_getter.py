@@ -23,6 +23,7 @@ from typing import List
 from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.google.google_sheet_opener import GoogleSheetOpener
 from telegram_payment_bot.logger.logger import Logger
+from telegram_payment_bot.misc.async_helpers import to_thread
 
 
 class GoogleSheetRowsGetter:
@@ -42,8 +43,8 @@ class GoogleSheetRowsGetter:
         """
         self.google_sheet_opener = GoogleSheetOpener(config, logger)
 
-    def GetRows(self,
-                worksheet_idx: int) -> List[List[str]]:
+    async def GetRows(self,
+                      worksheet_idx: int) -> List[List[str]]:
         """
         Get all rows from a worksheet.
 
@@ -53,8 +54,9 @@ class GoogleSheetRowsGetter:
         Returns:
             List of rows, where each row is a list of strings
         """
-        worksheet = self.google_sheet_opener.OpenWorksheet(worksheet_idx)
-        return worksheet.get_all_values(
+        worksheet = await self.google_sheet_opener.OpenWorksheet(worksheet_idx)
+        return await to_thread(
+            worksheet.get_all_values,
             include_tailing_empty_rows=False,
             include_tailing_empty=False,
             returnas="matrix"

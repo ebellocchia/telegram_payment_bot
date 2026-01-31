@@ -28,9 +28,7 @@ from telegram_payment_bot.bot.bot_config_types import BotConfigTypes
 from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.logger.logger import Logger
 from telegram_payment_bot.misc.user import User
-from telegram_payment_bot.payment.payments_data import (
-    PaymentsData, PaymentsDataErrors, SinglePayment, PaymentErrorTypes
-)
+from telegram_payment_bot.payment.payments_data import PaymentErrorTypes, PaymentsData, PaymentsDataErrors, SinglePayment
 
 
 class PaymentsLoaderBase(ABC):
@@ -52,7 +50,7 @@ class PaymentsLoaderBase(ABC):
         self.logger = logger
 
     @abstractmethod
-    def LoadAll(self) -> PaymentsData:
+    async def LoadAll(self) -> PaymentsData:
         """Load all payment data.
 
         Returns:
@@ -60,8 +58,8 @@ class PaymentsLoaderBase(ABC):
         """
 
     @abstractmethod
-    def LoadSingleByUser(self,
-                         user: User) -> Optional[SinglePayment]:
+    async def LoadSingleByUser(self,
+                               user: User) -> Optional[SinglePayment]:
         """Load a single payment by user.
 
         Args:
@@ -72,7 +70,7 @@ class PaymentsLoaderBase(ABC):
         """
 
     @abstractmethod
-    def CheckForErrors(self) -> PaymentsDataErrors:
+    async def CheckForErrors(self) -> PaymentsDataErrors:
         """Check for errors in the payment data.
 
         Returns:

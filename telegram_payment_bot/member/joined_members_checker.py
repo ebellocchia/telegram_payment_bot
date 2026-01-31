@@ -60,9 +60,9 @@ class JoinedMembersChecker:
         self.auth_users_msg_sender = AuthorizedUsersMessageSender(client, config, logger)
         self.member_kicker = MembersKicker(client, config, logger)
 
-    def CheckNewUsers(self,
-                      chat: pyrogram.types.Chat,
-                      new_users: List[pyrogram.types.User]) -> None:
+    async def CheckNewUsers(self,
+                            chat: pyrogram.types.Chat,
+                            new_users: List[pyrogram.types.User]) -> None:
         """Check multiple new users for username and payment requirements.
 
         Args:
@@ -71,31 +71,31 @@ class JoinedMembersChecker:
         """
         for user in new_users:
             if not user.is_self and not user.is_bot:
-                self.__CheckSingleUser(chat, user)
+                await self.__CheckSingleUser(chat, user)
 
-    def __CheckSingleUser(self,
-                          chat: pyrogram.types.Chat,
-                          user: pyrogram.types.User) -> None:
+    async def __CheckSingleUser(self,
+                                chat: pyrogram.types.Chat,
+                                user: pyrogram.types.User) -> None:
         """Check a single user for username and payment requirements.
 
         Args:
             chat: Chat where user joined
             user: User to check
         """
-        if self.member_kicker.KickSingleIfNoUsername(chat, user):
+        if await self.member_kicker.KickSingleIfNoUsername(chat, user):
             self.logger.GetLogger().info(
                 f"New user {UserHelper.GetNameOrId(user)} kicked (joined with no username)"
             )
-            self.auth_users_msg_sender.SendMessage(
+            await self.auth_users_msg_sender.SendMessage(
                 chat,
                 self.translator.GetSentence("JOINED_MEMBER_KICKED_FOR_USERNAME_MSG",
                                             name=UserHelper.GetNameOrId(user))
             )
-        elif self.member_kicker.KickSingleIfExpiredPayment(chat, user):
+        elif await self.member_kicker.KickSingleIfExpiredPayment(chat, user):
             self.logger.GetLogger().info(
                 f"New user {UserHelper.GetNameOrId(user)} kicked (joined with no payment)"
             )
-            self.auth_users_msg_sender.SendMessage(
+            await self.auth_users_msg_sender.SendMessage(
                 chat,
                 self.translator.GetSentence("JOINED_MEMBER_KICKED_FOR_PAYMENT_MSG",
                                             name=UserHelper.GetNameOrId(user))

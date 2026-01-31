@@ -26,6 +26,7 @@ from telegram_payment_bot.bot.bot_config_types import BotConfigTypes
 from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.google.google_cred_types import GoogleCredTypes
 from telegram_payment_bot.logger.logger import Logger
+from telegram_payment_bot.misc.async_helpers import to_thread
 
 
 class GoogleSheetOpener:
@@ -33,8 +34,7 @@ class GoogleSheetOpener:
 
     config: ConfigObject
     logger: Logger
-    gsheet: ConfigObject
-    worksheet: Optional[pygsheets.Spreadsheet]
+    google_sheet: Optional[pygsheets.Spreadsheet]
 
     def __init__(self,
                  config: ConfigObject,
@@ -50,8 +50,8 @@ class GoogleSheetOpener:
         self.logger = logger
         self.google_sheet = None
 
-    def OpenWorksheet(self,
-                      worksheet_idx: int) -> pygsheets.Worksheet:
+    async def OpenWorksheet(self,
+                            worksheet_idx: int) -> pygsheets.Worksheet:
         """
         Open a worksheet by index.
 
@@ -61,11 +61,11 @@ class GoogleSheetOpener:
         Returns:
             The worksheet object
         """
-        self.__OpenGoogleSheet()
+        await self.__OpenGoogleSheet()
         assert self.google_sheet is not None
         return self.google_sheet[worksheet_idx]
 
-    def __OpenGoogleSheet(self) -> None:
+    async def __OpenGoogleSheet(self) -> None:
         """Open Google Sheet using configured credentials."""
         if self.google_sheet is not None:
             return
@@ -85,12 +85,15 @@ class GoogleSheetOpener:
             cred_path = self.config.GetValue(BotConfigTypes.PAYMENT_GOOGLE_CRED_PATH)
             self.logger.GetLogger().info(f"Credential path: {cred_path}")
 
-            google_client = pygsheets.authorize(client_secret=cred_file,
-                                                credentials_directory=cred_path,
-                                                local=True)
+            google_client = await to_thread(
+                pygsheets.authorize,
+                client_secret=cred_file,
+                credentials_directory=cred_path,
+                local=True
+            )
         elif cred_type == GoogleCredTypes.SERVICE_ACCOUNT:
-            google_client = pygsheets.authorize(service_file=cred_file)
+            google_client = await to_thread(pygsheets.authorize, service_file=cred_file)
         else:
             raise ValueError("Invalid credential type")
 
-        self.google_sheet = google_client.open_by_key(sheet_id)
+        self.google_sheet = await to_thread(google_client.open_by_key, sheet_id)

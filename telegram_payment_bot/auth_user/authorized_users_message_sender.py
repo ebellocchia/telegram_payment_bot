@@ -51,10 +51,10 @@ class AuthorizedUsersMessageSender:
         self.auth_users_getter = AuthorizedUsersGetter(client, config)
         self.message_sender = MessageSender(client, logger)
 
-    def SendMessage(self,
-                    chat: pyrogram.types.Chat,
-                    msg: str,
-                    **kwargs) -> None:
+    async def SendMessage(self,
+                          chat: pyrogram.types.Chat,
+                          msg: str,
+                          **kwargs) -> None:
         """
         Send a message to all authorized users in the chat.
 
@@ -64,9 +64,9 @@ class AuthorizedUsersMessageSender:
             **kwargs: Additional keyword arguments for message sending
         """
         # Send to authorized users
-        for auth_member in self.auth_users_getter.GetUsers(chat):
+        for auth_member in await self.auth_users_getter.GetUsers(chat):
             try:
-                self.message_sender.SendMessage(auth_member.user, 0, msg, **kwargs)
+                await self.message_sender.SendMessage(auth_member.user, 0, msg, **kwargs)
                 self.logger.GetLogger().info(f"Message sent to authorized user: {UserHelper.GetNameOrId(auth_member.user)}")
             # It may happen if the user has never talked to the bot or blocked it
             except (pyrogram_ex.bad_request_400.PeerIdInvalid, pyrogram_ex.bad_request_400.UserIsBlocked):

@@ -62,11 +62,11 @@ class MessageDispatcher:
         self.logger = logger
         self.translator = translator
 
-    def Dispatch(self,
-                 client: pyrogram.Client,
-                 message: pyrogram.types.Message,
-                 msg_type: MessageTypes,
-                 **kwargs: Any) -> None:
+    async def Dispatch(self,
+                       client: pyrogram.Client,
+                       message: pyrogram.types.Message,
+                       msg_type: MessageTypes,
+                       **kwargs: Any) -> None:
         """
         Dispatch a message based on its type.
 
@@ -87,18 +87,18 @@ class MessageDispatcher:
 
         # New chat created
         if msg_type == MessageTypes.GROUP_CHAT_CREATED:
-            self.__OnCreatedChat(client, message, **kwargs)
+            await self.__OnCreatedChat(client, message, **kwargs)
         # A member left the chat
         elif msg_type == MessageTypes.LEFT_CHAT_MEMBER:
-            self.__OnLeftMember(client, message, **kwargs)
+            await self.__OnLeftMember(client, message, **kwargs)
         # A member joined the chat
         elif msg_type == MessageTypes.NEW_CHAT_MEMBERS:
-            self.__OnJoinedMember(client, message, **kwargs)
+            await self.__OnJoinedMember(client, message, **kwargs)
 
-    def __OnCreatedChat(self,
-                        client,
-                        message: pyrogram.types.Message,
-                        **kwargs: Any) -> None:
+    async def __OnCreatedChat(self,
+                              client,
+                              message: pyrogram.types.Message,
+                              **kwargs: Any) -> None:
         """
         Handle when a new chat is created.
 
@@ -111,16 +111,16 @@ class MessageDispatcher:
             return
 
         # Send the welcome message
-        MessageSender(client, self.logger).SendMessage(
+        await MessageSender(client, self.logger).SendMessage(
             message.chat,
             message.message_thread_id,
             self.translator.GetSentence("BOT_WELCOME_MSG")
         )
 
-    def __OnLeftMember(self,
-                       client,
-                       message: pyrogram.types.Message,
-                       **kwargs: Any) -> None:
+    async def __OnLeftMember(self,
+                             client,
+                             message: pyrogram.types.Message,
+                             **kwargs: Any) -> None:
         """
         Handle when a member left the chat.
 
@@ -133,10 +133,10 @@ class MessageDispatcher:
         if message.left_chat_member is not None and message.left_chat_member.is_self:
             kwargs["payments_check_scheduler"].ChatLeft(message.chat)
 
-    def __OnJoinedMember(self,
-                         client,
-                         message: pyrogram.types.Message,
-                         **kwargs: Any) -> None:
+    async def __OnJoinedMember(self,
+                               client,
+                               message: pyrogram.types.Message,
+                               **kwargs: Any) -> None:
         """
         Handle when a member joined the chat.
 
@@ -151,7 +151,7 @@ class MessageDispatcher:
         # If one of the members is the bot itself, send the welcome message
         for member in message.new_chat_members:
             if member.is_self:
-                MessageSender(client, self.logger).SendMessage(
+                await MessageSender(client, self.logger).SendMessage(
                     message.chat,
                     message.message_thread_id,
                     self.translator.GetSentence("BOT_WELCOME_MSG")
@@ -160,7 +160,7 @@ class MessageDispatcher:
 
         # Check joined members for payment in any case
         if self.config.GetValue(BotConfigTypes.PAYMENT_CHECK_ON_JOIN):
-            JoinedMembersChecker(client,
-                                 self.config,
-                                 self.logger,
-                                 self.translator).CheckNewUsers(message.chat, message.new_chat_members)
+            await JoinedMembersChecker(client,
+                                       self.config,
+                                       self.logger,
+                                       self.translator).CheckNewUsers(message.chat, message.new_chat_members)

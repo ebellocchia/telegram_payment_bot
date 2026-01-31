@@ -46,16 +46,16 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
         super().__init__(config, logger)
         self.google_sheet_rows_getter = GoogleSheetRowsGetter(config, logger)
 
-    def LoadAll(self) -> PaymentsData:
+    async def LoadAll(self) -> PaymentsData:
         """Load all payment data from Google Sheet.
 
         Returns:
             PaymentsData containing all payments
         """
-        return self.__LoadAndCheckAll()[0]
+        return (await self.__LoadAndCheckAll())[0]
 
-    def LoadSingleByUser(self,
-                         user: User) -> Optional[SinglePayment]:
+    async def LoadSingleByUser(self,
+                               user: User) -> Optional[SinglePayment]:
         """Load a single payment by user from Google Sheet.
 
         Args:
@@ -64,17 +64,17 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
         Returns:
             SinglePayment for the user, or None if not found
         """
-        return self.LoadAll().GetByUser(user)
+        return (await self.LoadAll()).GetByUser(user)
 
-    def CheckForErrors(self) -> PaymentsDataErrors:
+    async def CheckForErrors(self) -> PaymentsDataErrors:
         """Check for errors in the Google Sheet.
 
         Returns:
             PaymentsDataErrors containing any errors found
         """
-        return self.__LoadAndCheckAll()[1]
+        return (await self.__LoadAndCheckAll())[1]
 
-    def __LoadAndCheckAll(self) -> Tuple[PaymentsData, PaymentsDataErrors]:
+    async def __LoadAndCheckAll(self) -> Tuple[PaymentsData, PaymentsDataErrors]:
         """Load and check all payments from Google Sheet.
 
         Returns:
@@ -84,7 +84,7 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
             Exception: If an error occurs while loading the sheet
         """
         try:
-            payments_data, payments_data_err = self.__LoadWorkSheet()
+            payments_data, payments_data_err = await self.__LoadWorkSheet()
             self.logger.GetLogger().info(
                 f"Google Sheet successfully loaded, number of rows: {payments_data.Count()}"
             )
@@ -94,7 +94,7 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
             self.logger.GetLogger().exception("An error occurred while loading Google Sheet")
             raise
 
-    def __LoadWorkSheet(self) -> Tuple[PaymentsData, PaymentsDataErrors]:
+    async def __LoadWorkSheet(self) -> Tuple[PaymentsData, PaymentsDataErrors]:
         """Load payment data from a Google Sheet.
 
         Returns:
@@ -107,7 +107,7 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
         user_col_idx = self._ColumnToIndex(self.config.GetValue(BotConfigTypes.PAYMENT_USER_COL))
         expiration_col_idx = self._ColumnToIndex(self.config.GetValue(BotConfigTypes.PAYMENT_EXPIRATION_COL))
 
-        rows = self.google_sheet_rows_getter.GetRows(
+        rows = await self.google_sheet_rows_getter.GetRows(
             self.config.GetValue(BotConfigTypes.PAYMENT_WORKSHEET_IDX)
         )
 

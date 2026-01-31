@@ -65,9 +65,9 @@ class CommandBase(ABC):
         self.translator = translator
         self.message_sender = MessageSender(client, logger)
 
-    def Execute(self,
-                message: pyrogram.types.Message,
-                **kwargs: Any) -> None:
+    async def Execute(self,
+                      message: pyrogram.types.Message,
+                      **kwargs: Any) -> None:
         """
         Execute the command.
 
@@ -86,7 +86,7 @@ class CommandBase(ABC):
 
         if not self._IsUserAuthorized():
             if self._IsPrivateChat():
-                self._SendMessage(self.translator.GetSentence("AUTH_ONLY_ERR_MSG"))
+                await self._SendMessage(self.translator.GetSentence("AUTH_ONLY_ERR_MSG"))
 
             self.logger.GetLogger().warning(
                 f"User {UserHelper.GetNameOrId(self.cmd_data.User())} tried to execute the command but it's not authorized"
@@ -94,13 +94,13 @@ class CommandBase(ABC):
             return
 
         try:
-            self._ExecuteCommand(**kwargs)
+            await self._ExecuteCommand(**kwargs)
         except RPCError:
-            self._SendMessage(self.translator.GetSentence("GENERIC_ERR_MSG"))
+            await self._SendMessage(self.translator.GetSentence("GENERIC_ERR_MSG"))
             self.logger.GetLogger().exception(f"An error occurred while executing command {self.cmd_data.Name()}")
 
-    def _SendMessage(self,
-                     msg: str) -> None:
+    async def _SendMessage(self,
+                           msg: str) -> None:
         """
         Send a message.
 
@@ -110,21 +110,21 @@ class CommandBase(ABC):
         if self._IsQuietMode():
             cmd_user = self.cmd_data.User()
             if not self._IsChannel() and cmd_user is not None:
-                self.message_sender.SendMessage(cmd_user, self.message.message_thread_id, msg)
+                await self.message_sender.SendMessage(cmd_user, self.message.message_thread_id, msg)
             else:
-                self._SendMessageToAuthUsers(msg)
+                await self._SendMessageToAuthUsers(msg)
         else:
-            self.message_sender.SendMessage(self.cmd_data.Chat(), self.message.message_thread_id, msg)
+            await self.message_sender.SendMessage(self.cmd_data.Chat(), self.message.message_thread_id, msg)
 
-    def _SendMessageToAuthUsers(self,
-                                msg: str) -> None:
+    async def _SendMessageToAuthUsers(self,
+                                      msg: str) -> None:
         """
         Send a message to authorized users.
 
         Args:
             msg: Message to send
         """
-        AuthorizedUsersMessageSender(self.client, self.config, self.logger).SendMessage(self.cmd_data.Chat(), msg)
+        await AuthorizedUsersMessageSender(self.client, self.config, self.logger).SendMessage(self.cmd_data.Chat(), msg)
 
     def _IsChannel(self) -> bool:
         """
@@ -177,13 +177,15 @@ class CommandBase(ABC):
         """
         return self.cmd_data.Params().IsLast("q") or self.cmd_data.Params().IsLast("quiet")
 
-    def _NewInviteLink(self) -> None:
+    async def _NewInviteLink(self) -> None:
         """Generate and send a new invite link."""
-        invite_link = self.client.export_chat_invite_link(self.cmd_data.Chat().id)
-        self._SendMessage(self.translator.GetSentence("INVITE_LINK_ALL_CMD"))
-        self._SendMessageToAuthUsers(
+        invite_link = await self.client.export_chat_invite_link(self.cmd_data.Chat().id)
+        await self._SendMessage(self.translator.GetSentence("INVITE_LINK_ALL_CMD"))
+        await self._SendMessageToAuthUsers(
             self.translator.GetSentence(
-                "INVITE_LINK_AUTH_CMD", chat_title=ChatHelper.GetTitle(self.cmd_data.Chat()), invite_link=invite_link
+                "INVITE_LINK_AUTH_CMD",
+                chat_title=ChatHelper.GetTitle(self.cmd_data.Chat()),
+                invite_link=invite_link
             )
         )
 
@@ -194,8 +196,8 @@ class CommandBase(ABC):
         self.logger.GetLogger().debug(f"Received message: {self.message}")
 
     @abstractmethod
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the command implementation.
 

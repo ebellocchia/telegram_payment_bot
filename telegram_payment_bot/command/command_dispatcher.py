@@ -138,11 +138,11 @@ class CommandDispatcher:
         self.logger = logger
         self.translator = translator
 
-    def Dispatch(self,
-                 client: pyrogram.Client,
-                 message: pyrogram.types.Message,
-                 cmd_type: CommandTypes,
-                 **kwargs: Any) -> None:
+    async def Dispatch(self,
+                       client: pyrogram.Client,
+                       message: pyrogram.types.Message,
+                       cmd_type: CommandTypes,
+                       **kwargs: Any) -> None:
         """
         Dispatch a command.
 
@@ -162,4 +162,4 @@ class CommandDispatcher:
 
         if cmd_type in CommandDispatcherConst.CMD_TYPE_TO_CLASS:
             cmd_class = CommandDispatcherConst.CMD_TYPE_TO_CLASS[cmd_type](client, self.config, self.logger, self.translator)
-            cmd_class.Execute(message, **kwargs)
+            await cmd_class.Execute(message, **kwargs)

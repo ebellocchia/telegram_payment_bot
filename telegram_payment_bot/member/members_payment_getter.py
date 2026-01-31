@@ -60,15 +60,13 @@ class MembersPaymentGetter:
         self.payments_cache = None
         self.single_payment_cache = None
 
-        self.ReloadPayment()
-
     def ReloadPayment(self):
         """Reload payment data by clearing the cache."""
         self.payments_cache = None
         self.single_payment_cache = None
 
-    def GetAllMembersWithOkPayment(self,
-                                   chat: pyrogram.types.Chat) -> ChatMembersList:
+    async def GetAllMembersWithOkPayment(self,
+                                         chat: pyrogram.types.Chat) -> ChatMembersList:
         """Get all members with valid (non-expired) payments.
 
         Args:
@@ -77,9 +75,9 @@ class MembersPaymentGetter:
         Returns:
             List of chat members with valid payments
         """
-        payments = self.__GetAllPayments()
+        payments = await self.__GetAllPayments()
 
-        return ChatMembersGetter(self.client).FilterMembers(
+        return await ChatMembersGetter(self.client).FilterMembers(
             chat,
             lambda member: (
                 MemberHelper.IsValidMember(member) and
@@ -89,8 +87,8 @@ class MembersPaymentGetter:
             )
         )
 
-    def GetAllMembersWithExpiredPayment(self,
-                                        chat: pyrogram.types.Chat) -> ChatMembersList:
+    async def GetAllMembersWithExpiredPayment(self,
+                                              chat: pyrogram.types.Chat) -> ChatMembersList:
         """Get all members with expired payments or no username.
 
         Args:
@@ -99,12 +97,12 @@ class MembersPaymentGetter:
         Returns:
             List of chat members with expired payments
         """
-        payments = self.__GetAllPayments()
+        payments = await self.__GetAllPayments()
 
         if payments.Empty():
             return ChatMembersList()
 
-        return ChatMembersGetter(self.client).FilterMembers(
+        return await ChatMembersGetter(self.client).FilterMembers(
             chat,
             lambda member: (
                 MemberHelper.IsValidMember(member) and
@@ -114,9 +112,9 @@ class MembersPaymentGetter:
             )
         )
 
-    def GetAllMembersWithExpiringPayment(self,
-                                         chat: pyrogram.types.Chat,
-                                         days: int) -> ChatMembersList:
+    async def GetAllMembersWithExpiringPayment(self,
+                                               chat: pyrogram.types.Chat,
+                                               days: int) -> ChatMembersList:
         """Get all members with payments expiring within specified days.
 
         Args:
@@ -126,12 +124,12 @@ class MembersPaymentGetter:
         Returns:
             List of chat members with expiring payments
         """
-        payments = self.__GetAllPayments()
+        payments = await self.__GetAllPayments()
 
         if payments.Empty():
             return ChatMembersList()
 
-        return ChatMembersGetter(self.client).FilterMembers(
+        return await ChatMembersGetter(self.client).FilterMembers(
             chat,
             lambda member: (
                 MemberHelper.IsValidMember(member) and
@@ -141,16 +139,16 @@ class MembersPaymentGetter:
             )
         )
 
-    def GetAllEmailsWithExpiredPayment(self) -> PaymentsData:
+    async def GetAllEmailsWithExpiredPayment(self) -> PaymentsData:
         """Get all emails with expired payments.
 
         Returns:
             PaymentsData containing expired payments
         """
-        return self.__GetAllPayments().FilterExpired()
+        return (await self.__GetAllPayments()).FilterExpired()
 
-    def GetAllEmailsWithExpiringPayment(self,
-                                        days: int) -> PaymentsData:
+    async def GetAllEmailsWithExpiringPayment(self,
+                                              days: int) -> PaymentsData:
         """Get all emails with payments expiring within specified days.
 
         Args:
@@ -159,11 +157,11 @@ class MembersPaymentGetter:
         Returns:
             PaymentsData containing expiring payments
         """
-        return self.__GetAllPayments().FilterExpiringInDays(days)
+        return (await self.__GetAllPayments()).FilterExpiringInDays(days)
 
-    def IsSingleMemberExpired(self,
-                              chat: pyrogram.types.Chat,
-                              user: pyrogram.types.User) -> bool:
+    async def IsSingleMemberExpired(self,
+                                    chat: pyrogram.types.Chat,
+                                    user: pyrogram.types.User) -> bool:
         """Check if a single member's payment is expired.
 
         Args:
@@ -173,26 +171,26 @@ class MembersPaymentGetter:
         Returns:
             True if the payment is expired, False otherwise
         """
-        chat_members = ChatMembersGetter(self.client).GetSingle(chat, user)
+        chat_members = await ChatMembersGetter(self.client).GetSingle(chat, user)
         if chat_members is None:
             return False
 
-        single_payment = self.__GetSinglePayment(user)
+        single_payment = await self.__GetSinglePayment(user)
         return single_payment.IsExpired() if single_payment is not None else True
 
-    def __GetAllPayments(self) -> PaymentsData:
+    async def __GetAllPayments(self) -> PaymentsData:
         """Get all payments, loading them if not cached.
 
         Returns:
             PaymentsData containing all payments
         """
         if self.payments_cache is None:
-            self.payments_cache = self.payments_loader.LoadAll()
+            self.payments_cache = await self.payments_loader.LoadAll()
 
         return self.payments_cache
 
-    def __GetSinglePayment(self,
-                           user: pyrogram.types.User) -> Optional[SinglePayment]:
+    async def __GetSinglePayment(self,
+                                 user: pyrogram.types.User) -> Optional[SinglePayment]:
         """Get a single user's payment, loading it if not cached.
 
         Args:
@@ -203,7 +201,7 @@ class MembersPaymentGetter:
         """
         if self.single_payment_cache is None or self.single_payment_cache["user_id"] != user.id:
             self.single_payment_cache = {
-                "payment": self.payments_loader.LoadSingleByUser(User.FromUserObject(self.config, user)),
+                "payment": await self.payments_loader.LoadSingleByUser(User.FromUserObject(self.config, user)),
                 "user_id": user.id,
             }
 

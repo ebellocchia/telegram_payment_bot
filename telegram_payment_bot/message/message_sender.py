@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import time
+import asyncio
 from typing import Any, List, Union
 
 import pyrogram
@@ -52,11 +52,11 @@ class MessageSender:
         self.client = client
         self.logger = logger
 
-    def SendMessage(self,
-                    receiver: Union[pyrogram.types.Chat, pyrogram.types.User],
-                    topic_id: int,
-                    msg: str,
-                    **kwargs: Any) -> List[pyrogram.types.Message]:
+    async def SendMessage(self,
+                          receiver: Union[pyrogram.types.Chat, pyrogram.types.User],
+                          topic_id: int,
+                          msg: str,
+                          **kwargs: Any) -> List[pyrogram.types.Message]:
         """
         Send a message to a receiver, splitting if necessary.
 
@@ -72,13 +72,13 @@ class MessageSender:
         # Log
         self.logger.GetLogger().debug(f"Sending message (length: {len(msg)}):\n{msg}")
         # Split and send message
-        return self.__SendSplitMessage(receiver, topic_id, self.__SplitMessage(msg), **kwargs)
+        return await self.__SendSplitMessage(receiver, topic_id, self.__SplitMessage(msg), **kwargs)
 
-    def __SendSplitMessage(self,
-                           receiver: Union[pyrogram.types.Chat, pyrogram.types.User],
-                           topic_id: int,
-                           split_msg: List[str],
-                           **kwargs: Any) -> List[pyrogram.types.Message]:
+    async def __SendSplitMessage(self,
+                                 receiver: Union[pyrogram.types.Chat, pyrogram.types.User],
+                                 topic_id: int,
+                                 split_msg: List[str],
+                                 **kwargs: Any) -> List[pyrogram.types.Message]:
         """
         Send a message that has been split into multiple parts.
 
@@ -95,10 +95,11 @@ class MessageSender:
 
         # Send message
         for msg_part in split_msg:
-            sent_msgs.append(self.client.send_message(receiver.id, msg_part, message_thread_id=topic_id, **kwargs))
-            time.sleep(MessageSenderConst.SEND_MSG_SLEEP_TIME_SEC)
+            sent_msg = await self.client.send_message(receiver.id, msg_part, message_thread_id=topic_id, **kwargs)
+            sent_msgs.append(sent_msg)
+            await asyncio.sleep(MessageSenderConst.SEND_MSG_SLEEP_TIME_SEC)
 
-        return sent_msgs    # type: ignore
+        return sent_msgs
 
     def __SplitMessage(self,
                        msg: str) -> List[str]:

@@ -43,8 +43,8 @@ class MembersUsernameGetter:
         self.client = client
         self.config = config
 
-    def GetAllWithUsername(self,
-                           chat: pyrogram.types.Chat) -> ChatMembersList:
+    async def GetAllWithUsername(self,
+                                 chat: pyrogram.types.Chat) -> ChatMembersList:
         """Get all valid members that have a username.
 
         Args:
@@ -53,7 +53,7 @@ class MembersUsernameGetter:
         Returns:
             List of chat members with usernames
         """
-        return ChatMembersGetter(self.client).FilterMembers(
+        return await ChatMembersGetter(self.client).FilterMembers(
             chat,
             lambda member: (
                 MemberHelper.IsValidMember(member) and
@@ -62,8 +62,8 @@ class MembersUsernameGetter:
             )
         )
 
-    def GetAllWithNoUsername(self,
-                             chat: pyrogram.types.Chat) -> ChatMembersList:
+    async def GetAllWithNoUsername(self,
+                                   chat: pyrogram.types.Chat) -> ChatMembersList:
         """Get all valid members that do not have a username.
 
         Args:
@@ -72,7 +72,7 @@ class MembersUsernameGetter:
         Returns:
             List of chat members without usernames
         """
-        return ChatMembersGetter(self.client).FilterMembers(
+        return await ChatMembersGetter(self.client).FilterMembers(
             chat,
             lambda member: (
                 MemberHelper.IsValidMember(member) and

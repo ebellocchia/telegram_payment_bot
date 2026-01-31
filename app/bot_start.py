@@ -19,6 +19,7 @@
 # THE SOFTWARE.
 
 import argparse
+import asyncio
 
 from telegram_payment_bot import PaymentBot, __version__
 
@@ -68,14 +69,16 @@ def print_header() -> None:
     print("")
 
 
-if __name__ == "__main__":
-    # Print header
+async def main():
+    """Main async entry point."""
     print_header()
 
-    # Get arguments
     args_parser = ArgumentsParser()
     args = args_parser.Parse()
 
-    # Create and run bot
     bot = PaymentBot(args.config)
-    bot.Run()
+    await bot.Run()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

@@ -2,6 +2,8 @@ pygsheets
 xlrd
 openpyxl
 pyrotgfork
-tgcrypto
+pytgcrypto
+aiosmtplib
+aiofiles
 apscheduler
 defusedxml

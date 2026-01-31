@@ -43,7 +43,7 @@ from telegram_payment_bot.payment.payments_emailer import PaymentsEmailer
 from telegram_payment_bot.payment.payments_loader_factory import PaymentsLoaderFactory
 
 
-def GroupChatOnly(exec_cmd_fct: Callable[..., None]) -> Callable[..., None]:
+def GroupChatOnly(exec_cmd_fct: Callable[..., Any]) -> Callable[..., Any]:
     """
     Decorator for group-only commands.
 
@@ -54,12 +54,12 @@ def GroupChatOnly(exec_cmd_fct: Callable[..., None]) -> Callable[..., None]:
         Decorated function that checks for group chat
     """
 
-    def decorated(self,
-                  **kwargs: Any):
+    async def decorated(self,
+                        **kwargs: Any):
         if self._IsPrivateChat():
-            self._SendMessage(self.translator.GetSentence("GROUP_ONLY_ERR_MSG"))
+            await self._SendMessage(self.translator.GetSentence("GROUP_ONLY_ERR_MSG"))
         else:
-            exec_cmd_fct(self, **kwargs)
+            await exec_cmd_fct(self, **kwargs)
 
     return decorated
 
@@ -67,36 +67,36 @@ def GroupChatOnly(exec_cmd_fct: Callable[..., None]) -> Callable[..., None]:
 class HelpCmd(CommandBase):
     """Command for getting help."""
 
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the help command.
 
         Args:
             **kwargs: Additional keyword arguments
         """
-        self._SendMessage(self.translator.GetSentence("HELP_CMD", name=UserHelper.GetName(self.cmd_data.User())))
+        await self._SendMessage(self.translator.GetSentence("HELP_CMD", name=UserHelper.GetName(self.cmd_data.User())))
 
 
 class AliveCmd(CommandBase):
     """Command for checking if bot is alive."""
 
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the alive command.
 
         Args:
             **kwargs: Additional keyword arguments
         """
-        self._SendMessage(self.translator.GetSentence("ALIVE_CMD"))
+        await self._SendMessage(self.translator.GetSentence("ALIVE_CMD"))
 
 
 class SetTestModeCmd(CommandBase):
     """Command for setting test mode."""
 
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the set test mode command.
 
@@ -106,21 +106,21 @@ class SetTestModeCmd(CommandBase):
         try:
             flag = self.cmd_data.Params().GetAsBool(0)
         except CommandParameterError:
-            self._SendMessage(self.translator.GetSentence("PARAM_ERR_MSG"))
+            await self._SendMessage(self.translator.GetSentence("PARAM_ERR_MSG"))
         else:
             self.config.SetValue(BotConfigTypes.APP_TEST_MODE, flag)
 
             if self.config.GetValue(BotConfigTypes.APP_TEST_MODE):
-                self._SendMessage(self.translator.GetSentence("SET_TEST_MODE_EN_CMD"))
+                await self._SendMessage(self.translator.GetSentence("SET_TEST_MODE_EN_CMD"))
             else:
-                self._SendMessage(self.translator.GetSentence("SET_TEST_MODE_DIS_CMD"))
+                await self._SendMessage(self.translator.GetSentence("SET_TEST_MODE_DIS_CMD"))
 
 
 class IsTestModeCmd(CommandBase):
     """Command for checking if test mode is enabled."""
 
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the is test mode command.
 
@@ -128,38 +128,38 @@ class IsTestModeCmd(CommandBase):
             **kwargs: Additional keyword arguments
         """
         if self.config.GetValue(BotConfigTypes.APP_TEST_MODE):
-            self._SendMessage(self.translator.GetSentence("IS_TEST_MODE_EN_CMD"))
+            await self._SendMessage(self.translator.GetSentence("IS_TEST_MODE_EN_CMD"))
         else:
-            self._SendMessage(self.translator.GetSentence("IS_TEST_MODE_DIS_CMD"))
+            await self._SendMessage(self.translator.GetSentence("IS_TEST_MODE_DIS_CMD"))
 
 
 class AuthUsersCmd(CommandBase):
     """Command for getting authorized users."""
 
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the authorized users command.
 
         Args:
             **kwargs: Additional keyword arguments
         """
-        self._SendMessage(self.translator.GetSentence("AUTH_USERS_CMD", auth_users_list=str(AuthorizedUsersList(self.config))))
+        await self._SendMessage(self.translator.GetSentence("AUTH_USERS_CMD", auth_users_list=str(AuthorizedUsersList(self.config))))
 
 
 class ChatInfoCmd(CommandBase):
     """Command for getting chat information."""
 
     @GroupChatOnly
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the chat info command.
 
         Args:
             **kwargs: Additional keyword arguments
         """
-        self._SendMessage(
+        await self._SendMessage(
             self.translator.GetSentence(
                 "CHAT_INFO_CMD",
                 chat_title=ChatHelper.GetTitle(self.cmd_data.Chat()),
@@ -173,16 +173,16 @@ class UsersListCmd(CommandBase):
     """Command for getting the users list."""
 
     @GroupChatOnly
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the users list command.
 
         Args:
             **kwargs: Additional keyword arguments
         """
-        chat_members = ChatMembersGetter(self.client).GetAll(self.cmd_data.Chat())
-        self._SendMessage(
+        chat_members = await ChatMembersGetter(self.client).GetAll(self.cmd_data.Chat())
+        await self._SendMessage(
             self.translator.GetSentence(
                 "USERS_LIST_CMD",
                 chat_title=ChatHelper.GetTitle(self.cmd_data.Chat()),
@@ -196,44 +196,44 @@ class InviteLinkCmd(CommandBase):
     """Command for generating a new invite link."""
 
     @GroupChatOnly
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the invite link command.
 
         Args:
             **kwargs: Additional keyword arguments
         """
-        self._NewInviteLink()
+        await self._NewInviteLink()
 
 
 class VersionCmd(CommandBase):
     """Command for showing bot version."""
 
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the version command.
 
         Args:
             **kwargs: Additional keyword arguments
         """
-        self._SendMessage(self.translator.GetSentence("VERSION_CMD", version=__version__))
+        await self._SendMessage(self.translator.GetSentence("VERSION_CMD", version=__version__))
 
 
 class CheckNoUsernameCmd(CommandBase):
     """Command for checking users with no username."""
 
     @GroupChatOnly
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the check no username command.
 
         Args:
             **kwargs: Additional keyword arguments
         """
-        chat_members = MembersUsernameGetter(self.client, self.config).GetAllWithNoUsername(self.cmd_data.Chat())
+        chat_members = await MembersUsernameGetter(self.client, self.config).GetAllWithNoUsername(self.cmd_data.Chat())
 
         if chat_members.Any():
             left_hours = self.cmd_data.Params().GetAsInt(0, 0)
@@ -259,7 +259,7 @@ class CheckNoUsernameCmd(CommandBase):
         else:
             msg = self.translator.GetSentence("CHECK_NO_USERNAME_ALL_OK_CMD", chat_title=ChatHelper.GetTitle(self.cmd_data.Chat()))
 
-        self._SendMessage(msg)
+        await self._SendMessage(msg)
 
     def __HoursToStr(self,
                      hours: int) -> str:
@@ -285,22 +285,22 @@ class RemoveNoUsernameCmd(CommandBase):
     """Command for removing users with no username."""
 
     @GroupChatOnly
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the remove no username command.
 
         Args:
             **kwargs: Additional keyword arguments
         """
-        self._SendMessage(
+        await self._SendMessage(
             self.translator.GetSentence("REMOVE_NO_USERNAME_NOTICE_CMD", chat_title=ChatHelper.GetTitle(self.cmd_data.Chat()))
         )
 
         finished = False
         kicked_members = ChatMembersList()
         while not finished:
-            curr_kicked_members = MembersKicker(self.client, self.config, self.logger).KickAllWithNoUsername(self.cmd_data.Chat())
+            curr_kicked_members = await MembersKicker(self.client, self.config, self.logger).KickAllWithNoUsername(self.cmd_data.Chat())
             if curr_kicked_members.Any():
                 kicked_members.AddMultiple(curr_kicked_members)
                 finished = self.config.GetValue(BotConfigTypes.APP_TEST_MODE)
@@ -311,16 +311,16 @@ class RemoveNoUsernameCmd(CommandBase):
         if kicked_members.Any():
             msg += self.translator.GetSentence("REMOVE_NO_USERNAME_LIST_CMD", members_list=str(kicked_members))
 
-        self._SendMessage(msg)
+        await self._SendMessage(msg)
         if kicked_members.Any():
-            self._NewInviteLink()
+            await self._NewInviteLink()
 
 
 class SetCheckPaymentsOnJoinCmd(CommandBase):
     """Command for setting payment check on joined members."""
 
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the set check payments on join command.
 
@@ -330,21 +330,21 @@ class SetCheckPaymentsOnJoinCmd(CommandBase):
         try:
             flag = self.cmd_data.Params().GetAsBool(0)
         except CommandParameterError:
-            self._SendMessage(self.translator.GetSentence("PARAM_ERR_MSG"))
+            await self._SendMessage(self.translator.GetSentence("PARAM_ERR_MSG"))
         else:
             self.config.SetValue(BotConfigTypes.PAYMENT_CHECK_ON_JOIN, flag)
 
             if self.config.GetValue(BotConfigTypes.PAYMENT_CHECK_ON_JOIN):
-                self._SendMessage(self.translator.GetSentence("SET_CHECK_PAYMENT_ON_JOIN_EN_CMD"))
+                await self._SendMessage(self.translator.GetSentence("SET_CHECK_PAYMENT_ON_JOIN_EN_CMD"))
             else:
-                self._SendMessage(self.translator.GetSentence("SET_CHECK_PAYMENT_ON_JOIN_DIS_CMD"))
+                await self._SendMessage(self.translator.GetSentence("SET_CHECK_PAYMENT_ON_JOIN_DIS_CMD"))
 
 
 class IsCheckPaymentsOnJoinCmd(CommandBase):
     """Command for checking if payment check on joined members is enabled."""
 
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the is check payments on join command.
 
@@ -352,26 +352,26 @@ class IsCheckPaymentsOnJoinCmd(CommandBase):
             **kwargs: Additional keyword arguments
         """
         if self.config.GetValue(BotConfigTypes.PAYMENT_CHECK_ON_JOIN):
-            self._SendMessage(self.translator.GetSentence("IS_CHECK_PAYMENT_ON_JOIN_EN_CMD"))
+            await self._SendMessage(self.translator.GetSentence("IS_CHECK_PAYMENT_ON_JOIN_EN_CMD"))
         else:
-            self._SendMessage(self.translator.GetSentence("IS_CHECK_PAYMENT_ON_JOIN_DIS_CMD"))
+            await self._SendMessage(self.translator.GetSentence("IS_CHECK_PAYMENT_ON_JOIN_DIS_CMD"))
 
 
 class CheckPaymentsDataCmd(CommandBase):
     """Command for checking payments data for errors."""
 
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the check payments data command.
 
         Args:
             **kwargs: Additional keyword arguments
         """
-        self._SendMessage(self.translator.GetSentence("CHECK_PAYMENTS_DATA_NOTICE_CMD"))
+        await self._SendMessage(self.translator.GetSentence("CHECK_PAYMENTS_DATA_NOTICE_CMD"))
 
         payments_loader = PaymentsLoaderFactory(self.config, self.logger).CreateLoader()
-        payments_data_err = payments_loader.CheckForErrors()
+        payments_data_err = await payments_loader.CheckForErrors()
 
         if payments_data_err.Any():
             msg = self.translator.GetSentence("CHECK_PAYMENTS_DATA_COMPLETED_CMD", errors_count=payments_data_err.Count())
@@ -389,14 +389,14 @@ class CheckPaymentsDataCmd(CommandBase):
         else:
             msg = self.translator.GetSentence("CHECK_PAYMENTS_DATA_ALL_OK_CMD")
 
-        self._SendMessage(msg)
+        await self._SendMessage(msg)
 
 
 class EmailNoPaymentCmd(CommandBase):
     """Command for sending email to users with no payment."""
 
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the email no payment command.
 
@@ -408,12 +408,17 @@ class EmailNoPaymentCmd(CommandBase):
         else:
             days_left = self.cmd_data.Params().GetAsInt(0, 0)
 
-            self._SendMessage(
-                self.translator.GetSentence("EMAIL_NO_PAYMENT_NOTICE_CMD", chat_title=ChatHelper.GetTitle(self.cmd_data.Chat()))
+            await self._SendMessage(
+                self.translator.GetSentence("EMAIL_NO_PAYMENT_NOTICE_CMD",
+                                            chat_title=ChatHelper.GetTitle(self.cmd_data.Chat()))
             )
 
             try:
-                expired_payments = PaymentsEmailer(self.client, self.config, self.logger).EmailAllWithExpiringPayment(days_left)
+                expired_payments = await PaymentsEmailer(
+                    self.client,
+                    self.config,
+                    self.logger
+                ).EmailAllWithExpiringPayment(days_left)
 
                 if expired_payments.Any():
                     days_left_str = (
@@ -434,15 +439,15 @@ class EmailNoPaymentCmd(CommandBase):
                 self.logger.GetLogger().exception("Error while sending email to no payment members")
                 msg = self.translator.GetSentence("EMAIL_NO_PAYMENT_ERR_CMD")
 
-        self._SendMessage(msg)
+        await self._SendMessage(msg)
 
 
 class CheckNoPaymentCmd(CommandBase):
     """Command for checking users with no payment."""
 
     @GroupChatOnly
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the check no payment command.
 
@@ -452,9 +457,13 @@ class CheckNoPaymentCmd(CommandBase):
         days_left = self.cmd_data.Params().GetAsInt(0, 0)
         last_day = self.cmd_data.Params().GetAsInt(1, 0)
 
-        self._SendMessage(self.translator.GetSentence("CHECK_NO_PAYMENT_NOTICE_CMD", chat_title=ChatHelper.GetTitle(self.cmd_data.Chat())))
+        await self._SendMessage(
+            self.translator.GetSentence(
+                "CHECK_NO_PAYMENT_NOTICE_CMD", chat_title=ChatHelper.GetTitle(self.cmd_data.Chat())
+            )
+        )
 
-        expired_members = MembersPaymentGetter(self.client, self.config, self.logger).GetAllMembersWithExpiringPayment(
+        expired_members = await MembersPaymentGetter(self.client, self.config, self.logger).GetAllMembersWithExpiringPayment(
             self.cmd_data.Chat(), days_left
         )
 
@@ -495,27 +504,31 @@ class CheckNoPaymentCmd(CommandBase):
         else:
             msg = self.translator.GetSentence("CHECK_NO_PAYMENT_ALL_OK_CMD", chat_title=ChatHelper.GetTitle(self.cmd_data.Chat()))
 
-        self._SendMessage(msg)
+        await self._SendMessage(msg)
 
 
 class RemoveNoPaymentCmd(CommandBase):
     """Command for removing users with no payment."""
 
     @GroupChatOnly
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the remove no payment command.
 
         Args:
             **kwargs: Additional keyword arguments
         """
-        self._SendMessage(self.translator.GetSentence("REMOVE_NO_PAYMENT_NOTICE_CMD", chat_title=ChatHelper.GetTitle(self.cmd_data.Chat())))
+        await self._SendMessage(
+            self.translator.GetSentence(
+                "REMOVE_NO_PAYMENT_NOTICE_CMD", chat_title=ChatHelper.GetTitle(self.cmd_data.Chat())
+            )
+        )
 
         finished = False
         kicked_members = ChatMembersList()
         while not finished:
-            curr_kicked_members = MembersKicker(self.client, self.config, self.logger).KickAllWithExpiredPayment(self.cmd_data.Chat())
+            curr_kicked_members = await MembersKicker(self.client, self.config, self.logger).KickAllWithExpiredPayment(self.cmd_data.Chat())
             if curr_kicked_members.Any():
                 kicked_members.AddMultiple(curr_kicked_members)
                 finished = self.config.GetValue(BotConfigTypes.APP_TEST_MODE)
@@ -526,16 +539,16 @@ class RemoveNoPaymentCmd(CommandBase):
         if kicked_members.Any():
             msg += self.translator.GetSentence("REMOVE_NO_PAYMENT_LIST_CMD", members_list=str(kicked_members))
 
-        self._SendMessage(msg)
+        await self._SendMessage(msg)
         if kicked_members.Any():
-            self._NewInviteLink()
+            await self._NewInviteLink()
 
 
 class PaymentTaskStartCmd(CommandBase):
     """Command for starting payment task."""
 
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the payment task start command.
 
@@ -545,22 +558,22 @@ class PaymentTaskStartCmd(CommandBase):
         try:
             period_hours = self.cmd_data.Params().GetAsInt(0)
         except CommandParameterError:
-            self._SendMessage(self.translator.GetSentence("PARAM_ERR_MSG"))
+            await self._SendMessage(self.translator.GetSentence("PARAM_ERR_MSG"))
         else:
             try:
                 kwargs["payments_check_scheduler"].Start(period_hours)
-                self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_START_OK_CMD", period=period_hours))
+                await self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_START_OK_CMD", period=period_hours))
             except PaymentsCheckJobAlreadyRunningError:
-                self._SendMessage(self.translator.GetSentence("TASK_EXISTENT_ERR_MSG"))
+                await self._SendMessage(self.translator.GetSentence("TASK_EXISTENT_ERR_MSG"))
             except PaymentsCheckJobInvalidPeriodError:
-                self._SendMessage(self.translator.GetSentence("TASK_PERIOD_ERR_MSG"))
+                await self._SendMessage(self.translator.GetSentence("TASK_PERIOD_ERR_MSG"))
 
 
 class PaymentTaskStopCmd(CommandBase):
     """Command for stopping payment task."""
 
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the payment task stop command.
 
@@ -569,17 +582,17 @@ class PaymentTaskStopCmd(CommandBase):
         """
         try:
             kwargs["payments_check_scheduler"].Stop()
-            self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_STOP_OK_CMD"))
+            await self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_STOP_OK_CMD"))
         except PaymentsCheckJobNotRunningError:
-            self._SendMessage(self.translator.GetSentence("TASK_NOT_EXISTENT_ERR_MSG"))
+            await self._SendMessage(self.translator.GetSentence("TASK_NOT_EXISTENT_ERR_MSG"))
 
 
 class PaymentTaskAddChatCmd(CommandBase):
     """Command for adding current chat to payment task."""
 
     @GroupChatOnly
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the payment task add chat command.
 
@@ -588,17 +601,17 @@ class PaymentTaskAddChatCmd(CommandBase):
         """
         try:
             kwargs["payments_check_scheduler"].AddChat(self.cmd_data.Chat())
-            self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_ADD_CHAT_OK_CMD"))
+            await self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_ADD_CHAT_OK_CMD"))
         except PaymentsCheckJobChatAlreadyPresentError:
-            self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_ADD_CHAT_ERR_CMD"))
+            await self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_ADD_CHAT_ERR_CMD"))
 
 
 class PaymentTaskRemoveChatCmd(CommandBase):
     """Command for removing current chat from payment task."""
 
     @GroupChatOnly
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the payment task remove chat command.
 
@@ -607,16 +620,16 @@ class PaymentTaskRemoveChatCmd(CommandBase):
         """
         try:
             kwargs["payments_check_scheduler"].RemoveChat(self.cmd_data.Chat())
-            self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_REMOVE_CHAT_OK_CMD"))
+            await self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_REMOVE_CHAT_OK_CMD"))
         except PaymentsCheckJobChatNotPresentError:
-            self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_REMOVE_CHAT_ERR_CMD"))
+            await self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_REMOVE_CHAT_ERR_CMD"))
 
 
 class PaymentTaskRemoveAllChatsCmd(CommandBase):
     """Command for removing all chats from payment task."""
 
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the payment task remove all chats command.
 
@@ -624,14 +637,14 @@ class PaymentTaskRemoveAllChatsCmd(CommandBase):
             **kwargs: Additional keyword arguments
         """
         kwargs["payments_check_scheduler"].RemoveAllChats()
-        self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_REMOVE_ALL_CHATS_CMD"))
+        await self._SendMessage(self.translator.GetSentence("PAYMENT_TASK_REMOVE_ALL_CHATS_CMD"))
 
 
 class PaymentTaskInfoCmd(CommandBase):
     """Command for getting payment task information."""
 
-    def _ExecuteCommand(self,
-                        **kwargs: Any) -> None:
+    async def _ExecuteCommand(self,
+                              **kwargs: Any) -> None:
         """
         Execute the payment task info command.
 
@@ -650,4 +663,4 @@ class PaymentTaskInfoCmd(CommandBase):
         if chats.Any():
             msg += self.translator.GetSentence("PAYMENT_TASK_INFO_GROUPS_CMD", chats_count=chats.Count(), chats_list=str(chats))
 
-        self._SendMessage(msg)
+        await self._SendMessage(msg)

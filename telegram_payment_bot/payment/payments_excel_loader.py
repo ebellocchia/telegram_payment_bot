@@ -18,15 +18,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from datetime import datetime
-from typing import Any, Optional, Tuple
+from typing import Optional, Tuple
 
 import openpyxl
 import xlrd
 
 from telegram_payment_bot.bot.bot_config_types import BotConfigTypes
+from telegram_payment_bot.misc.async_helpers import to_thread
 from telegram_payment_bot.misc.user import User
-from telegram_payment_bot.payment.payments_data import PaymentErrorTypes, PaymentsData, PaymentsDataErrors, SinglePayment
+from telegram_payment_bot.payment.payments_data import PaymentsData, PaymentsDataErrors, SinglePayment
 from telegram_payment_bot.payment.payments_loader_base import PaymentsLoaderBase
 
 
@@ -39,16 +39,16 @@ class PaymentsExcelLoaderConst:
 class PaymentsExcelLoader(PaymentsLoaderBase):
     """Loader for payment data from Excel files."""
 
-    def LoadAll(self) -> PaymentsData:
+    async def LoadAll(self) -> PaymentsData:
         """Load all payment data from Excel file.
 
         Returns:
             PaymentsData containing all payments
         """
-        return self.__LoadAndCheckAll()[0]
+        return (await self.__LoadAndCheckAll())[0]
 
-    def LoadSingleByUser(self,
-                         user: User) -> Optional[SinglePayment]:
+    async def LoadSingleByUser(self,
+                               user: User) -> Optional[SinglePayment]:
         """Load a single payment by user from Excel file.
 
         Args:
@@ -57,17 +57,17 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
         Returns:
             SinglePayment for the user, or None if not found
         """
-        return self.LoadAll().GetByUser(user)
+        return (await self.LoadAll()).GetByUser(user)
 
-    def CheckForErrors(self) -> PaymentsDataErrors:
+    async def CheckForErrors(self) -> PaymentsDataErrors:
         """Check for errors in the Excel file.
 
         Returns:
             PaymentsDataErrors containing any errors found
         """
-        return self.__LoadAndCheckAll()[1]
+        return (await self.__LoadAndCheckAll())[1]
 
-    def __LoadAndCheckAll(self) -> Tuple[PaymentsData, PaymentsDataErrors]:
+    async def __LoadAndCheckAll(self) -> Tuple[PaymentsData, PaymentsDataErrors]:
         """Load and check all payments from Excel file.
 
         Returns:
@@ -82,9 +82,9 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
             self.logger.GetLogger().info(f"Loading file '{payment_file}'...")
 
             if payment_file.lower().endswith(".xlsx"):
-                payments_data, payments_data_err = self.__LoadXlsxFile(payment_file)
+                payments_data, payments_data_err = await self.__LoadXlsxFile(payment_file)
             elif payment_file.lower().endswith(".xls"):
-                payments_data, payments_data_err = self.__LoadXlsFile(payment_file)
+                payments_data, payments_data_err = await self.__LoadXlsFile(payment_file)
             else:
                 raise ValueError(f"Invalid payment file '{payment_file}'")
 
@@ -98,8 +98,8 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
             self.logger.GetLogger().exception(f"An error occurred while loading file '{payment_file}'")
             raise
 
-    def __LoadXlsFile(self,
-                      payment_file: str) -> Tuple[PaymentsData, PaymentsDataErrors]:
+    async def __LoadXlsFile(self,
+                            payment_file: str) -> Tuple[PaymentsData, PaymentsDataErrors]:
         """Load payment data from an Excel sheet (xls).
 
         Args:
@@ -108,7 +108,7 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
         Returns:
             Tuple of (PaymentsData, PaymentsDataErrors)
         """
-        wb = xlrd.open_workbook(payment_file)
+        wb = await to_thread(xlrd.open_workbook, payment_file)
         sheet = wb.sheet_by_index(self.config.GetValue(BotConfigTypes.PAYMENT_WORKSHEET_IDX))
 
         payments_data = PaymentsData(self.config)
@@ -129,8 +129,8 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
 
         return payments_data, payments_data_err
 
-    def __LoadXlsxFile(self,
-                       payment_file: str) -> Tuple[PaymentsData, PaymentsDataErrors]:
+    async def __LoadXlsxFile(self,
+                             payment_file: str) -> Tuple[PaymentsData, PaymentsDataErrors]:
         """Load payment data from an Excel sheet (xlsx).
 
         Args:
@@ -139,7 +139,7 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
         Returns:
             Tuple of (PaymentsData, PaymentsDataErrors)
         """
-        wb = openpyxl.load_workbook(payment_file, data_only=True)
+        wb = await to_thread(openpyxl.load_workbook, payment_file, data_only=True)
         sheet = wb.worksheets[self.config.GetValue(BotConfigTypes.PAYMENT_WORKSHEET_IDX)]
 
         payments_data = PaymentsData(self.config)

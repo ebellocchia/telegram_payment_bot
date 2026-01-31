@@ -44,9 +44,9 @@ class BanHelper:
         """
         self.client = client
 
-    def BanUser(self,
-                chat: pyrogram.types.Chat,
-                user: pyrogram.types.User) -> None:
+    async def BanUser(self,
+                      chat: pyrogram.types.Chat,
+                      user: pyrogram.types.User) -> None:
         """
         Ban a user from a chat permanently.
 
@@ -54,13 +54,13 @@ class BanHelper:
             chat: The chat to ban the user from
             user: The user to ban
         """
-        self.client.ban_chat_member(chat.id,
-                                    user.id,
-                                    until_date=datetime.now())
+        await self.client.ban_chat_member(chat.id,
+                                          user.id,
+                                          until_date=datetime.now())
 
-    def KickUser(self,
-                 chat: pyrogram.types.Chat,
-                 user: pyrogram.types.User) -> None:
+    async def KickUser(self,
+                       chat: pyrogram.types.Chat,
+                       user: pyrogram.types.User) -> None:
         """
         Kick a user from a chat temporarily.
 
@@ -68,13 +68,13 @@ class BanHelper:
             chat: The chat to kick the user from
             user: The user to kick
         """
-        self.client.ban_chat_member(chat.id,
-                                    user.id,
-                                    until_date=datetime.now() + timedelta(seconds=BanHelperConst.BAN_TIME_SEC))
+        await self.client.ban_chat_member(chat.id,
+                                          user.id,
+                                          until_date=datetime.now() + timedelta(seconds=BanHelperConst.BAN_TIME_SEC))
 
-    def UnbanUser(self,
-                  chat: pyrogram.types.Chat,
-                  user: pyrogram.types.User) -> None:
+    async def UnbanUser(self,
+                        chat: pyrogram.types.Chat,
+                        user: pyrogram.types.User) -> None:
         """
         Unban a user from a chat.
 
@@ -82,4 +82,4 @@ class BanHelper:
             chat: The chat to unban the user from
             user: The user to unban
         """
-        self.client.unban_chat_member(chat.id, user.id)
+        await self.client.unban_chat_member(chat.id, user.id)

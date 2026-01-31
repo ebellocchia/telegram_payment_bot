@@ -44,8 +44,8 @@ class AuthorizedUsersGetter:
         self.config = config
         self.chat_members_getter = ChatMembersGetter(client)
 
-    def GetUsers(self,
-                 chat: pyrogram.types.Chat) -> ChatMembersList:
+    async def GetUsers(self,
+                       chat: pyrogram.types.Chat) -> ChatMembersList:
         """
         Get all authorized users from the specified chat.
 
@@ -55,7 +55,7 @@ class AuthorizedUsersGetter:
         Returns:
             List of authorized chat members
         """
-        return self.chat_members_getter.FilterMembers(
+        return await self.chat_members_getter.FilterMembers(
             chat,
             lambda member: (
                 member.user is not None

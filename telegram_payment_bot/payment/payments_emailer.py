@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import time
+import asyncio
 
 import pyrogram
 
@@ -56,21 +56,21 @@ class PaymentsEmailer:
         self.emailer = SubscriptionEmailer(config)
         self.members_payment_getter = MembersPaymentGetter(client, config, logger)
 
-    def EmailAllWithExpiredPayment(self) -> PaymentsData:
+    async def EmailAllWithExpiredPayment(self) -> PaymentsData:
         """Email all users with expired payment."""
-        expired_payments = self.members_payment_getter.GetAllEmailsWithExpiredPayment()
-        self.__SendEmails(expired_payments)
+        expired_payments = await self.members_payment_getter.GetAllEmailsWithExpiredPayment()
+        await self.__SendEmails(expired_payments)
         return expired_payments
 
-    def EmailAllWithExpiringPayment(self,
-                                    days: int) -> PaymentsData:
+    async def EmailAllWithExpiringPayment(self,
+                                          days: int) -> PaymentsData:
         """Email all users with expiring payment in the specified number of days."""
-        expired_payments = self.members_payment_getter.GetAllEmailsWithExpiringPayment(days)
-        self.__SendEmails(expired_payments)
+        expired_payments = await self.members_payment_getter.GetAllEmailsWithExpiringPayment(days)
+        await self.__SendEmails(expired_payments)
         return expired_payments
 
-    def __SendEmails(self,
-                     expired_payments: PaymentsData) -> None:
+    async def __SendEmails(self,
+                           expired_payments: PaymentsData) -> None:
         """Send emails to expired payments."""
         if self.config.GetValue(BotConfigTypes.APP_TEST_MODE):
             self.logger.GetLogger().info("Test mode ON: no email was sent")
@@ -78,7 +78,7 @@ class PaymentsEmailer:
 
         if expired_payments.Any():
             emails = set()
-            self.emailer.Connect()
+            await self.emailer.Connect()
 
             for payment in expired_payments.Values():
                 pay_email = payment.Email()
@@ -91,11 +91,11 @@ class PaymentsEmailer:
                     continue
 
                 self.emailer.PrepareMsg(pay_email)
-                self.emailer.Send()
+                await self.emailer.Send()
                 self.logger.GetLogger().info(
                     f"Email successfully sent to: {pay_email} ({payment.User()})"
                 )
                 emails.add(payment.Email())
-                time.sleep(PaymentsEmailerConst.SEND_EMAIL_SLEEP_TIME_SEC)
+                await asyncio.sleep(PaymentsEmailerConst.SEND_EMAIL_SLEEP_TIME_SEC)
 
-            self.emailer.Disconnect()
+            await self.emailer.Disconnect()

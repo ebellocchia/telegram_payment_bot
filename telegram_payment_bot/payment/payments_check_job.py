@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from threading import Lock
+import asyncio
 
 import pyrogram
 
@@ -60,7 +60,7 @@ class PaymentsCheckJob:
     config: ConfigObject
     logger: Logger
     translator: TranslationLoader
-    job_chats_lock: Lock
+    job_chats_lock: asyncio.Lock
     period: int
     auth_users_msg_sender: AuthorizedUsersMessageSender
     job_chats: PaymentsCheckJobChats
@@ -82,7 +82,7 @@ class PaymentsCheckJob:
         self.config = config
         self.logger = logger
         self.translator = translator
-        self.job_chats_lock = Lock()
+        self.job_chats_lock = asyncio.Lock()
         self.period = 0
         self.auth_users_msg_sender = AuthorizedUsersMessageSender(client, config, logger)
         self.job_chats = PaymentsCheckJobChats()
@@ -104,8 +104,8 @@ class PaymentsCheckJob:
         """
         self.period = period
 
-    def AddChat(self,
-                chat: pyrogram.types.Chat) -> bool:
+    async def AddChat(self,
+                      chat: pyrogram.types.Chat) -> bool:
         """Add a chat to the job.
 
         Args:
@@ -114,15 +114,15 @@ class PaymentsCheckJob:
         Returns:
             True if added successfully, False if chat already exists
         """
-        with self.job_chats_lock:
+        async with self.job_chats_lock:
             if self.job_chats.IsKey(chat.id):
                 return False
 
             self.job_chats.AddSingle(chat.id, chat)
             return True
 
-    def RemoveChat(self,
-                   chat: pyrogram.types.Chat) -> bool:
+    async def RemoveChat(self,
+                         chat: pyrogram.types.Chat) -> bool:
         """Remove a chat from the job.
 
         Args:
@@ -131,16 +131,16 @@ class PaymentsCheckJob:
         Returns:
             True if removed successfully, False if chat not found
         """
-        with self.job_chats_lock:
+        async with self.job_chats_lock:
             if not self.job_chats.IsKey(chat.id):
                 return False
 
             self.job_chats.RemoveSingle(chat.id)
             return True
 
-    def RemoveAllChats(self) -> None:
+    async def RemoveAllChats(self) -> None:
         """Remove all chats from the job."""
-        with self.job_chats_lock:
+        async with self.job_chats_lock:
             self.job_chats.Clear()
 
     def GetChats(self) -> PaymentsCheckJobChats:
@@ -151,22 +151,22 @@ class PaymentsCheckJob:
         """
         return self.job_chats
 
-    def DoJob(self) -> None:
+    async def DoJob(self) -> None:
         """Execute the payments check job."""
         self.logger.GetLogger().info("Payments check job started")
 
-        with self.job_chats_lock:
+        async with self.job_chats_lock:
             if self.job_chats.Empty():
                 self.logger.GetLogger().info("No chat to check, exiting...")
                 return
 
             members_kicker = MembersKicker(self.client, self.config, self.logger)
             for chat in self.job_chats.Values():
-                self.__KickMembersInChat(chat, members_kicker)
+                await self.__KickMembersInChat(chat, members_kicker)
 
-    def __KickMembersInChat(self,
-                            chat: pyrogram.types.Chat,
-                            members_kicker: MembersKicker) -> None:
+    async def __KickMembersInChat(self,
+                                  chat: pyrogram.types.Chat,
+                                  members_kicker: MembersKicker) -> None:
         """Kick members with expired payments in a chat.
 
         Args:
@@ -174,7 +174,7 @@ class PaymentsCheckJob:
             members_kicker: MembersKicker instance
         """
         self.logger.GetLogger().info(f"Checking payments for chat {ChatHelper.GetTitleOrId(chat)}...")
-        kicked_members = members_kicker.KickAllWithExpiredPayment(chat)
+        kicked_members = await members_kicker.KickAllWithExpiredPayment(chat)
 
         self.logger.GetLogger().info(
             f"Kicked members for chat {ChatHelper.GetTitleOrId(chat)}: {kicked_members.Count()}"
@@ -190,4 +190,4 @@ class PaymentsCheckJob:
             msg += self.translator.GetSentence("REMOVE_NO_PAYMENT_LIST_CMD",
                                                members_list=str(kicked_members))
 
-            self.auth_users_msg_sender.SendMessage(chat, msg)
+            await self.auth_users_msg_sender.SendMessage(chat, msg)

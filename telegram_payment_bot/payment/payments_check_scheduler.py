@@ -19,7 +19,7 @@
 # THE SOFTWARE.
 
 import pyrogram
-from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from telegram_payment_bot.bot.bot_config_types import BotConfigTypes
 from telegram_payment_bot.config.config_object import ConfigObject
@@ -63,7 +63,7 @@ class PaymentsCheckScheduler:
     config: ConfigObject
     logger: Logger
     payments_checker_job: PaymentsCheckJob
-    scheduler: BackgroundScheduler
+    scheduler: AsyncIOScheduler
 
     def __init__(self,
                  client: pyrogram.Client,
@@ -81,7 +81,7 @@ class PaymentsCheckScheduler:
         self.config = config
         self.logger = logger
         self.payments_checker_job = PaymentsCheckJob(client, config, logger, translator)
-        self.scheduler = BackgroundScheduler()
+        self.scheduler = AsyncIOScheduler()
         self.scheduler.start()
 
     def GetChats(self) -> PaymentsCheckJobChats:
@@ -137,8 +137,8 @@ class PaymentsCheckScheduler:
         self.scheduler.remove_job(PaymentsCheckSchedulerConst.JOB_ID)
         self.logger.GetLogger().info("Stopped payments check job")
 
-    def AddChat(self,
-                chat: pyrogram.types.Chat) -> None:
+    async def AddChat(self,
+                      chat: pyrogram.types.Chat) -> None:
         """Add a chat to the job.
 
         Args:
@@ -147,7 +147,7 @@ class PaymentsCheckScheduler:
         Raises:
             PaymentsCheckJobChatAlreadyPresentError: If chat is already present
         """
-        if not self.payments_checker_job.AddChat(chat):
+        if not await self.payments_checker_job.AddChat(chat):
             self.logger.GetLogger().error(
                 f"Chat {ChatHelper.GetTitleOrId(chat)} already present in payments check job, cannot add it"
             )
@@ -157,8 +157,8 @@ class PaymentsCheckScheduler:
             f"Added chat {ChatHelper.GetTitleOrId(chat)} to payments check job"
         )
 
-    def RemoveChat(self,
-                   chat: pyrogram.types.Chat) -> None:
+    async def RemoveChat(self,
+                         chat: pyrogram.types.Chat) -> None:
         """Remove a chat from the job.
 
         Args:
@@ -167,7 +167,7 @@ class PaymentsCheckScheduler:
         Raises:
             PaymentsCheckJobChatNotPresentError: If chat is not present
         """
-        if not self.payments_checker_job.RemoveChat(chat):
+        if not await self.payments_checker_job.RemoveChat(chat):
             self.logger.GetLogger().error(
                 f"Chat {ChatHelper.GetTitleOrId(chat)} not present in payments check job, cannot remove it"
             )
@@ -177,19 +177,19 @@ class PaymentsCheckScheduler:
             f"Removed chat {ChatHelper.GetTitleOrId(chat)} from payments check job"
         )
 
-    def ChatLeft(self,
-                 chat: pyrogram.types.Chat) -> None:
+    async def ChatLeft(self,
+                       chat: pyrogram.types.Chat) -> None:
         """Handle bot leaving a chat.
 
         Args:
             chat: Chat that was left
         """
-        self.payments_checker_job.RemoveChat(chat)
+        await self.payments_checker_job.RemoveChat(chat)
         self.logger.GetLogger().info(f"Left chat {ChatHelper.GetTitleOrId(chat)}")
 
-    def RemoveAllChats(self) -> None:
+    async def RemoveAllChats(self) -> None:
         """Remove all chats from the job."""
-        self.payments_checker_job.RemoveAllChats()
+        await self.payments_checker_job.RemoveAllChats()
         self.logger.GetLogger().info("Removed all chats from payments check job")
 
     def IsRunning(self) -> bool:
