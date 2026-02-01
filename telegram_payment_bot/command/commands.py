@@ -249,13 +249,13 @@ class CheckNoUsernameCmd(CommandBase):
 
             support_email = self.config.GetValue(BotConfigTypes.SUPPORT_EMAIL)
             support_tg = self.config.GetValue(BotConfigTypes.SUPPORT_TELEGRAM)
-            if support_email != "" and support_tg != "":
+            if support_email and support_tg:
                 msg += self.translator.GetSentence(
                     "CHECK_NO_USERNAME_EMAIL_TG_CMD", support_email=support_email, support_telegram=support_tg
                 )
-            elif support_email != "":
+            elif support_email:
                 msg += self.translator.GetSentence("CHECK_NO_USERNAME_ONLY_EMAIL_CMD", support_email=support_email)
-            elif support_tg != "":
+            elif support_tg:
                 msg += self.translator.GetSentence("CHECK_NO_USERNAME_ONLY_TG_CMD", support_telegram=support_tg)
         else:
             msg = self.translator.GetSentence("CHECK_NO_USERNAME_ALL_OK_CMD", chat_title=ChatHelper.GetTitle(self.cmd_data.Chat()))
@@ -489,18 +489,18 @@ class CheckNoPaymentCmd(CommandBase):
             )
 
             website = self.config.GetValue(BotConfigTypes.PAYMENT_WEBSITE)
-            if website != "":
+            if website:
                 msg += self.translator.GetSentence("CHECK_NO_PAYMENT_WEBSITE_CMD", website=website)
 
             support_email = self.config.GetValue(BotConfigTypes.SUPPORT_EMAIL)
             support_tg = self.config.GetValue(BotConfigTypes.SUPPORT_TELEGRAM)
-            if support_email != "" and support_tg != "":
+            if support_email and support_tg:
                 msg += self.translator.GetSentence(
                     "CHECK_NO_PAYMENT_EMAIL_TG_CMD", support_email=support_email, support_telegram=support_tg
                 )
-            elif support_email != "":
+            elif support_email:
                 msg += self.translator.GetSentence("CHECK_NO_PAYMENT_ONLY_EMAIL_CMD", support_email=support_email)
-            elif support_tg != "":
+            elif support_tg:
                 msg += self.translator.GetSentence("CHECK_NO_PAYMENT_ONLY_TG_CMD", support_telegram=support_tg)
         else:
             msg = self.translator.GetSentence("CHECK_NO_PAYMENT_ALL_OK_CMD", chat_title=ChatHelper.GetTitle(self.cmd_data.Chat()))
