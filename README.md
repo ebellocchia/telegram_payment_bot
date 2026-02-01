@@ -9,7 +9,7 @@
 
 ## Introduction
 
-Telegram bot for handling payments in groups based on the *pyrogram* library.
+Telegram bot for handling payments in groups based on *pyrotgfork* (a maintained fork of the *pyrogram* library).
 
 Payments can be either loaded from a *xls*/*xlsx* file or, better, from a Google Sheet. The advantages of the Google Sheet are:
 - It can be easily shared with other people or admins.
@@ -22,33 +22,66 @@ Payments data can be either updated manually by the admins or, better, automatic
 
 ### Create Telegram app
 
-In order to use the bot, in addition to the bot token you also need an API ID and hash.\
-To get them, create an app using the following website: [https://my.telegram.org/apps](https://my.telegram.org/apps).
+In order to use the bot, you need a Telegram bot token, an API ID, and an API hash.
+
+To obtain them, create an app on the following website: [https://my.telegram.org/apps](https://my.telegram.org/apps).
 
 ### Installation
 
-The package requires Python >= 3.7.\
-To install it:
+This package requires **Python >= 3.7**.
 
-    pip install telegram_payment_bot
 
-To run the bot, edit the configuration file by specifying the API ID/hash and bot token. Then, move to the *app* folder and run the *bot.py* script:
+1. **Set up a virtual environment (optional but recommended)**:
 
-    cd app
-    python bot_start.py
+```
+python -m venv venv
+source venv/bin/activate    # On Windows use: venv\Scripts\activate
+```
 
-When run with no parameters, *conf/config.ini* will be the default configuration file (in this way it can be used for different groups).\
-To specify a different configuration file:
+2. **Install the bot:**
 
-    python bot_start.py -c another_conf.ini
-    python bot_start.py --config another_conf.ini
+```
+pip install telegram_payment_bot
+```
 
-Of course, the *app* folder can be moved elsewhere if needed.
+**IMPORTANT NOTE:** This bot uses *pyrotgfork*. If you are not using a virtual environment, ensure that the standard *pyrogram* library (or forks) is not installed in your Python environment.
+Since both libraries use the same package name, having both installed will cause conflicts and the bot will not function correctly.
+
+3. **Set up the files:**
+Copy the **app** folder from the repository to your device. Edit the configuration file by specifying your API ID, API hash, bot token, and other parameters according to your needs (see the "Configuration" chapter).
+4. **Run the bot:**
+Inside the **app** folder, launch the **bot_start.py** script to start the bot:
+
+```
+python bot_start.py
+```
+
+---
+
+#### Custom Configuration
+
+When run without parameters, the bot uses **conf/config.ini** as the default configuration file. To specify a different configuration file, use:
+
+```
+python bot_start.py -c another_conf.ini
+```
+
+or:
+
+```
+python bot_start.py --config another_conf.ini
+```
+
+This allows you to manage different bots easily, each one with its own configuration file.
+
+### Code analysis
 
 To run code analysis:
 
-    mypy .
-    ruff check .
+```
+mypy .
+ruff check .
+```
 
 ## Configuration
 
@@ -166,7 +199,7 @@ The period of the task always starts from midnight (if you use a VPS, be sure to
 
 ## Run the Bot
 
-The bot must be an administrator of the group.\
+The bot must be a group administrator to remove not-paying members.\
 If you just need to run bot once in a while (e.g. once a week), you can do it manually using the `check_no_payment` and `remove_no_payment` commands. In this case, it's sufficient to run the bot locally on the PC when needed.\
 If you prefer to let the bot check for payment periodically, it'll be better to run it 24h/24h on a VPS.
 
@@ -175,9 +208,11 @@ If you prefer to let the bot check for payment periodically, it'll be better to 
 Docker files are also provided, to run the bot in a Docker container.
 In this case, the configuration file can be set by setting the `CONFIG_FILE` variable, for example:
 
-    CONFIG_FILE=conf/config.ini docker compose up -d --build
+```
+CONFIG_FILE=conf/config.ini docker compose up -d --build
+```
 
-**NOTE:** Depending on your timezone, you may want to adjust the `TZ=Europe/Rome` variable in `docker-compose.yml`.
+**NOTE:** Adjust the `TZ=Europe/Rome` variable in `docker-compose.yml` to match your timezone.
 
 ## Payment File
 
@@ -208,14 +243,6 @@ In both cases (Google Sheet or Excel file), the file must contain the following 
 
 The indexes of these columns are set in the configuration file. It is possible to add other columns beside these if necessary, they are simply ignored by the bot.
 
-## Test Mode
-
-Test mode can be used to test the bot without any effect on the users of the group. When active:
-- Users are not kicked from the group if they don't have a username or haven't paid, in any case (i.e. when running a command, when joining the group, during periodical checks)
-- Emails are not sent to the users that haven't paid yet
-
-Moreover, the payment task period will be applied in minutes instead of hours. This allows to quickly check if it is working.
-
 ## Channel Limitations
 
 When used in channels:
@@ -224,11 +251,17 @@ When used in channels:
 - Commands in quiet mode will send the result to authorized users instead of privately to the user that executed the command
 - Due to a Telegram limitation, only 200 members can be managed
 
+## Test Mode
+
+Test mode can be used to test the bot without any effect on the users of the group. When active:
+- Users are not kicked from the group if they don't have a username or haven't paid, in any case (i.e. when running a command, when joining the group, during periodical checks)
+- Emails are not sent to the users that haven't paid yet
+
+Moreover, the payment task period will be applied in minutes instead of hours. This allows to quickly check if it is working.
+
 ## Translation
 
-The messages sent by the bot on Telegram can be translated into different languages (the default language is English) by providing a custom XML file.\
-The XML file path is specified in the configuration file (`app_lang_file` field).\
-An example XML file in Italian is provided in the folder *app/lang*.
+Bot messages can be translated using a custom XML file specified in the `app_lang_file` field. An Italian example is provided in **app/lang**.
 
 # License
 
