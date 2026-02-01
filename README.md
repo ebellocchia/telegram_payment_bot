@@ -47,7 +47,7 @@ pip install telegram_payment_bot
 **IMPORTANT NOTE:** This bot uses *pyrotgfork*. If you are not using a virtual environment, ensure that the standard *pyrogram* library (or forks) is not installed in your Python environment.
 Since both libraries use the same package name, having both installed will cause conflicts and the bot will not function correctly.
 
-3. **Set up the files:**
+3. **Set up the bot:**
 Copy the **app** folder from the repository to your device. Edit the configuration file by specifying your API ID, API hash, bot token, and other parameters according to your needs (see the "Configuration" chapter).
 4. **Run the bot:**
 Inside the **app** folder, launch the **bot_start.py** script to start the bot:
@@ -85,60 +85,61 @@ ruff check .
 
 ## Configuration
 
-An example of configuration file is provided in the *app/conf* folder.\
-The list of all possible fields that can be set is shown below.
+An example configuration file is provided in the **app/conf** folder.
 
-|Name|Description|
+The list of all configurable fields is shown below.
+
+| Name | Description |
 |---|---|
-|**[pyrogram]**|Configuration for pyrogram|
-|`session_name`|Name of the file used to store the session|
-|`api_id`|API ID from [https://my.telegram.org/apps](https://my.telegram.org/apps)|
-|`api_hash`|API hash from [https://my.telegram.org/apps](https://my.telegram.org/apps)|
-|`bot_token`|Bot token from BotFather|
-|**[app]**|Configuration for app|
-|`app_is_test_mode`|True to activate test mode, false otherwise|
-|`app_lang_file`|Language file in XML format (default: English)|
-|**[users]**|Configuration for users|
-|`authorized_users`|List of Telegram usernames that are authorized to use the bot, comma separated|
-|**[support]**|Configuration for support|
-|`support_email`|Email for getting support or send payments receipts (default: empty)|
-|`support_telegram`|Telegram username for getting support or send payments receipts (default: empty)|
-|**[payment]**|Configuration for payment|
-|`payment_website`|Website for payment (default: empty)|
-|`payment_check_on_join`|Flag to check the payment of new members as soon as they join the group (default: `true`)|
-|`payment_check_dup_email`|Flag to check for duplicated emails in payment data (default: `true`)|
-|`payment_type`|Input for payment data: `EXCEL_FILE` for using xls/xlsx file, `GOOGLE_SHEET` for using a Google Sheet|
-|`payment_excel_file`|Name of the Excel file used for payment data, loaded only if `payment_type` is `EXCEL_FILE`|
-|`payment_google_sheet_id`|ID of the Google Sheet used for payment data, loaded only if `payment_type` is `GOOGLE_SHEET`|
-|`payment_google_cred_type`|Credentials type: `OAUTH2` for OAuth2 flow or `SERVICE_ACCOUNT` for service account (default: `OAUTH2`), loaded only if `payment_type` is `GOOGLE_SHEET`|
-|`payment_google_cred`|Name of the *json* credentials file for OAuth2 or service account (default: `credentials.json`), loaded only if `payment_type` is `GOOGLE_SHEET`|
-|`payment_google_cred_path`|Path where Google OAuth2 token file will be saved, loaded only if `payment_type` is `GOOGLE_SHEET` and `payment_google_cred_type` is `OAUTH2`|
-|`payment_use_user_id`|If true, `payment_user_col` will be considered as a user ID (number), otherwise it'll be considered as a username|
-|`payment_worksheet_idx`|Worksheet index (default: `0`)|
-|`payment_email_col`|Table column (letter) containing the email used for paying (default: `A`, maximum: `Z`)|
-|`payment_user_col`|Table column (letter) containing the user (default: `B`, maximum: `Z`). The user can be a username or a user ID (depending on the `payment_use_user_id` flag).|
-|`payment_expiration_col`|Table column (letter) containing the payment expiration date (default: `C`, maximum: `Z`)|
-|`payment_date_format`|Date format in payments data (default: `%d/%m/%Y`)|
-|**[email]**|Configuration for email that reminds users to pay|
-|`email_enabled`|Email enabled flag (default: `false`). If false, all the next fields will be skipped.|
-|`email_auth_type`|Email authentication type: `NONE`, `SSL_TLS` or `STARTTLS`|
-|`email_from`|Email sender|
-|`email_reply_to`|Email reply-to|
-|`email_host`|Host for sending email|
-|`email_user`|Username for logging to host|
-|`email_password`|Password for logging to host|
-|`email_subject`|Email subject|
-|`email_alt_body`|File containing email alternate body (text)|
-|`email_html_body`|File containing email HTML body|
-|**[logging]**|Configuration for logging|
-|`log_level`|Log level, same of python logging (`DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`). Default: `INFO`.|
-|`log_console_enabled`|True to enable logging to console, false otherwise (default: true)|
-|`log_file_enabled`|True to enable logging to file, false otherwise (default: false). If false, all the next fields will be skipped.|
-|`log_file_name`|Log file name|
-|`log_file_use_rotating`|True for using a rotating log file, false otherwise|
-|`log_file_max_bytes`|Maximum size in bytes for a log file. When reached, a new log file is created up to `log_file_backup_cnt`. Valid only if `log_file_use_rotating` is true.|
-|`log_file_backup_cnt`|Maximum number of log files. Valid only if `log_file_use_rotating` is true.|
-|`log_file_append`|True to append to log file, false to start from a new file each time. Valid only if `log_file_use_rotating` is false.|
+| **[pyrogram]** | Configuration for Pyrogram |
+| `session_name` | Name of the file used to store the session |
+| `api_id` | API ID from [https://my.telegram.org/apps](https://my.telegram.org/apps) |
+| `api_hash` | API hash from [https://my.telegram.org/apps](https://my.telegram.org/apps) |
+| `bot_token` | Bot token from BotFather |
+| **[app]** | Configuration for the app |
+| `app_is_test_mode` | Set to `true` to activate test mode, `false` otherwise |
+| `app_lang_file` | Language file in XML format (default: English) |
+| **[users]** | Configuration for users |
+| `authorized_users` | Comma-separated list of Telegram usernames authorized to use the bot |
+| **[support]** | Configuration for support |
+| `support_email` | Email address for support or sending payment receipts (default: empty) |
+| `support_telegram` | Telegram username for support or sending payment receipts (default: empty) |
+| **[payment]** | Configuration for payments |
+| `payment_website` | Website for payments (default: empty) |
+| `payment_check_on_join` | Check the payment status of new members as soon as they join the group (default: `true`) |
+| `payment_check_dup_email` | Check for duplicated emails in payment data (default: `true`) |
+| `payment_type` | Input source for payment data: `EXCEL_FILE` for xls/xlsx files, `GOOGLE_SHEET` for Google Sheets |
+| `payment_excel_file` | Name of the Excel file for payment data (loaded only if `payment_type` is `EXCEL_FILE`) |
+| `payment_google_sheet_id` | ID of the Google Sheet for payment data (loaded only if `payment_type` is `GOOGLE_SHEET`) |
+| `payment_google_cred_type` | Credentials type: `OAUTH2` or `SERVICE_ACCOUNT` (default: `OAUTH2`, loaded only if `payment_type` is `GOOGLE_SHEET`) |
+| `payment_google_cred` | Name of the *json* credentials file (default: `credentials.json`, loaded only if `payment_type` is `GOOGLE_SHEET`) |
+| `payment_google_cred_path` | Path where the Google OAuth2 token file will be saved (loaded only if `payment_type` is `GOOGLE_SHEET` and `payment_google_cred_type` is `OAUTH2`) |
+| `payment_use_user_id` | If `true`, `payment_user_col` is treated as a numerical User ID; otherwise, it is treated as a username |
+| `payment_worksheet_idx` | Worksheet index (default: `0`) |
+| `payment_email_col` | Column letter containing the payment email (default: `A`, maximum: `Z`) |
+| `payment_user_col` | Column letter containing the user info (default: `B`, maximum: `Z`). Depends on the `payment_use_user_id` flag. |
+| `payment_expiration_col` | Column letter containing the payment expiration date (default: `C`, maximum: `Z`) |
+| `payment_date_format` | Date format used in payment data (default: `%d/%m/%Y`) |
+| **[email]** | Configuration for payment reminder emails |
+| `email_enabled` | Enable or disable emails (default: `false`). If `false`, the following fields are ignored. |
+| `email_auth_type` | Email authentication type: `NONE`, `SSL_TLS`, or `STARTTLS` |
+| `email_from` | Sender email address |
+| `email_reply_to` | Reply-to email address |
+| `email_host` | SMTP host for sending emails |
+| `email_user` | Username for SMTP authentication |
+| `email_password` | Password for SMTP authentication |
+| `email_subject` | Subject line of the email |
+| `email_alt_body` | Path to the file containing the plain text email body |
+| `email_html_body` | Path to the file containing the HTML email body |
+| **[logging]** | Configuration for logging |
+| `log_level` | Log level, same as Python logging (`DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`). Default: `INFO`. |
+| `log_console_enabled` | Set to `true` to enable console logging, `false` otherwise (default: `true`) |
+| `log_file_enabled` | Set to `true` to enable file logging, `false` otherwise (default: `false`). If `false`, the following fields are ignored. |
+| `log_file_name` | Name of the log file |
+| `log_file_use_rotating` | Set to `true` to use a rotating log file, `false` otherwise |
+| `log_file_max_bytes` | Maximum size in bytes for a log file before rotating. Valid only if `log_file_use_rotating` is `true`. |
+| `log_file_backup_cnt` | Maximum number of log files to keep. Valid only if `log_file_use_rotating` is `true`. |
+| `log_file_append` | Set to `true` to append to the log file, `false` to overwrite it each time. Valid only if `log_file_use_rotating` is `false`. |
 
 ## Supported Commands
 
@@ -193,15 +194,50 @@ It's suggested to run a background task to check for payments periodically. It c
 The task can check multiple groups at once (sharing the same payments data, of course). The groups can be added/removed with the `paybot_task_add_chat`/`paybot_task_remove_chat` commands (either while the task is running or stopped).\
 If no group was added, the task will simply run without checking any group.
 
-The period of the task always starts from midnight (if you use a VPS, be sure to set the correct time), for example:
-- A task period of 8 hours will check for payments at 00:00, 08:00 and 16:00
-- A task period of 6 hours will check for payments at 00:00, 06:00, 12:00 and 18:00
+**Scheduling Logic:**
+The task period starts from the specified hour (ensure the VPS time is correct):
+
+- Period of 8h starting at 00:00: sends at 00:00, 08:00, 16:00
+- Period of 6h starting at 10:00: sends at 10:00, 16:00, 22:00, 04:00
+
+## Payment File
+
+The payment file can be either an **xls**/**xlsx** file or a Google Sheet.
+
+In the case of a Google Sheet, two types of authorization are possible:
+- **OAuth2 flow:**
+    - Create it in the [Google Cloud Console](https://console.cloud.google.com) (under *APIs & Services* → *Credentials*) and download the *json* file with the credentials.
+    - Copy the *json* file into the **app/cred** folder. The filename must match the configured one (i.e., `payment_google_cred`).
+    - The first time the bot loads the Sheet, the browser will automatically open and you will be asked to log in to your Google account to allow the bot to access the sheet. If the bot is running on a VPS, it will print the URL for you to open on your PC.
+    - A *json* file will be automatically created in the configured folder (i.e., `payment_google_cred_path`).
+    - This *json* file allows the bot to access the sheet in the future without asking for further authorization (it can also be moved to other devices).
+- **Service account (recommended):**
+    - Create it in the [Google Cloud Console](https://console.cloud.google.com) (under *APIs & Services* → *Credentials*) and download the *json* file with the credentials.
+    - Copy the *json* file into the **app/cred** folder. The filename must match the configured one (i.e., `payment_google_cred`).
+    - A service account is pre-authorized, so there is no need to authorize the bot via a browser. You simply need to share the Google Sheet with the service account's Gmail address.
+
+Please refer to the official Google documentation for more details on how to create these credentials.
+
+In both cases (Google Sheet or Excel file), the file must contain the following columns starting from the second row (the first row is used as a header):
+- Email address used for payment (for convenience, as an email is usually required by payment platforms)
+- Telegram user ID or username
+- Expiration date of the payment, in the format specified by `payment_date_format`
+
+The indexes for these columns are set in the configuration file. You can add other columns if necessary: they will be ignored by the bot.
+
+## Channel Limitations
+
+When used in channels:
+- The bot can check for payments periodically but it cannot check users immediately when they join
+- All admins can use the bot, not only authorized users
+- Commands in quiet mode will send the result to authorized users instead of privately to the user that executed the command
+- Due to a Telegram limitation, only 200 members can be managed
 
 ## Run the Bot
 
-The bot must be a group administrator to remove not-paying members.\
-If you just need to run bot once in a while (e.g. once a week), you can do it manually using the `check_no_payment` and `remove_no_payment` commands. In this case, it's sufficient to run the bot locally on the PC when needed.\
-If you prefer to let the bot check for payment periodically, it'll be better to run it 24h/24h on a VPS.
+The bot must be a group administrator in order to remove non-paying members.
+
+It is recommended to run the bot 24/7 on a VPS.
 
 ### Docker
 
@@ -214,50 +250,13 @@ CONFIG_FILE=conf/config.ini docker compose up -d --build
 
 **NOTE:** Adjust the `TZ=Europe/Rome` variable in `docker-compose.yml` to match your timezone.
 
-## Payment File
-
-The payment file can be either a *xls*/*xlsx* file or a Google Sheet.\
-In case a Google Sheet is used and the OAuth2 flow is chosen:
-1. Create a project on [Google Cloud Console](https://console.cloud.google.com)
-2. Go to *APIs & Services*, then *Credentials* and select *Configure Consent Screen*
-3. Create a new app and publish it, it doesn't need to be verified (but you can verify it, of course)
-4. Go back to the *Credentials* page and create the credentials for OAuth client ID by selecting *Create Credentials*
-5. Select *Desktop app*, choose a name and download the *json* file with the credentials
-6. Go to the *Library* page, search for Google Sheet and enable Google Sheet APIs
-7. Rename the *json* file to the name specified in the configuration file (`payment_google_cred`) and place it in the *app* folder
-8. The first time the bot loads your Google Sheet, you'll be asked to login into your Google account and allow the bot to access the sheet. After this, a new *json* file will be automatically created in the folder you configured (`payment_google_cred_path`).
-9. This *json* file allows the bot to access the sheet next times, so you don't need to allow it again
-10. If you move the bot to another PC or server, just keep the *json* files to grant the bot access to the sheet without repeating the whole procedure
-
-For more information: [create project](https://developers.google.com/workspace/guides/create-project), [create credentials](https://developers.google.com/workspace/guides/create-credentials)
-
-Since for allowing the bot to access the Google Sheet a browser window will open, in case of a dedicated server (no GUI) it's easier to generate the *json* file on a PC and then just copy it to the server.
-
-A better alternative is to create a service account, which is pre-authorized.
-In this case, you don't need to authorize it from a browser window; you only have to share the Google Sheet with the service account gmail.
-
-In both cases (Google Sheet or Excel file), the file must contain the following columns starting from the second row (the first row is used as header):
-- Email address used for paying (for convenience, since an email address is usually required in payment platforms)
-- Telegram user ID or username
-- Expiration date of the payment in the format specified by `payment_date_format`
-
-The indexes of these columns are set in the configuration file. It is possible to add other columns beside these if necessary, they are simply ignored by the bot.
-
-## Channel Limitations
-
-When used in channels:
-- The bot can check for payments periodically but it cannot check users immediately when they join
-- All admins can use the bot, not only authorized users
-- Commands in quiet mode will send the result to authorized users instead of privately to the user that executed the command
-- Due to a Telegram limitation, only 200 members can be managed
-
 ## Test Mode
 
-Test mode can be used to test the bot without any effect on the users of the group. When active:
-- Users are not kicked from the group if they don't have a username or haven't paid, in any case (i.e. when running a command, when joining the group, during periodical checks)
-- Emails are not sent to the users that haven't paid yet
+Test mode can be used to test the bot's functionality without affecting the group members. When active:
+- Users are not kicked from the group even if they lack a username or have not paid (this applies to manual commands, new members joining, and periodic checks).
+- Emails are not sent to users who have not yet paid.
 
-Moreover, the payment task period will be applied in minutes instead of hours. This allows to quickly check if it is working.
+Moreover, the payment task period will be applied in **minutes** instead of hours. This allows you to quickly verify that the bot is working as expected.
 
 ## Translation
 
