@@ -102,10 +102,10 @@ The list of all configurable fields is shown below.
 | **[users]** | Configuration for users |
 | `authorized_users` | Comma-separated list of Telegram usernames authorized to use the bot |
 | **[support]** | Configuration for support |
-| `support_email` | Email address for support or sending payment receipts (default: empty) |
-| `support_telegram` | Telegram username for support or sending payment receipts (default: empty) |
+| `support_email` | Email address for support or sending payment receipts (default: empty). Only for showing to users when manually checking for payments. |
+| `support_telegram` | Telegram username for support or sending payment receipts (default: empty). Only for showing to users when manually checking for payments. |
 | **[payment]** | Configuration for payments |
-| `payment_website` | Website for payments (default: empty) |
+| `payment_website` | Website for payments (default: empty). Only for showing to users when manually checking for payments. |
 | `payment_check_on_join` | Check the payment status of new members as soon as they join the group (default: `true`) |
 | `payment_check_dup_email` | Check for duplicated emails in payment data (default: `true`) |
 | `payment_type` | Input source for payment data: `EXCEL_FILE` for xls/xlsx files, `GOOGLE_SHEET` for Google Sheets |
