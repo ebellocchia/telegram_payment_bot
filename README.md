@@ -91,20 +91,20 @@ The list of all configurable fields is shown below.
 
 | Name | Description |
 |---|---|
-| **[pyrogram]** | Configuration for Pyrogram |
+| **[pyrogram]** | *Configuration for Pyrogram* |
 | `session_name` | Path of the file used to store the session. |
 | `api_id` | API ID from [https://my.telegram.org/apps](https://my.telegram.org/apps). |
 | `api_hash` | API hash from [https://my.telegram.org/apps](https://my.telegram.org/apps). |
 | `bot_token` | Bot token from *BotFather*. |
-| **[app]** | Configuration for the app |
+| **[app]** | *Configuration for the app* |
 | `app_is_test_mode` | Set to `true` to activate test mode, `false` otherwise. |
 | `app_lang_file` | Path of custom language file in XML format (default: English). |
-| **[users]** | Configuration for users |
+| **[users]** | *Configuration for users* |
 | `authorized_users` | Comma-separated list of Telegram usernames authorized to use the bot |
-| **[support]** | Configuration for support |
+| **[support]** | *Configuration for support* |
 | `support_email` | Email address for support or sending payment receipts (default: empty). Only for showing to users when manually checking for payments. |
 | `support_telegram` | Telegram username for support or sending payment receipts (default: empty). Only for showing to users when manually checking for payments. |
-| **[payment]** | Configuration for payments |
+| **[payment]** | *Configuration for payments* |
 | `payment_website` | Website for payments (default: empty). Only for showing to users when manually checking for payments. |
 | `payment_check_on_join` | Check the payment status of new members as soon as they join the group (default: `true`) |
 | `payment_check_dup_email` | Check for duplicated emails in payment data (default: `true`) |
@@ -120,7 +120,7 @@ The list of all configurable fields is shown below.
 | `payment_user_col` | Column letter containing the user info (default: `B`, maximum: `Z`). Depends on the `payment_use_user_id` flag. |
 | `payment_expiration_col` | Column letter containing the payment expiration date (default: `C`, maximum: `Z`) |
 | `payment_date_format` | Date format used in payment data (default: `%d/%m/%Y`) |
-| **[email]** | Configuration for payment reminder emails |
+| **[email]** | *Configuration for payment reminder emails* |
 | `email_enabled` | Enable or disable emails (default: `false`). If `false`, the following fields are ignored. |
 | `email_auth_type` | Email authentication type: `NONE`, `SSL_TLS`, or `STARTTLS` |
 | `email_from` | Sender email address |
@@ -131,7 +131,7 @@ The list of all configurable fields is shown below.
 | `email_subject` | Subject line of the email |
 | `email_alt_body` | Path to the file containing the plain text email body |
 | `email_html_body` | Path to the file containing the HTML email body |
-| **[logging]** | Configuration for logging |
+| **[logging]** | *Configuration for logging* |
 | `log_level` | Log level, same as Python logging (`DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`). Default: `INFO`. |
 | `log_console_enabled` | Set to `true` to enable console logging, `false` otherwise (default: `true`) |
 | `log_file_enabled` | Set to `true` to enable file logging, `false` otherwise (default: `false`). If `false`, the following fields are ignored. |
