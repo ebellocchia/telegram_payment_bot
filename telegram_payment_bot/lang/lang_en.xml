@@ -106,7 +106,7 @@ Members list:
 {members_list}
 
 Please set the username {hours_left} or you'll be removed from the group.
-To set it: **Settings -> Edit Profile -> username**</sentence>
+To set it: **Settings -> My Account -> username**</sentence>
     <!-- Check username command message (email/telegram) -->
     <sentence id="CHECK_NO_USERNAME_EMAIL_TG_CMD">\n\n**The username shall be sent via email to {support_email} or to @{support_telegram}**.</sentence>
     <!-- Check username command message (only email) -->

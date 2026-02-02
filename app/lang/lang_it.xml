@@ -106,7 +106,7 @@ Lista membri:
 {members_list}
 
 Siete pregati di impostare lo username {hours_left} o verrete rimossi dal gruppo.
-Per impostarlo: **Impostazioni -> Modifica profilo -> username**</sentence>
+Per impostarlo: **Impostazioni -> Account -> username**</sentence>
     <!-- Check username command message (email/telegram) -->
     <sentence id="CHECK_NO_USERNAME_EMAIL_TG_CMD">\n\n**Lo username deve essere inviato via email a {support_email} o in privato a @{support_telegram}**.</sentence>
     <!-- Check username command message (only email) -->
