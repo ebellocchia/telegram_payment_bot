@@ -40,7 +40,7 @@ Download = "https://github.com/ebellocchia/telegram_payment_bot/archive/v{versio
 
 [tool.setuptools.packages.find]
 where = ["."]
-exclude = ["app*", "build*", "dist*"]
+exclude = ["app*", "build*", "dist*", "venv*"]
 
 [tool.setuptools.package-data]
 telegram_payment_bot = ["lang/lang_en.xml"]
