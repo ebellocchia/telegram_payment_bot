@@ -38,8 +38,9 @@ Changelog = "https://github.com/ebellocchia/telegram_payment_bot/blob/master/CHA
 Repository = "https://github.com/ebellocchia/telegram_payment_bot"
 Download = "https://github.com/ebellocchia/telegram_payment_bot/archive/v{version}.tar.gz"
 
-[tool.setuptools]
-packages = {find = {}}
+[tool.setuptools.packages.find]
+where = ["."]
+exclude = ["app*", "build*", "dist*"]
 
 [tool.setuptools.package-data]
 telegram_payment_bot = ["lang/lang_en.xml"]
