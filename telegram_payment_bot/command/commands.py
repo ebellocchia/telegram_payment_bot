@@ -20,6 +20,8 @@
 
 from typing import Any, Callable
 
+from typing_extensions import override
+
 from telegram_payment_bot._version import __version__
 from telegram_payment_bot.auth_user.authorized_users_list import AuthorizedUsersList
 from telegram_payment_bot.bot.bot_config_types import BotConfigTypes
@@ -67,6 +69,7 @@ def GroupChatOnly(exec_cmd_fct: Callable[..., Any]) -> Callable[..., Any]:
 class HelpCmd(CommandBase):
     """Command for getting help."""
 
+    @override
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
         """
@@ -82,6 +85,7 @@ class HelpCmd(CommandBase):
 class AliveCmd(CommandBase):
     """Command for checking if bot is alive."""
 
+    @override
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
         """
@@ -96,6 +100,7 @@ class AliveCmd(CommandBase):
 class SetTestModeCmd(CommandBase):
     """Command for setting test mode."""
 
+    @override
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
         """
@@ -120,6 +125,7 @@ class SetTestModeCmd(CommandBase):
 class IsTestModeCmd(CommandBase):
     """Command for checking if test mode is enabled."""
 
+    @override
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
         """
@@ -137,6 +143,7 @@ class IsTestModeCmd(CommandBase):
 class AuthUsersCmd(CommandBase):
     """Command for getting authorized users."""
 
+    @override
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
         """
@@ -151,6 +158,7 @@ class AuthUsersCmd(CommandBase):
 class ChatInfoCmd(CommandBase):
     """Command for getting chat information."""
 
+    @override
     @GroupChatOnly
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
@@ -173,6 +181,7 @@ class ChatInfoCmd(CommandBase):
 class UsersListCmd(CommandBase):
     """Command for getting the users list."""
 
+    @override
     @GroupChatOnly
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
@@ -196,6 +205,7 @@ class UsersListCmd(CommandBase):
 class InviteLinkCmd(CommandBase):
     """Command for generating a new invite link."""
 
+    @override
     @GroupChatOnly
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
@@ -211,6 +221,7 @@ class InviteLinkCmd(CommandBase):
 class VersionCmd(CommandBase):
     """Command for showing bot version."""
 
+    @override
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
         """
@@ -225,6 +236,7 @@ class VersionCmd(CommandBase):
 class CheckNoUsernameCmd(CommandBase):
     """Command for checking users with no username."""
 
+    @override
     @GroupChatOnly
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
@@ -285,6 +297,7 @@ class CheckNoUsernameCmd(CommandBase):
 class RemoveNoUsernameCmd(CommandBase):
     """Command for removing users with no username."""
 
+    @override
     @GroupChatOnly
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
@@ -320,6 +333,7 @@ class RemoveNoUsernameCmd(CommandBase):
 class SetCheckPaymentsOnJoinCmd(CommandBase):
     """Command for setting payment check on joined members."""
 
+    @override
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
         """
@@ -344,6 +358,7 @@ class SetCheckPaymentsOnJoinCmd(CommandBase):
 class IsCheckPaymentsOnJoinCmd(CommandBase):
     """Command for checking if payment check on joined members is enabled."""
 
+    @override
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
         """
@@ -361,6 +376,7 @@ class IsCheckPaymentsOnJoinCmd(CommandBase):
 class CheckPaymentsDataCmd(CommandBase):
     """Command for checking payments data for errors."""
 
+    @override
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
         """
@@ -396,6 +412,7 @@ class CheckPaymentsDataCmd(CommandBase):
 class EmailNoPaymentCmd(CommandBase):
     """Command for sending email to users with no payment."""
 
+    @override
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
         """
@@ -446,6 +463,7 @@ class EmailNoPaymentCmd(CommandBase):
 class CheckNoPaymentCmd(CommandBase):
     """Command for checking users with no payment."""
 
+    @override
     @GroupChatOnly
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
@@ -511,6 +529,7 @@ class CheckNoPaymentCmd(CommandBase):
 class RemoveNoPaymentCmd(CommandBase):
     """Command for removing users with no payment."""
 
+    @override
     @GroupChatOnly
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
@@ -548,6 +567,7 @@ class RemoveNoPaymentCmd(CommandBase):
 class PaymentTaskStartCmd(CommandBase):
     """Command for starting payment task."""
 
+    @override
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
         """
@@ -573,6 +593,7 @@ class PaymentTaskStartCmd(CommandBase):
 class PaymentTaskStopCmd(CommandBase):
     """Command for stopping payment task."""
 
+    @override
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
         """
@@ -591,6 +612,7 @@ class PaymentTaskStopCmd(CommandBase):
 class PaymentTaskAddChatCmd(CommandBase):
     """Command for adding current chat to payment task."""
 
+    @override
     @GroupChatOnly
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
@@ -610,6 +632,7 @@ class PaymentTaskAddChatCmd(CommandBase):
 class PaymentTaskRemoveChatCmd(CommandBase):
     """Command for removing current chat from payment task."""
 
+    @override
     @GroupChatOnly
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
@@ -629,6 +652,7 @@ class PaymentTaskRemoveChatCmd(CommandBase):
 class PaymentTaskRemoveAllChatsCmd(CommandBase):
     """Command for removing all chats from payment task."""
 
+    @override
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
         """
@@ -644,6 +668,7 @@ class PaymentTaskRemoveAllChatsCmd(CommandBase):
 class PaymentTaskInfoCmd(CommandBase):
     """Command for getting payment task information."""
 
+    @override
     async def _ExecuteCommand(self,
                               **kwargs: Any) -> None:
         """

@@ -7,3 +7,4 @@ aiosmtplib
 aiofiles
 apscheduler
 defusedxml
+typing-extensions

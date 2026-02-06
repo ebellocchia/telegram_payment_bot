@@ -22,6 +22,7 @@ from typing import Optional, Tuple
 
 import openpyxl
 import xlrd
+from typing_extensions import override
 
 from telegram_payment_bot.bot.bot_config_types import BotConfigTypes
 from telegram_payment_bot.misc.async_helpers import to_thread
@@ -39,6 +40,7 @@ class PaymentsExcelLoaderConst:
 class PaymentsExcelLoader(PaymentsLoaderBase):
     """Loader for payment data from Excel files."""
 
+    @override
     async def LoadAll(self) -> PaymentsData:
         """Load all payment data from Excel file.
 
@@ -47,6 +49,7 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
         """
         return (await self.__LoadAndCheckAll())[0]
 
+    @override
     async def LoadSingleByUser(self,
                                user: User) -> Optional[SinglePayment]:
         """Load a single payment by user from Excel file.
@@ -59,6 +62,7 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
         """
         return (await self.LoadAll()).GetByUser(user)
 
+    @override
     async def CheckForErrors(self) -> PaymentsDataErrors:
         """Check for errors in the Excel file.
 

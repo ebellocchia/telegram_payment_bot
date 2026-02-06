@@ -20,6 +20,8 @@
 
 from typing import Optional, Tuple
 
+from typing_extensions import override
+
 from telegram_payment_bot.bot.bot_config_types import BotConfigTypes
 from telegram_payment_bot.config.config_object import ConfigObject
 from telegram_payment_bot.google.google_sheet_rows_getter import GoogleSheetRowsGetter
@@ -46,6 +48,7 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
         super().__init__(config, logger)
         self.google_sheet_rows_getter = GoogleSheetRowsGetter(config, logger)
 
+    @override
     async def LoadAll(self) -> PaymentsData:
         """Load all payment data from Google Sheet.
 
@@ -54,6 +57,7 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
         """
         return (await self.__LoadAndCheckAll())[0]
 
+    @override
     async def LoadSingleByUser(self,
                                user: User) -> Optional[SinglePayment]:
         """Load a single payment by user from Google Sheet.
@@ -66,6 +70,7 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
         """
         return (await self.LoadAll()).GetByUser(user)
 
+    @override
     async def CheckForErrors(self) -> PaymentsDataErrors:
         """Check for errors in the Google Sheet.
 
