@@ -26,6 +26,8 @@ from telegram_payment_bot.config.config_object import ConfigObject, ConfigTypes
 
 
 class ConfigFieldType(TypedDict):
+    """Represents a configuration field."""
+
     type: ConfigTypes
     name: str
     def_val: NotRequired[Any]
