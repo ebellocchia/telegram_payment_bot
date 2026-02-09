@@ -54,9 +54,9 @@ class MessageDispatcher:
         Constructor.
 
         Args:
-            config: Configuration object
-            logger: Logger object
-            translator: Translation loader object
+            config: Configuration object.
+            logger: Logger object.
+            translator: Translation loader object.
         """
         self.config = config
         self.logger = logger
@@ -71,13 +71,13 @@ class MessageDispatcher:
         Dispatch a message based on its type.
 
         Args:
-            client: Pyrogram client
-            message: Message object
-            msg_type: Type of message to dispatch
-            **kwargs: Additional arguments
+            client: Pyrogram client.
+            message: Message object.
+            msg_type: Type of message to dispatch.
+            **kwargs: Additional arguments.
 
         Raises:
-            TypeError: If msg_type is not a MessageTypes enum
+            TypeError: If msg_type is not a MessageTypes enum.
         """
         if not isinstance(msg_type, MessageTypes):
             raise TypeError("Message type is not an enumerative of MessageTypes")
@@ -103,9 +103,9 @@ class MessageDispatcher:
         Handle when a new chat is created.
 
         Args:
-            client: Pyrogram client
-            message: Message object
-            **kwargs: Additional arguments
+            client: Pyrogram client.
+            message: Message object.
+            **kwargs: Additional arguments.
         """
         if message.chat is None:
             return
@@ -125,9 +125,9 @@ class MessageDispatcher:
         Handle when a member left the chat.
 
         Args:
-            client: Pyrogram client
-            message: Message object
-            **kwargs: Additional arguments
+            client: Pyrogram client.
+            message: Message object.
+            **kwargs: Additional arguments.
         """
         # If the member is the bot itself, remove the chat from the scheduler
         if message.left_chat_member is not None and message.left_chat_member.is_self:
@@ -141,9 +141,9 @@ class MessageDispatcher:
         Handle when a member joined the chat.
 
         Args:
-            client: Pyrogram client
-            message: Message object
-            **kwargs: Additional arguments
+            client: Pyrogram client.
+            message: Message object.
+            **kwargs: Additional arguments.
         """
         if message.new_chat_members is None or message.chat is None:
             return

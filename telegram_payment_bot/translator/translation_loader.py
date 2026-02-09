@@ -46,7 +46,7 @@ class TranslationLoader:
         Constructor.
 
         Args:
-            logger: Logger object
+            logger: Logger object.
         """
         self.logger = logger
         self.sentences = {}
@@ -57,7 +57,7 @@ class TranslationLoader:
         Load a translation file.
 
         Args:
-            file_name: Path to the translation file, or None to use default
+            file_name: Path to the translation file, or None to use default.
         """
         def_file_path = os.path.join(os.path.dirname(__file__),
                                      TranslationLoaderConst.DEF_LANG_FOLDER,
@@ -83,11 +83,11 @@ class TranslationLoader:
         Get a sentence by its ID and format it with provided arguments.
 
         Args:
-            sentence_id: ID of the sentence to retrieve
-            **kwargs: Arguments for string formatting
+            sentence_id: ID of the sentence to retrieve.
+            **kwargs: Arguments for string formatting.
 
         Returns:
-            Formatted sentence string
+            Formatted sentence string.
         """
         return self.sentences[sentence_id].format(**kwargs)
 
@@ -97,7 +97,7 @@ class TranslationLoader:
         Load and parse a translation XML file.
 
         Args:
-            file_name: Path to the XML file to load
+            file_name: Path to the XML file to load.
         """
         # Parse xml
         tree = ElementTree.parse(file_name)

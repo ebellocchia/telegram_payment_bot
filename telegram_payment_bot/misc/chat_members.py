@@ -36,10 +36,10 @@ class ChatMembersList(WrappedList):
         Get a chat member by user ID.
 
         Args:
-            user_id: The user ID to search for
+            user_id: The user ID to search for.
 
         Returns:
-            The chat member if found, None otherwise
+            The chat member if found, None otherwise.
         """
         res = list(filter(lambda member: user_id == member.user.id, self.list_elements))
         return None if len(res) == 0 else res[0]
@@ -50,10 +50,10 @@ class ChatMembersList(WrappedList):
         Get a chat member by username.
 
         Args:
-            username: The username to search for
+            username: The username to search for.
 
         Returns:
-            The chat member if found, None otherwise
+            The chat member if found, None otherwise.
         """
         res = list(filter(lambda member: username == member.user.username, self.list_elements))
         return None if len(res) == 0 else res[0]
@@ -64,10 +64,10 @@ class ChatMembersList(WrappedList):
         Check if a user ID is present in the list.
 
         Args:
-            user_id: The user ID to check
+            user_id: The user ID to check.
 
         Returns:
-            True if the user ID is present, False otherwise
+            True if the user ID is present, False otherwise.
         """
         return self.GetByUserId(user_id) is not None
 
@@ -77,10 +77,10 @@ class ChatMembersList(WrappedList):
         Check if a username is present in the list.
 
         Args:
-            username: The username to check
+            username: The username to check.
 
         Returns:
-            True if the username is present, False otherwise
+            True if the username is present, False otherwise.
         """
         return self.GetByUsername(username) is not None
 
@@ -89,7 +89,7 @@ class ChatMembersList(WrappedList):
         Convert the chat members list to a formatted string.
 
         Returns:
-            A formatted string with all members
+            A formatted string with all members.
         """
         return "\n".join([f"- {UserHelper.GetNameOrId(member.user)}" for member in self.list_elements])
 
@@ -98,7 +98,7 @@ class ChatMembersList(WrappedList):
         Convert the chat members list to a formatted string.
 
         Returns:
-            A formatted string with all members
+            A formatted string with all members.
         """
         return self.ToString()
 
@@ -114,7 +114,7 @@ class ChatMembersGetter:
         Initialize the chat members getter.
 
         Args:
-            client: The Pyrogram client instance
+            client: The Pyrogram client instance.
         """
         self.client = client
 
@@ -126,12 +126,12 @@ class ChatMembersGetter:
         Get the list of chat members by applying the specified filter.
 
         Args:
-            chat: The chat to get members from
-            filter_fct: Optional filter function to apply to members
-            filter_type: Pyrogram filter
+            chat: The chat to get members from.
+            filter_fct: Optional filter function to apply to members.
+            filter_type: Pyrogram filter.
 
         Returns:
-            A sorted and filtered list of chat members
+            A sorted and filtered list of chat members.
         """
         filtered_members = [member async for member in self.client.get_chat_members(chat.id, filter=filter_type)]
         if filter_fct is not None:

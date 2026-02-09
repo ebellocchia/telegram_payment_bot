@@ -51,12 +51,13 @@ class MembersKicker:
                  client: pyrogram.Client,
                  config: ConfigObject,
                  logger: Logger) -> None:
-        """Initialize the members kicker.
+        """
+        Initialize the members kicker.
 
         Args:
-            client: Pyrogram client instance
-            config: Configuration object
-            logger: Logger instance
+            client: Pyrogram client instance.
+            config: Configuration object.
+            logger: Logger instance.
         """
         self.client = client
         self.config = config
@@ -67,13 +68,14 @@ class MembersKicker:
 
     async def KickAllWithExpiredPayment(self,
                                         chat: pyrogram.types.Chat) -> ChatMembersList:
-        """Kick all members with expired payments from the chat.
+        """
+        Kick all members with expired payments from the chat.
 
         Args:
-            chat: Chat to kick members from
+            chat: Chat to kick members from.
 
         Returns:
-            List of kicked members
+            List of kicked members.
         """
         no_payment_members = await self.members_payment_getter.GetAllMembersWithExpiredPayment(chat)
         if no_payment_members.Any():
@@ -83,14 +85,15 @@ class MembersKicker:
     async def KickSingleIfExpiredPayment(self,
                                          chat: pyrogram.types.Chat,
                                          user: pyrogram.types.User) -> bool:
-        """Kick a single member if their payment is expired.
+        """
+        Kick a single member if their payment is expired.
 
         Args:
-            chat: Chat to kick member from
-            user: User to check and kick if expired
+            chat: Chat to kick member from.
+            user: User to check and kick if expired.
 
         Returns:
-            True if the user was kicked, False otherwise
+            True if the user was kicked, False otherwise.
         """
         payment_expired = await self.members_payment_getter.IsSingleMemberExpired(chat, user)
         if payment_expired:
@@ -99,13 +102,14 @@ class MembersKicker:
 
     async def KickAllWithNoUsername(self,
                                     chat: pyrogram.types.Chat) -> ChatMembersList:
-        """Kick all members without usernames from the chat.
+        """
+        Kick all members without usernames from the chat.
 
         Args:
-            chat: Chat to kick members from
+            chat: Chat to kick members from.
 
         Returns:
-            List of kicked members
+            List of kicked members.
         """
         no_username_members = await self.members_username_getter.GetAllWithNoUsername(chat)
         if no_username_members.Any():
@@ -115,14 +119,15 @@ class MembersKicker:
     async def KickSingleIfNoUsername(self,
                                      chat: pyrogram.types.Chat,
                                      user: pyrogram.types.User) -> bool:
-        """Kick a single member if they have no username.
+        """
+        Kick a single member if they have no username.
 
         Args:
-            chat: Chat to kick member from
-            user: User to check and kick if no username
+            chat: Chat to kick member from.
+            user: User to check and kick if no username.
 
         Returns:
-            True if the user was kicked, False otherwise
+            True if the user was kicked, False otherwise.
         """
         no_username = user.username is None
         if no_username:
@@ -132,11 +137,12 @@ class MembersKicker:
     async def __KickSingle(self,
                            chat: pyrogram.types.Chat,
                            user: pyrogram.types.User) -> None:
-        """Kick a single member from the chat.
+        """
+        Kick a single member from the chat.
 
         Args:
-            chat: Chat to kick member from
-            user: User to kick
+            chat: Chat to kick member from.
+            user: User to kick.
         """
         if not self.config.GetValue(BotConfigTypes.APP_TEST_MODE):
             await self.ban_helper.KickUser(chat, user)
@@ -146,11 +152,12 @@ class MembersKicker:
     async def __KickMultiple(self,
                              chat: pyrogram.types.Chat,
                              members: ChatMembersList) -> None:
-        """Kick multiple members from the chat.
+        """
+        Kick multiple members from the chat.
 
         Args:
-            chat: Chat to kick members from
-            members: List of members to kick
+            chat: Chat to kick members from.
+            members: List of members to kick.
         """
         if not self.config.GetValue(BotConfigTypes.APP_TEST_MODE):
             for member in members:

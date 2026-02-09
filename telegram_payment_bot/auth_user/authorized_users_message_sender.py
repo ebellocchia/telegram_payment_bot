@@ -43,9 +43,9 @@ class AuthorizedUsersMessageSender:
         Constructor.
 
         Args:
-            client: Pyrogram client
-            config: Configuration object
-            logger: Logger instance
+            client: Pyrogram client.
+            config: Configuration object.
+            logger: Logger instance.
         """
         self.logger = logger
         self.auth_users_getter = AuthorizedUsersGetter(client, config)
@@ -59,9 +59,9 @@ class AuthorizedUsersMessageSender:
         Send a message to all authorized users in the chat.
 
         Args:
-            chat: Telegram chat
-            msg: Message to send
-            **kwargs: Additional keyword arguments for message sending
+            chat: Telegram chat.
+            msg: Message to send.
+            **kwargs: Additional keyword arguments for message sending.
         """
         # Send to authorized users
         for auth_member in await self.auth_users_getter.GetUsers(chat):

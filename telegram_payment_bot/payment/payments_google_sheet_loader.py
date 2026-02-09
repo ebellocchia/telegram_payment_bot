@@ -39,54 +39,59 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
     def __init__(self,
                  config: ConfigObject,
                  logger: Logger) -> None:
-        """Initialize the Google Sheets payments loader.
+        """
+        Initialize the Google Sheets payments loader.
 
         Args:
-            config: Configuration object
-            logger: Logger instance
+            config: Configuration object.
+            logger: Logger instance.
         """
         super().__init__(config, logger)
         self.google_sheet_rows_getter = GoogleSheetRowsGetter(config, logger)
 
     @override
     async def LoadAll(self) -> PaymentsData:
-        """Load all payment data from Google Sheet.
+        """
+        Load all payment data from Google Sheet.
 
         Returns:
-            PaymentsData containing all payments
+            PaymentsData containing all payments.
         """
         return (await self.__LoadAndCheckAll())[0]
 
     @override
     async def LoadSingleByUser(self,
                                user: User) -> Optional[SinglePayment]:
-        """Load a single payment by user from Google Sheet.
+        """
+        Load a single payment by user from Google Sheet.
 
         Args:
-            user: User to load payment for
+            user: User to load payment for.
 
         Returns:
-            SinglePayment for the user, or None if not found
+            SinglePayment for the user, or None if not found.
         """
         return (await self.LoadAll()).GetByUser(user)
 
     @override
     async def CheckForErrors(self) -> PaymentsDataErrors:
-        """Check for errors in the Google Sheet.
+        """
+        Check for errors in the Google Sheet.
 
         Returns:
-            PaymentsDataErrors containing any errors found
+            PaymentsDataErrors containing any errors found.
         """
         return (await self.__LoadAndCheckAll())[1]
 
     async def __LoadAndCheckAll(self) -> Tuple[PaymentsData, PaymentsDataErrors]:
-        """Load and check all payments from Google Sheet.
+        """
+        Load and check all payments from Google Sheet.
 
         Returns:
-            Tuple of (PaymentsData, PaymentsDataErrors)
+            Tuple of (PaymentsData, PaymentsDataErrors).
 
         Raises:
-            Exception: If an error occurs while loading the sheet
+            Exception: If an error occurs while loading the sheet.
         """
         try:
             payments_data, payments_data_err = await self.__LoadWorkSheet()
@@ -100,10 +105,11 @@ class PaymentsGoogleSheetLoader(PaymentsLoaderBase):
             raise
 
     async def __LoadWorkSheet(self) -> Tuple[PaymentsData, PaymentsDataErrors]:
-        """Load payment data from a Google Sheet.
+        """
+        Load payment data from a Google Sheet.
 
         Returns:
-            Tuple of (PaymentsData, PaymentsDataErrors)
+            Tuple of (PaymentsData, PaymentsDataErrors).
         """
         payments_data = PaymentsData(self.config)
         payments_data_err = PaymentsDataErrors()

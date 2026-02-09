@@ -38,8 +38,8 @@ class GoogleSheetRowsGetter:
         Constructor.
 
         Args:
-            config: Configuration object
-            logger: Logger object
+            config: Configuration object.
+            logger: Logger object.
         """
         self.google_sheet_opener = GoogleSheetOpener(config, logger)
 
@@ -49,10 +49,10 @@ class GoogleSheetRowsGetter:
         Get all rows from a worksheet.
 
         Args:
-            worksheet_idx: Worksheet index
+            worksheet_idx: Worksheet index.
 
         Returns:
-            List of rows, where each row is a list of strings
+            List of rows, where each row is a list of strings.
         """
         worksheet = await self.google_sheet_opener.OpenWorksheet(worksheet_idx)
         return await to_thread(

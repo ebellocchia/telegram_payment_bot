@@ -34,24 +34,26 @@ class MembersUsernameGetter:
     def __init__(self,
                  client: pyrogram.Client,
                  config: ConfigObject) -> None:
-        """Initialize the members username getter.
+        """
+        Initialize the members username getter.
 
         Args:
-            client: Pyrogram client instance
-            config: Configuration object
+            client: Pyrogram client instance.
+            config: Configuration object.
         """
         self.client = client
         self.config = config
 
     async def GetAllWithUsername(self,
                                  chat: pyrogram.types.Chat) -> ChatMembersList:
-        """Get all valid members that have a username.
+        """
+        Get all valid members that have a username.
 
         Args:
-            chat: Chat to get members from
+            chat: Chat to get members from.
 
         Returns:
-            List of chat members with usernames
+            List of chat members with usernames.
         """
         return await ChatMembersGetter(self.client).FilterMembers(
             chat,
@@ -64,13 +66,14 @@ class MembersUsernameGetter:
 
     async def GetAllWithNoUsername(self,
                                    chat: pyrogram.types.Chat) -> ChatMembersList:
-        """Get all valid members that do not have a username.
+        """
+        Get all valid members that do not have a username.
 
         Args:
-            chat: Chat to get members from
+            chat: Chat to get members from.
 
         Returns:
-            List of chat members without usernames
+            List of chat members without usernames.
         """
         return await ChatMembersGetter(self.client).FilterMembers(
             chat,

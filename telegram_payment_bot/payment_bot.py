@@ -35,7 +35,7 @@ class PaymentBot(BotBase):
         Constructor.
 
         Args:
-            config_file: Path to the configuration file
+            config_file: Path to the configuration file.
         """
         super().__init__(config_file,
                          BotConfig,

@@ -47,7 +47,7 @@ class Logger:
         Constructor.
 
         Args:
-            config: Configuration object
+            config: Configuration object.
         """
         self.config = config
         self.logger = logging.getLogger(LoggerConst.LOGGER_NAME)
@@ -58,7 +58,7 @@ class Logger:
         Get the logger instance.
 
         Returns:
-            Logger instance
+            Logger instance.
         """
         return self.logger
 
@@ -110,7 +110,7 @@ class Logger:
         Create log directory if it doesn't exist.
 
         Args:
-            file_name: Log file path
+            file_name: Log file path.
         """
         try:
             os.makedirs(os.path.dirname(file_name))

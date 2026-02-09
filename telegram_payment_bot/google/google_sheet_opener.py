@@ -43,8 +43,8 @@ class GoogleSheetOpener:
         Constructor.
 
         Args:
-            config: Configuration object
-            logger: Logger object
+            config: Configuration object.
+            logger: Logger object.
         """
         self.config = config
         self.logger = logger
@@ -56,10 +56,10 @@ class GoogleSheetOpener:
         Open a worksheet by index.
 
         Args:
-            worksheet_idx: Worksheet index
+            worksheet_idx: Worksheet index.
 
         Returns:
-            The worksheet object
+            The worksheet object.
         """
         await self.__OpenGoogleSheet()
         assert self.google_sheet is not None

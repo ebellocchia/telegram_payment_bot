@@ -40,7 +40,7 @@ class WrappedList(ABC):
         Add single element.
 
         Args:
-            element: Element to add
+            element: Element to add.
         """
         self.list_elements.append(element)
 
@@ -50,7 +50,7 @@ class WrappedList(ABC):
         Add multiple elements.
 
         Args:
-            elements: List or WrappedList containing elements to add
+            elements: List or WrappedList containing elements to add.
         """
         if isinstance(elements, WrappedList):
             self.list_elements.extend(elements.GetList())
@@ -63,7 +63,7 @@ class WrappedList(ABC):
         Remove single element.
 
         Args:
-            element: Element to remove
+            element: Element to remove.
         """
         self.list_elements.remove(element)
 
@@ -73,10 +73,10 @@ class WrappedList(ABC):
         Check if element is present.
 
         Args:
-            element: Element to check
+            element: Element to check.
 
         Returns:
-            True if element exists, False otherwise
+            True if element exists, False otherwise.
         """
         return element in self.list_elements
 
@@ -89,7 +89,7 @@ class WrappedList(ABC):
         Get elements count.
 
         Returns:
-            Number of elements
+            Number of elements.
         """
         return len(self.list_elements)
 
@@ -98,7 +98,7 @@ class WrappedList(ABC):
         Check if any elements exist.
 
         Returns:
-            True if list is not empty, False otherwise
+            True if list is not empty, False otherwise.
         """
         return self.Count() > 0
 
@@ -107,7 +107,7 @@ class WrappedList(ABC):
         Check if list is empty.
 
         Returns:
-            True if list is empty, False otherwise
+            True if list is empty, False otherwise.
         """
         return self.Count() == 0
 
@@ -118,8 +118,8 @@ class WrappedList(ABC):
         Sort the list.
 
         Args:
-            key: Optional key function for sorting
-            reverse: If True, sort in descending order
+            key: Optional key function for sorting.
+            reverse: If True, sort in descending order.
         """
         self.list_elements.sort(key=key, reverse=reverse)
 
@@ -128,7 +128,7 @@ class WrappedList(ABC):
         Get the underlying list.
 
         Returns:
-            The list
+            The list.
         """
         return self.list_elements
 
@@ -138,10 +138,10 @@ class WrappedList(ABC):
         Get item by index.
 
         Args:
-            key: Index to retrieve
+            key: Index to retrieve.
 
         Returns:
-            Element at the index
+            Element at the index.
         """
         return self.list_elements[key]
 
@@ -151,7 +151,7 @@ class WrappedList(ABC):
         Delete item by index.
 
         Args:
-            key: Index to delete
+            key: Index to delete.
         """
         del self.list_elements[key]
 
@@ -162,8 +162,8 @@ class WrappedList(ABC):
         Set item by index.
 
         Args:
-            key: Index to set
-            value: Value to set
+            key: Index to set.
+            value: Value to set.
         """
         self.list_elements[key] = value
 
@@ -172,6 +172,6 @@ class WrappedList(ABC):
         Get iterator over elements.
 
         Returns:
-            Iterator over list elements
+            Iterator over list elements.
         """
         yield from self.list_elements

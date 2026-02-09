@@ -46,12 +46,13 @@ class MembersPaymentGetter:
                  client: pyrogram.Client,
                  config: ConfigObject,
                  logger: Logger) -> None:
-        """Initialize the members payment getter.
+        """
+        Initialize the members payment getter.
 
         Args:
-            client: Pyrogram client instance
-            config: Configuration object
-            logger: Logger instance
+            client: Pyrogram client instance.
+            config: Configuration object.
+            logger: Logger instance.
         """
         self.client = client
         self.config = config
@@ -67,13 +68,14 @@ class MembersPaymentGetter:
 
     async def GetAllMembersWithOkPayment(self,
                                          chat: pyrogram.types.Chat) -> ChatMembersList:
-        """Get all members with valid (non-expired) payments.
+        """
+        Get all members with valid (non-expired) payments.
 
         Args:
-            chat: Chat to get members from
+            chat: Chat to get members from.
 
         Returns:
-            List of chat members with valid payments
+            List of chat members with valid payments.
         """
         payments = await self.__GetAllPayments()
 
@@ -89,13 +91,14 @@ class MembersPaymentGetter:
 
     async def GetAllMembersWithExpiredPayment(self,
                                               chat: pyrogram.types.Chat) -> ChatMembersList:
-        """Get all members with expired payments or no username.
+        """
+        Get all members with expired payments or no username.
 
         Args:
-            chat: Chat to get members from
+            chat: Chat to get members from.
 
         Returns:
-            List of chat members with expired payments
+            List of chat members with expired payments.
         """
         payments = await self.__GetAllPayments()
 
@@ -115,14 +118,15 @@ class MembersPaymentGetter:
     async def GetAllMembersWithExpiringPayment(self,
                                                chat: pyrogram.types.Chat,
                                                days: int) -> ChatMembersList:
-        """Get all members with payments expiring within specified days.
+        """
+        Get all members with payments expiring within specified days.
 
         Args:
-            chat: Chat to get members from
-            days: Number of days to check for expiration
+            chat: Chat to get members from.
+            days: Number of days to check for expiration.
 
         Returns:
-            List of chat members with expiring payments
+            List of chat members with expiring payments.
         """
         payments = await self.__GetAllPayments()
 
@@ -140,36 +144,39 @@ class MembersPaymentGetter:
         )
 
     async def GetAllEmailsWithExpiredPayment(self) -> PaymentsData:
-        """Get all emails with expired payments.
+        """
+        Get all emails with expired payments.
 
         Returns:
-            PaymentsData containing expired payments
+            PaymentsData containing expired payments.
         """
         return (await self.__GetAllPayments()).FilterExpired()
 
     async def GetAllEmailsWithExpiringPayment(self,
                                               days: int) -> PaymentsData:
-        """Get all emails with payments expiring within specified days.
+        """
+        Get all emails with payments expiring within specified days.
 
         Args:
-            days: Number of days to check for expiration
+            days: Number of days to check for expiration.
 
         Returns:
-            PaymentsData containing expiring payments
+            PaymentsData containing expiring payments.
         """
         return (await self.__GetAllPayments()).FilterExpiringInDays(days)
 
     async def IsSingleMemberExpired(self,
                                     chat: pyrogram.types.Chat,
                                     user: pyrogram.types.User) -> bool:
-        """Check if a single member's payment is expired.
+        """
+        Check if a single member's payment is expired.
 
         Args:
-            chat: Chat to check membership in
-            user: User to check
+            chat: Chat to check membership in.
+            user: User to check.
 
         Returns:
-            True if the payment is expired, False otherwise
+            True if the payment is expired, False otherwise.
         """
         chat_members = await ChatMembersGetter(self.client).GetSingle(chat, user)
         if chat_members is None:
@@ -179,10 +186,11 @@ class MembersPaymentGetter:
         return single_payment.IsExpired() if single_payment is not None else True
 
     async def __GetAllPayments(self) -> PaymentsData:
-        """Get all payments, loading them if not cached.
+        """
+        Get all payments, loading them if not cached.
 
         Returns:
-            PaymentsData containing all payments
+            PaymentsData containing all payments.
         """
         if self.payments_cache is None:
             self.payments_cache = await self.payments_loader.LoadAll()
@@ -191,13 +199,14 @@ class MembersPaymentGetter:
 
     async def __GetSinglePayment(self,
                                  user: pyrogram.types.User) -> Optional[SinglePayment]:
-        """Get a single user's payment, loading it if not cached.
+        """
+        Get a single user's payment, loading it if not cached.
 
         Args:
-            user: User to get payment for
+            user: User to get payment for.
 
         Returns:
-            SinglePayment for the user, or None if not found
+            SinglePayment for the user, or None if not found.
         """
         if self.single_payment_cache is None or self.single_payment_cache["user_id"] != user.id:
             self.single_payment_cache = {

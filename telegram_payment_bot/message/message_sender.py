@@ -46,8 +46,8 @@ class MessageSender:
         Constructor.
 
         Args:
-            client: Pyrogram client
-            logger: Logger object
+            client: Pyrogram client.
+            logger: Logger object.
         """
         self.client = client
         self.logger = logger
@@ -61,13 +61,13 @@ class MessageSender:
         Send a message to a receiver, splitting if necessary.
 
         Args:
-            receiver: Chat or user to send the message to
-            topic_id: Topic to send the message to
-            msg: Message text to send
-            **kwargs: Additional arguments to pass to send_message
+            receiver: Chat or user to send the message to.
+            topic_id: Topic to send the message to.
+            msg: Message text to send.
+            **kwargs: Additional arguments to pass to send_message.
 
         Returns:
-            List of sent message objects
+            List of sent message objects.
         """
         # Log
         self.logger.GetLogger().debug(f"Sending message (length: {len(msg)}):\n{msg}")
@@ -83,13 +83,13 @@ class MessageSender:
         Send a message that has been split into multiple parts.
 
         Args:
-            receiver: Chat or user to send the message to
-            topic_id: Topic to send the message to
-            split_msg: List of message parts
-            **kwargs: Additional arguments to pass to send_message
+            receiver: Chat or user to send the message to.
+            topic_id: Topic to send the message to.
+            split_msg: List of message parts.
+            **kwargs: Additional arguments to pass to send_message.
 
         Returns:
-            List of sent message objects
+            List of sent message objects.
         """
         sent_msgs = []
 
@@ -107,10 +107,10 @@ class MessageSender:
         Split a message into parts if it exceeds the maximum length.
 
         Args:
-            msg: Message to split
+            msg: Message to split.
 
         Returns:
-            List of message parts
+            List of message parts.
         """
         msg_parts = []
 

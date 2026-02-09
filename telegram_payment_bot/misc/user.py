@@ -42,11 +42,11 @@ class User:
         Construct a User instance from a string representation.
 
         Args:
-            config: The configuration object
-            user_str: The string representation of the user (ID or username)
+            config: The configuration object.
+            user_str: The string representation of the user (ID or username).
 
         Returns:
-            A new User instance
+            A new User instance.
         """
         if config.GetValue(BotConfigTypes.PAYMENT_USE_USER_ID):
             try:
@@ -67,14 +67,14 @@ class User:
         Construct a User instance from a Pyrogram User object.
 
         Args:
-            config: The configuration object
-            user: The Pyrogram User object
+            config: The configuration object.
+            user: The Pyrogram User object.
 
         Returns:
-            A new User instance
+            A new User instance.
 
         Raises:
-            ValueError: If username is None when username mode is enabled
+            ValueError: If username is None when username mode is enabled.
         """
         if config.GetValue(BotConfigTypes.PAYMENT_USE_USER_ID):
             return cls(user.id)
@@ -89,7 +89,7 @@ class User:
         Initialize a User instance.
 
         Args:
-            user: The user ID (int) or username (str)
+            user: The user ID (int) or username (str).
         """
         self.user = user
 
@@ -98,7 +98,7 @@ class User:
         Check if the user is represented by a username.
 
         Returns:
-            True if the user is represented by a username, False otherwise
+            True if the user is represented by a username, False otherwise.
         """
         return isinstance(self.user, str) or self.user is None
 
@@ -107,7 +107,7 @@ class User:
         Check if the user representation is valid.
 
         Returns:
-            True if the user is valid (non-empty username or non-zero ID), False otherwise
+            True if the user is valid (non-empty username or non-zero ID), False otherwise.
         """
         return self.user != "" if self.IsUsername() else self.user != 0
 
@@ -116,7 +116,7 @@ class User:
         Get the user value (ID or username).
 
         Returns:
-            The user ID or username
+            The user ID or username.
         """
         return self.user
 
@@ -125,10 +125,10 @@ class User:
         Get the user value as a key for dictionary lookups.
 
         Returns:
-            The user ID or lowercase username for consistent key lookups
+            The user ID or lowercase username for consistent key lookups.
 
         Raises:
-            KeyError: If the user is invalid
+            KeyError: If the user is invalid.
         """
         if not self.IsValid():
             raise KeyError("An invalid user cannot be used as a key")
@@ -140,7 +140,7 @@ class User:
         Convert the user to a string representation.
 
         Returns:
-            The string representation of the user
+            The string representation of the user.
         """
         return f"{self.user}"
 
@@ -149,6 +149,6 @@ class User:
         Convert the user to a string representation.
 
         Returns:
-            The string representation of the user
+            The string representation of the user.
         """
         return self.ToString()

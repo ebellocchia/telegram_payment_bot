@@ -40,41 +40,45 @@ class PaymentsLoaderBase(ABC):
     def __init__(self,
                  config: ConfigObject,
                  logger: Logger) -> None:
-        """Initialize the payments loader.
+        """
+        Initialize the payments loader.
 
         Args:
-            config: Configuration object
-            logger: Logger instance
+            config: Configuration object.
+            logger: Logger instance.
         """
         self.config = config
         self.logger = logger
 
     @abstractmethod
     async def LoadAll(self) -> PaymentsData:
-        """Load all payment data.
+        """
+        Load all payment data.
 
         Returns:
-            PaymentsData containing all payments
+            PaymentsData containing all payments.
         """
 
     @abstractmethod
     async def LoadSingleByUser(self,
                                user: User) -> Optional[SinglePayment]:
-        """Load a single payment by user.
+        """
+        Load a single payment by user.
 
         Args:
-            user: User to load payment for
+            user: User to load payment for.
 
         Returns:
-            SinglePayment for the user, or None if not found
+            SinglePayment for the user, or None if not found.
         """
 
     @abstractmethod
     async def CheckForErrors(self) -> PaymentsDataErrors:
-        """Check for errors in the payment data.
+        """
+        Check for errors in the payment data.
 
         Returns:
-            PaymentsDataErrors containing any errors found
+            PaymentsDataErrors containing any errors found.
         """
 
     def _AddPayment(self,
@@ -84,15 +88,16 @@ class PaymentsLoaderBase(ABC):
                     email: str,
                     user: User,
                     expiration: str) -> None:
-        """Add a payment entry from a row.
+        """
+        Add a payment entry from a row.
 
         Args:
-            row_idx: Row index (1-based)
-            payments_data: PaymentsData to add to
-            payments_data_err: PaymentsDataErrors to add errors to
-            email: Email address
-            user: User object
-            expiration: Expiration date string
+            row_idx: Row index (1-based).
+            payments_data: PaymentsData to add to.
+            payments_data_err: PaymentsDataErrors to add errors to.
+            email: Email address.
+            user: User object.
+            expiration: Expiration date string.
         """
         try:
             if isinstance(expiration, datetime):
@@ -126,12 +131,13 @@ class PaymentsLoaderBase(ABC):
 
     @staticmethod
     def _ColumnToIndex(col: str) -> int:
-        """Convert column letter to zero-based index.
+        """
+        Convert column letter to zero-based index.
 
         Args:
-            col: Column letter (e.g., 'A', 'B')
+            col: Column letter (e.g., 'A', 'B').
 
         Returns:
-            Zero-based column index
+            Zero-based column index.
         """
         return ord(col) - ord("A")

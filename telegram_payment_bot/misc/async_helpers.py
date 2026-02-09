@@ -18,8 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-"""Async helper functions for compatibility across Python versions."""
-
 import asyncio
 import functools
 import sys
@@ -42,12 +40,12 @@ else:
         and run_in_executor() on Python 3.8.
 
         Args:
-            func: Function to run in a thread
-            *args: Positional arguments for the function
-            **kwargs: Keyword arguments for the function
+            func: Function to run in a thread.
+            *args: Positional arguments for the function.
+            **kwargs: Keyword arguments for the function.
 
         Returns:
-            The return value of the function
+            The return value of the function.
         """
         loop = asyncio.get_event_loop()
         pfunc = functools.partial(func, **kwargs) if kwargs else func

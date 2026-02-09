@@ -49,10 +49,10 @@ class _BotConfigUtils:
         Read file contents.
 
         Args:
-            file_name: File name to read
+            file_name: File name to read.
 
         Returns:
-            File contents as string
+            File contents as string.
         """
         with open(file_name, encoding="utf-8") as fin:
             return fin.read()
@@ -64,11 +64,11 @@ class _BotConfigUtils:
         Check if column indexes are valid.
 
         Args:
-            config: Configuration object
-            curr_col: Current column to validate
+            config: Configuration object.
+            curr_col: Current column to validate.
 
         Returns:
-            True if column indexes are valid, False otherwise
+            True if column indexes are valid, False otherwise.
         """
         if len(curr_col) != 1 or curr_col < _BotConfigUtils.COL_MIN_VAL or curr_col > _BotConfigUtils.COL_MAX_VAL:
             return False

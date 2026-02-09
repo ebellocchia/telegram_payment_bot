@@ -50,10 +50,10 @@ def GroupChatOnly(exec_cmd_fct: Callable[..., Any]) -> Callable[..., Any]:
     Decorator for group-only commands.
 
     Args:
-        exec_cmd_fct: Command execution function
+        exec_cmd_fct: Command execution function.
 
     Returns:
-        Decorated function that checks for group chat
+        Decorated function that checks for group chat.
     """
 
     async def decorated(self,
@@ -76,7 +76,7 @@ class HelpCmd(CommandBase):
         Execute the help command.
 
         Args:
-            **kwargs: Additional keyword arguments
+            **kwargs: Additional keyword arguments.
         """
         await self._SendMessage(self.translator.GetSentence("HELP_CMD",
                                                             name=UserHelper.GetName(self.cmd_data.User())))
@@ -92,7 +92,7 @@ class AliveCmd(CommandBase):
         Execute the alive command.
 
         Args:
-            **kwargs: Additional keyword arguments
+            **kwargs: Additional keyword arguments.
         """
         await self._SendMessage(self.translator.GetSentence("ALIVE_CMD"))
 

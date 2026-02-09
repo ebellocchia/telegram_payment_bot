@@ -50,84 +50,93 @@ class SinglePayment:
                  email: str,
                  user: User,
                  expiration_date: datetime.date):
-        """Initialize a single payment entry.
+        """
+        Initialize a single payment entry.
 
         Args:
-            email: User email address
-            user: User object
-            expiration_date: Payment expiration date
+            email: User email address.
+            user: User object.
+            expiration_date: Payment expiration date.
         """
         self.email = email
         self.user = user
         self.expiration_date = expiration_date
 
     def Email(self) -> str:
-        """Get the email address.
+        """
+        Get the email address.
 
         Returns:
-            Email address
+            Email address.
         """
         return self.email
 
     def User(self) -> User:
-        """Get the user object.
+        """
+        Get the user object.
 
         Returns:
-            User object
+            User object.
         """
         return self.user
 
     def ExpirationDate(self) -> datetime.date:
-        """Get the expiration date.
+        """
+        Get the expiration date.
 
         Returns:
-            Expiration date
+            Expiration date.
         """
         return self.expiration_date
 
     def DaysLeft(self) -> int:
-        """Get the number of days left until expiration.
+        """
+        Get the number of days left until expiration.
 
         Returns:
-            Number of days left (negative if expired)
+            Number of days left (negative if expired).
         """
         return (self.expiration_date - datetime.date.today()).days
 
     def IsExpired(self) -> bool:
-        """Check if the payment is expired.
+        """
+        Check if the payment is expired.
 
         Returns:
-            True if expired, False otherwise
+            True if expired, False otherwise.
         """
         return self.expiration_date < datetime.date.today()
 
     def IsExpiringInDays(self,
                          days: int) -> bool:
-        """Check if the payment is expiring within the specified number of days.
+        """
+        Check if the payment is expiring within the specified number of days.
 
         Args:
-            days: Number of days to check
+            days: Number of days to check.
 
         Returns:
-            True if expiring within the specified days, False otherwise
+            True if expiring within the specified days, False otherwise.
         """
         return self.DaysLeft() < days
 
     def ToString(self) -> str:
-        """Convert to string representation.
+        """
+        Convert to string representation.
 
         Returns:
-            String representation
+            String representation.
         """
         if self.email:
             return f"{self.email} ({self.user}): {self.expiration_date.strftime('%Y-%m-%d')}"
         return f"{self.user}: {self.expiration_date.strftime('%Y-%m-%d')}"
 
     def __str__(self) -> str:
-        """Convert to string representation.
+        """
+        Convert to string representation.
 
         Returns:
-            String representation
+            String representation.
         """
         return self.ToString()
 
@@ -145,13 +154,14 @@ class PaymentError:
                  row: int,
                  user: User,
                  expiration_data: Optional[str]):
-        """Initialize a payment error.
+        """
+        Initialize a payment error.
 
         Args:
-            err_type: Type of error
-            row: Row number where error occurred
-            user: User associated with the error
-            expiration_data: Expiration date string (if applicable)
+            err_type: Type of error.
+            row: Row number where error occurred.
+            user: User associated with the error.
+            expiration_data: Expiration date string (if applicable).
         """
         self.err_type = err_type
         self.row = row
@@ -159,34 +169,38 @@ class PaymentError:
         self.expiration_date = expiration_data
 
     def Type(self) -> PaymentErrorTypes:
-        """Get the error type.
+        """
+        Get the error type.
 
         Returns:
-            Error type
+            Error type.
         """
         return self.err_type
 
     def Row(self) -> int:
-        """Get the row number.
+        """
+        Get the row number.
 
         Returns:
-            Row number
+            Row number.
         """
         return self.row
 
     def User(self) -> User:
-        """Get the user.
+        """
+        Get the user.
 
         Returns:
-            User object
+            User object.
         """
         return self.user
 
     def ExpirationDate(self) -> Optional[str]:
-        """Get the expiration date string.
+        """
+        Get the expiration date string.
 
         Returns:
-            Expiration date string, or None
+            Expiration date string, or None.
         """
         return self.expiration_date
 
@@ -199,13 +213,14 @@ class PaymentsDataErrors(WrappedList):
                         row: int,
                         user: User,
                         expiration: Optional[str] = None) -> None:
-        """Add a payment error to the collection.
+        """
+        Add a payment error to the collection.
 
         Args:
-            err_type: Type of error
-            row: Row number where error occurred
-            user: User associated with the error
-            expiration: Expiration date string (optional)
+            err_type: Type of error.
+            row: Row number where error occurred.
+            user: User associated with the error.
+            expiration: Expiration date string (optional).
         """
         self.AddSingle(PaymentError(err_type, row, user, expiration))
 
@@ -217,10 +232,11 @@ class PaymentsData(WrappedDict):
 
     def __init__(self,
                  config: ConfigObject) -> None:
-        """Initialize payments data collection.
+        """
+        Initialize payments data collection.
 
         Args:
-            config: Configuration object
+            config: Configuration object.
         """
         super().__init__()
         self.config = config
@@ -229,15 +245,16 @@ class PaymentsData(WrappedDict):
                    email: str,
                    user: User,
                    expiration: datetime.date) -> bool:
-        """Add a payment to the collection.
+        """
+        Add a payment to the collection.
 
         Args:
-            email: User email address
-            user: User object
-            expiration: Payment expiration date
+            email: User email address.
+            user: User object.
+            expiration: Payment expiration date.
 
         Returns:
-            True if added successfully, False if user already exists or email is duplicated
+            True if added successfully, False if user already exists or email is duplicated.
         """
         if not self.IsUserExistent(user):
             if self.config.GetValue(BotConfigTypes.PAYMENT_CHECK_DUP_EMAIL):
@@ -250,13 +267,14 @@ class PaymentsData(WrappedDict):
 
     def GetByEmail(self,
                    email: str) -> Optional[SinglePayment]:
-        """Get payment by email address.
+        """
+        Get payment by email address.
 
         Args:
-            email: Email address to search for
+            email: Email address to search for.
 
         Returns:
-            SinglePayment if found, None otherwise
+            SinglePayment if found, None otherwise.
         """
         for _, payment in self.dict_elements.items():
             if email == payment.Email():
@@ -265,13 +283,14 @@ class PaymentsData(WrappedDict):
 
     def GetByUser(self,
                   user: User) -> Optional[SinglePayment]:
-        """Get payment by user.
+        """
+        Get payment by user.
 
         Args:
-            user: User to search for
+            user: User to search for.
 
         Returns:
-            SinglePayment if found, None otherwise
+            SinglePayment if found, None otherwise.
         """
         if not user.IsValid() or user.GetAsKey() not in self.dict_elements:
             return None
@@ -279,37 +298,40 @@ class PaymentsData(WrappedDict):
 
     def IsEmailExistent(self,
                         email: str) -> bool:
-        """Check if an email exists in the payment data.
+        """
+        Check if an email exists in the payment data.
 
         Args:
-            email: Email address to check
+            email: Email address to check.
 
         Returns:
-            True if email exists, False otherwise
+            True if email exists, False otherwise.
         """
         return self.GetByEmail(email) is not None
 
     def IsUserExistent(self,
                        user: User) -> bool:
-        """Check if a user exists in the payment data.
+        """
+        Check if a user exists in the payment data.
 
         Args:
-            user: User to check
+            user: User to check.
 
         Returns:
-            True if user exists, False otherwise
+            True if user exists, False otherwise.
         """
         return self.GetByUser(user) is not None
 
     def IsExpiredByUser(self,
                         user: User) -> bool:
-        """Check if a user's payment is expired.
+        """
+        Check if a user's payment is expired.
 
         Args:
-            user: User to check
+            user: User to check.
 
         Returns:
-            True if expired or user not found, False otherwise
+            True if expired or user not found, False otherwise.
         """
         payment = self.GetByUser(user)
         return payment.IsExpired() if payment is not None else True
@@ -317,23 +339,25 @@ class PaymentsData(WrappedDict):
     def IsExpiringInDaysByUser(self,
                                user: User,
                                days: int) -> bool:
-        """Check if a user's payment is expiring within specified days.
+        """
+        Check if a user's payment is expiring within specified days.
 
         Args:
-            user: User to check
-            days: Number of days to check
+            user: User to check.
+            days: Number of days to check.
 
         Returns:
-            True if expiring or user not found, False otherwise
+            True if expiring or user not found, False otherwise.
         """
         payment = self.GetByUser(user)
         return payment.IsExpiringInDays(days) if payment is not None else True
 
     def FilterExpired(self) -> PaymentsData:
-        """Filter and return only expired payments.
+        """
+        Filter and return only expired payments.
 
         Returns:
-            PaymentsData containing only expired payments
+            PaymentsData containing only expired payments.
         """
         expired_payments = {user: payment for (user, payment)
                             in self.dict_elements.items()
@@ -346,13 +370,14 @@ class PaymentsData(WrappedDict):
 
     def FilterExpiringInDays(self,
                              days: int) -> PaymentsData:
-        """Filter and return payments expiring within specified days.
+        """
+        Filter and return payments expiring within specified days.
 
         Args:
-            days: Number of days to check
+            days: Number of days to check.
 
         Returns:
-            PaymentsData containing payments expiring within specified days
+            PaymentsData containing payments expiring within specified days.
         """
         expiring_payments = {user: payment for (user, payment)
                              in self.dict_elements.items()
@@ -364,19 +389,21 @@ class PaymentsData(WrappedDict):
         return payments
 
     def ToString(self) -> str:
-        """Convert to string representation.
+        """
+        Convert to string representation.
 
         Returns:
-            String representation
+            String representation.
         """
         return "\n".join(
             [f"- {str(payment)}" for _, payment in self.dict_elements.items()]
         )
 
     def __str__(self) -> str:
-        """Convert to string representation.
+        """
+        Convert to string representation.
 
         Returns:
-            String representation
+            String representation.
         """
         return self.ToString()

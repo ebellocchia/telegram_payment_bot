@@ -130,9 +130,9 @@ class CommandDispatcher:
         Constructor.
 
         Args:
-            config: Configuration object
-            logger: Logger instance
-            translator: Translation loader
+            config: Configuration object.
+            logger: Logger instance.
+            translator: Translation loader.
         """
         self.config = config
         self.logger = logger
@@ -147,13 +147,13 @@ class CommandDispatcher:
         Dispatch a command.
 
         Args:
-            client: Pyrogram client
-            message: Telegram message
-            cmd_type: Command type
-            **kwargs: Additional keyword arguments
+            client: Pyrogram client.
+            message: Telegram message.
+            cmd_type: Command type.
+            **kwargs: Additional keyword arguments.
 
         Raises:
-            TypeError: If cmd_type is not a CommandTypes enum value
+            TypeError: If cmd_type is not a CommandTypes enum value.
         """
         if not isinstance(cmd_type, CommandTypes):
             raise TypeError("Command type is not an enumerative of CommandTypes")

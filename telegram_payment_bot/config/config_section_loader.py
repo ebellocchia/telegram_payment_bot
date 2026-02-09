@@ -32,10 +32,11 @@ class ConfigSectionLoader:
 
     def __init__(self,
                  config_parser: configparser.ConfigParser) -> None:
-        """Initialize the configuration section loader.
+        """
+        Initialize the configuration section loader.
 
         Args:
-            config_parser: ConfigParser instance to use for loading
+            config_parser: ConfigParser instance to use for loading.
         """
         self.config_parser = config_parser
 
@@ -43,12 +44,13 @@ class ConfigSectionLoader:
                     config_obj: ConfigObject,
                     section_name: str,
                     section: ConfigSectionType) -> None:
-        """Load a configuration section.
+        """
+        Load a configuration section.
 
         Args:
-            config_obj: ConfigObject to populate with loaded values
-            section_name: Name of the section to load
-            section: Section definition containing field specifications
+            config_obj: ConfigObject to populate with loaded values.
+            section_name: Name of the section to load.
+            section: Section definition containing field specifications.
         """
         for field in section:
             if self.__FieldShallBeLoaded(config_obj, field):
@@ -60,14 +62,15 @@ class ConfigSectionLoader:
     @staticmethod
     def __FieldShallBeLoaded(config_obj: ConfigObject,
                              field: ConfigFieldType) -> bool:
-        """Check if a field should be loaded based on its load_if condition.
+        """
+        Check if a field should be loaded based on its load_if condition.
 
         Args:
-            config_obj: ConfigObject to check conditions against
-            field: Field definition to check
+            config_obj: ConfigObject to check conditions against.
+            field: Field definition to check.
 
         Returns:
-            True if the field should be loaded, False otherwise
+            True if the field should be loaded, False otherwise.
         """
         return field["load_if"](config_obj) if "load_if" in field else True
 
@@ -75,16 +78,17 @@ class ConfigSectionLoader:
                         config_obj: ConfigObject,
                         section: str,
                         field: ConfigFieldType) -> None:
-        """Set a field value in the configuration object.
+        """
+        Set a field value in the configuration object.
 
         Args:
-            config_obj: ConfigObject to set the value in
-            section: Section name containing the field
-            field: Field definition
+            config_obj: ConfigObject to set the value in.
+            section: Section name containing the field.
+            field: Field definition.
 
         Raises:
-            ConfigFieldNotExistentError: If the field is not found and has no default value
-            ConfigFieldValueError: If the field value fails validation
+            ConfigFieldNotExistentError: If the field is not found and has no default value.
+            ConfigFieldValueError: If the field value fails validation.
         """
         try:
             field_val = self.config_parser[section][field["name"]]
@@ -104,11 +108,12 @@ class ConfigSectionLoader:
     @staticmethod
     def __PrintFieldValue(config_obj: ConfigObject,
                           field: ConfigFieldType) -> None:
-        """Print a field value to the console.
+        """
+        Print a field value to the console.
 
         Args:
-            config_obj: ConfigObject containing the field value
-            field: Field definition
+            config_obj: ConfigObject containing the field value.
+            field: Field definition.
         """
         if "print_fct" in field:
             print(f"- {field['name']}: {field['print_fct'](config_obj.GetValue(field['type']))}")

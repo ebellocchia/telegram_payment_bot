@@ -54,10 +54,10 @@ class CommandBase(ABC):
         Constructor.
 
         Args:
-            client: Pyrogram client
-            config: Configuration object
-            logger: Logger instance
-            translator: Translation loader
+            client: Pyrogram client.
+            config: Configuration object.
+            logger: Logger instance.
+            translator: Translation loader.
         """
         self.client = client
         self.config = config
@@ -72,8 +72,8 @@ class CommandBase(ABC):
         Execute the command.
 
         Args:
-            message: Telegram message containing the command
-            **kwargs: Additional keyword arguments
+            message: Telegram message containing the command.
+            **kwargs: Additional keyword arguments.
         """
         self.message = message
         self.cmd_data = CommandData(message)
@@ -105,7 +105,7 @@ class CommandBase(ABC):
         Send a message.
 
         Args:
-            msg: Message to send
+            msg: Message to send.
         """
         if self._IsQuietMode():
             cmd_user = self.cmd_data.User()
@@ -122,7 +122,7 @@ class CommandBase(ABC):
         Send a message to authorized users.
 
         Args:
-            msg: Message to send
+            msg: Message to send.
         """
         await AuthorizedUsersMessageSender(self.client, self.config, self.logger).SendMessage(self.cmd_data.Chat(), msg)
 
@@ -131,7 +131,7 @@ class CommandBase(ABC):
         Check if command was executed in a channel.
 
         Returns:
-            True if channel, False otherwise
+            True if channel, False otherwise.
         """
         return ChatHelper.IsChannel(self.cmd_data.Chat())
 
@@ -140,7 +140,7 @@ class CommandBase(ABC):
         Check if user is anonymous.
 
         Returns:
-            True if user is anonymous, False otherwise
+            True if user is anonymous, False otherwise.
         """
         return self.cmd_data.User() is None
 
@@ -149,7 +149,7 @@ class CommandBase(ABC):
         Check if user is authorized.
 
         Returns:
-            True if user is authorized, False otherwise
+            True if user is authorized, False otherwise.
         """
         if not self._IsChannel():
             user = self.cmd_data.User()
@@ -161,7 +161,7 @@ class CommandBase(ABC):
         Check if chat is private.
 
         Returns:
-            True if private chat, False otherwise
+            True if private chat, False otherwise.
         """
         cmd_user = self.cmd_data.User()
         if cmd_user is None:
@@ -173,7 +173,7 @@ class CommandBase(ABC):
         Check if quiet mode is enabled.
 
         Returns:
-            True if quiet mode is enabled, False otherwise
+            True if quiet mode is enabled, False otherwise.
         """
         return self.cmd_data.Params().IsLast("q") or self.cmd_data.Params().IsLast("quiet")
 
@@ -202,5 +202,5 @@ class CommandBase(ABC):
         Execute the command implementation.
 
         Args:
-            **kwargs: Additional keyword arguments
+            **kwargs: Additional keyword arguments.
         """

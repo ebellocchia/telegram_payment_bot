@@ -37,16 +37,17 @@ class ConfigObject:
 
     def GetValue(self,
                  config_type: ConfigTypes) -> Any:
-        """Get the value for the specified configuration type.
+        """
+        Get the value for the specified configuration type.
 
         Args:
-            config_type: The configuration type to retrieve
+            config_type: The configuration type to retrieve.
 
         Returns:
-            The value associated with the configuration type
+            The value associated with the configuration type.
 
         Raises:
-            TypeError: If config_type is not an instance of ConfigTypes
+            TypeError: If config_type is not an instance of ConfigTypes.
         """
         if not isinstance(config_type, ConfigTypes):
             raise TypeError("BotConfig type is not an enumerative of ConfigTypes")
@@ -55,14 +56,15 @@ class ConfigObject:
     def SetValue(self,
                  config_type: ConfigTypes,
                  value: Any) -> None:
-        """Set the value for the specified configuration type.
+        """
+        Set the value for the specified configuration type.
 
         Args:
-            config_type: The configuration type to set
-            value: The value to associate with the configuration type
+            config_type: The configuration type to set.
+            value: The value to associate with the configuration type.
 
         Raises:
-            TypeError: If config_type is not an instance of ConfigTypes
+            TypeError: If config_type is not an instance of ConfigTypes.
         """
         if not isinstance(config_type, ConfigTypes):
             raise TypeError("BotConfig type is not an enumerative of ConfigTypes")
@@ -70,12 +72,13 @@ class ConfigObject:
 
     def IsValueSet(self,
                    config_type: ConfigTypes) -> bool:
-        """Check if a value is set for the specified configuration type.
+        """
+        Check if a value is set for the specified configuration type.
 
         Args:
-            config_type: The configuration type to check
+            config_type: The configuration type to check.
 
         Returns:
-            True if the configuration type has a value set, False otherwise
+            True if the configuration type has a value set, False otherwise.
         """
         return config_type in self.config

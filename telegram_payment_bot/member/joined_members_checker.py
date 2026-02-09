@@ -45,13 +45,14 @@ class JoinedMembersChecker:
                  config: ConfigObject,
                  logger: Logger,
                  translator: TranslationLoader) -> None:
-        """Initialize the joined members checker.
+        """
+        Initialize the joined members checker.
 
         Args:
-            client: Pyrogram client instance
-            config: Configuration object
-            logger: Logger instance
-            translator: Translation loader instance
+            client: Pyrogram client instance.
+            config: Configuration object.
+            logger: Logger instance.
+            translator: Translation loader instance.
         """
         self.client = client
         self.config = config
@@ -63,11 +64,12 @@ class JoinedMembersChecker:
     async def CheckNewUsers(self,
                             chat: pyrogram.types.Chat,
                             new_users: List[pyrogram.types.User]) -> None:
-        """Check multiple new users for username and payment requirements.
+        """
+        Check multiple new users for username and payment requirements.
 
         Args:
-            chat: Chat where users joined
-            new_users: List of users to check
+            chat: Chat where users joined.
+            new_users: List of users to check.
         """
         for user in new_users:
             if not user.is_self and not user.is_bot:
@@ -76,11 +78,12 @@ class JoinedMembersChecker:
     async def __CheckSingleUser(self,
                                 chat: pyrogram.types.Chat,
                                 user: pyrogram.types.User) -> None:
-        """Check a single user for username and payment requirements.
+        """
+        Check a single user for username and payment requirements.
 
         Args:
-            chat: Chat where user joined
-            user: User to check
+            chat: Chat where user joined.
+            user: User to check.
         """
         if await self.member_kicker.KickSingleIfNoUsername(chat, user):
             self.logger.GetLogger().info(

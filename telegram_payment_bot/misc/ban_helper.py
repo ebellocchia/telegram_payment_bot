@@ -40,7 +40,7 @@ class BanHelper:
         Initialize the ban helper.
 
         Args:
-            client: The Pyrogram client instance
+            client: The Pyrogram client instance.
         """
         self.client = client
 
@@ -51,8 +51,8 @@ class BanHelper:
         Ban a user from a chat permanently.
 
         Args:
-            chat: The chat to ban the user from
-            user: The user to ban
+            chat: The chat to ban the user from.
+            user: The user to ban.
         """
         await self.client.ban_chat_member(chat.id,
                                           user.id,
@@ -65,8 +65,8 @@ class BanHelper:
         Kick a user from a chat temporarily.
 
         Args:
-            chat: The chat to kick the user from
-            user: The user to kick
+            chat: The chat to kick the user from.
+            user: The user to kick.
         """
         await self.client.ban_chat_member(chat.id,
                                           user.id,
@@ -79,7 +79,7 @@ class BanHelper:
         Unban a user from a chat.
 
         Args:
-            chat: The chat to unban the user from
-            user: The user to unban
+            chat: The chat to unban the user from.
+            user: The user to unban.
         """
         await self.client.unban_chat_member(chat.id, user.id)

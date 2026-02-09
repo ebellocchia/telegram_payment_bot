@@ -49,7 +49,14 @@ class PaymentsEmailer:
                  client: pyrogram.Client,
                  config: ConfigObject,
                  logger: Logger) -> None:
-        """Constructor."""
+        """
+        Initialize the payments emailer.
+
+        Args:
+            client: Pyrogram client instance.
+            config: Configuration object.
+            logger: Logger instance.
+        """
         self.client = client
         self.config = config
         self.logger = logger
@@ -57,21 +64,39 @@ class PaymentsEmailer:
         self.members_payment_getter = MembersPaymentGetter(client, config, logger)
 
     async def EmailAllWithExpiredPayment(self) -> PaymentsData:
-        """Email all users with expired payment."""
+        """
+        Email all users with expired payment.
+
+        Returns:
+            PaymentsData containing all expired payments.
+        """
         expired_payments = await self.members_payment_getter.GetAllEmailsWithExpiredPayment()
         await self.__SendEmails(expired_payments)
         return expired_payments
 
     async def EmailAllWithExpiringPayment(self,
                                           days: int) -> PaymentsData:
-        """Email all users with expiring payment in the specified number of days."""
+        """
+        Email all users with expiring payment in the specified number of days.
+
+        Args:
+            days: Number of days until payment expiration.
+
+        Returns:
+            PaymentsData containing all expiring payments.
+        """
         expired_payments = await self.members_payment_getter.GetAllEmailsWithExpiringPayment(days)
         await self.__SendEmails(expired_payments)
         return expired_payments
 
     async def __SendEmails(self,
                            expired_payments: PaymentsData) -> None:
-        """Send emails to expired payments."""
+        """
+        Send emails to expired payments.
+
+        Args:
+            expired_payments: PaymentsData containing expired payments.
+        """
         if self.config.GetValue(BotConfigTypes.APP_TEST_MODE):
             self.logger.GetLogger().info("Test mode ON: no email was sent")
             return

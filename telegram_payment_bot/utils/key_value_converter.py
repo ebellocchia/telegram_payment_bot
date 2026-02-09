@@ -32,7 +32,7 @@ class KeyValueConverter:
         Constructor.
 
         Args:
-            kv_dict: Dictionary for key-value conversion
+            kv_dict: Dictionary for key-value conversion.
         """
         self.kv_dict = kv_dict
 
@@ -42,10 +42,10 @@ class KeyValueConverter:
         Convert key to value.
 
         Args:
-            key: Key to look up
+            key: Key to look up.
 
         Returns:
-            Value associated with the key
+            Value associated with the key.
         """
         return self.kv_dict[key]
 
@@ -55,10 +55,10 @@ class KeyValueConverter:
         Convert value to key.
 
         Args:
-            value: Value to look up
+            value: Value to look up.
 
         Returns:
-            Key associated with the value
+            Key associated with the value.
         """
         idx = list(self.kv_dict.values()).index(value)
         return list(self.kv_dict.keys())[idx]

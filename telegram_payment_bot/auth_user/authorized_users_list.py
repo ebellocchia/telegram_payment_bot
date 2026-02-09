@@ -34,7 +34,7 @@ class AuthorizedUsersList(WrappedList):
         Constructor.
 
         Args:
-            config: Configuration object
+            config: Configuration object.
         """
         super().__init__()
         self.AddMultiple(config.GetValue(BotConfigTypes.AUTHORIZED_USERS))
@@ -45,10 +45,10 @@ class AuthorizedUsersList(WrappedList):
         Check if a user is present in the authorized users list.
 
         Args:
-            user: Pyrogram user
+            user: Pyrogram user.
 
         Returns:
-            True if user is present, False otherwise
+            True if user is present, False otherwise.
         """
         return user.username is not None and user.username in self.list_elements
 
@@ -57,7 +57,7 @@ class AuthorizedUsersList(WrappedList):
         Convert the authorized users list to a formatted string.
 
         Returns:
-            String with usernames formatted as list items
+            String with usernames formatted as list items.
         """
         return "\n".join([f"- @{username}" for username in self.list_elements])
 
@@ -66,6 +66,6 @@ class AuthorizedUsersList(WrappedList):
         Convert the authorized users list to a string.
 
         Returns:
-            String representation of the list
+            String representation of the list.
         """
         return self.ToString()

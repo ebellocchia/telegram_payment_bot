@@ -42,8 +42,8 @@ class WrappedDict(ABC):
         Add single element.
 
         Args:
-            key: Key for the element
-            value: Value for the element
+            key: Key for the element.
+            value: Value for the element.
         """
         self.dict_elements[key] = value
 
@@ -53,7 +53,7 @@ class WrappedDict(ABC):
         Add multiple elements.
 
         Args:
-            elements: Dictionary or WrappedDict containing elements to add
+            elements: Dictionary or WrappedDict containing elements to add.
         """
         if isinstance(elements, WrappedDict):
             self.dict_elements = {**self.dict_elements, **elements.GetDict()}
@@ -66,7 +66,7 @@ class WrappedDict(ABC):
         Remove single element.
 
         Args:
-            key: Key to remove
+            key: Key to remove.
         """
         self.dict_elements.pop(key, None)
 
@@ -76,10 +76,10 @@ class WrappedDict(ABC):
         Check if key is present.
 
         Args:
-            key: Key to check
+            key: Key to check.
 
         Returns:
-            True if key exists, False otherwise
+            True if key exists, False otherwise.
         """
         return key in self.dict_elements
 
@@ -89,10 +89,10 @@ class WrappedDict(ABC):
         Check if value is present.
 
         Args:
-            value: Value to check
+            value: Value to check.
 
         Returns:
-            True if value exists, False otherwise
+            True if value exists, False otherwise.
         """
         return value in self.dict_elements.values()
 
@@ -101,7 +101,7 @@ class WrappedDict(ABC):
         Get keys.
 
         Returns:
-            View of dictionary keys
+            View of dictionary keys.
         """
         return self.dict_elements.keys()
 
@@ -110,7 +110,7 @@ class WrappedDict(ABC):
         Get values.
 
         Returns:
-            View of dictionary values
+            View of dictionary values.
         """
         return self.dict_elements.values()
 
@@ -119,7 +119,7 @@ class WrappedDict(ABC):
         Get items.
 
         Returns:
-            View of dictionary items
+            View of dictionary items.
         """
         return self.dict_elements.items()
 
@@ -132,7 +132,7 @@ class WrappedDict(ABC):
         Get elements count.
 
         Returns:
-            Number of elements
+            Number of elements.
         """
         return len(self.dict_elements)
 
@@ -141,7 +141,7 @@ class WrappedDict(ABC):
         Check if any elements exist.
 
         Returns:
-            True if dictionary is not empty, False otherwise
+            True if dictionary is not empty, False otherwise.
         """
         return self.Count() > 0
 
@@ -150,7 +150,7 @@ class WrappedDict(ABC):
         Check if dictionary is empty.
 
         Returns:
-            True if dictionary is empty, False otherwise
+            True if dictionary is empty, False otherwise.
         """
         return self.Count() == 0
 
@@ -159,7 +159,7 @@ class WrappedDict(ABC):
         Get the underlying dictionary.
 
         Returns:
-            The dictionary
+            The dictionary.
         """
         return self.dict_elements
 
@@ -169,10 +169,10 @@ class WrappedDict(ABC):
         Get item by key.
 
         Args:
-            key: Key to retrieve
+            key: Key to retrieve.
 
         Returns:
-            Value associated with the key
+            Value associated with the key.
         """
         return self.dict_elements[key]
 
@@ -182,7 +182,7 @@ class WrappedDict(ABC):
         Delete item by key.
 
         Args:
-            key: Key to delete
+            key: Key to delete.
         """
         del self.dict_elements[key]
 
@@ -193,8 +193,8 @@ class WrappedDict(ABC):
         Set item by key.
 
         Args:
-            key: Key to set
-            value: Value to set
+            key: Key to set.
+            value: Value to set.
         """
         self.dict_elements[key] = value
 
@@ -203,6 +203,6 @@ class WrappedDict(ABC):
         Get iterator over keys.
 
         Returns:
-            Iterator over dictionary keys
+            Iterator over dictionary keys.
         """
         yield from self.dict_elements

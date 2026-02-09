@@ -40,23 +40,25 @@ class PaymentsLoaderFactory:
     def __init__(self,
                  config: ConfigObject,
                  logger: Logger) -> None:
-        """Initialize the payments loader factory.
+        """
+        Initialize the payments loader factory.
 
         Args:
-            config: Configuration object
-            logger: Logger instance
+            config: Configuration object.
+            logger: Logger instance.
         """
         self.config = config
         self.logger = logger
 
     def CreateLoader(self) -> PaymentsLoaderBase:
-        """Create a payments loader based on the configured payment type.
+        """
+        Create a payments loader based on the configured payment type.
 
         Returns:
-            PaymentsLoaderBase instance for the configured payment type
+            PaymentsLoaderBase instance for the configured payment type.
 
         Raises:
-            PaymentTypeError: If the payment type is invalid
+            PaymentTypeError: If the payment type is invalid.
         """
         payment_type = self.config.GetValue(BotConfigTypes.PAYMENT_TYPE)
         if payment_type == PaymentTypes.EXCEL_FILE:

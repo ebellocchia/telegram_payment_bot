@@ -35,20 +35,22 @@ class PaymentsCheckJobChats(WrappedDict):
     """Collection of chats for the payments check job."""
 
     def ToString(self) -> str:
-        """Convert to string representation.
+        """
+        Convert to string representation.
 
         Returns:
-            String representation with chat titles
+            String representation with chat titles.
         """
         return "\n".join(
             [f"- {ChatHelper.GetTitle(chat)}" for _, chat in self.dict_elements.items()]
         )
 
     def __str__(self) -> str:
-        """Convert to string representation.
+        """
+        Convert to string representation.
 
         Returns:
-            String representation with chat titles
+            String representation with chat titles.
         """
         return self.ToString()
 
@@ -70,13 +72,14 @@ class PaymentsCheckJob:
                  config: ConfigObject,
                  logger: Logger,
                  translator: TranslationLoader) -> None:
-        """Initialize the payments check job.
+        """
+        Initialize the payments check job.
 
         Args:
-            client: Pyrogram client instance
-            config: Configuration object
-            logger: Logger instance
-            translator: Translation loader instance
+            client: Pyrogram client instance.
+            config: Configuration object.
+            logger: Logger instance.
+            translator: Translation loader instance.
         """
         self.client = client
         self.config = config
@@ -88,31 +91,34 @@ class PaymentsCheckJob:
         self.job_chats = PaymentsCheckJobChats()
 
     def GetPeriod(self) -> int:
-        """Get the job period.
+        """
+        Get the job period.
 
         Returns:
-            Job period in hours
+            Job period in hours.
         """
         return self.period
 
     def SetPeriod(self,
                   period: int) -> None:
-        """Set the job period.
+        """
+        Set the job period.
 
         Args:
-            period: Job period in hours
+            period: Job period in hours.
         """
         self.period = period
 
     async def AddChat(self,
                       chat: pyrogram.types.Chat) -> bool:
-        """Add a chat to the job.
+        """
+        Add a chat to the job.
 
         Args:
-            chat: Chat to add
+            chat: Chat to add.
 
         Returns:
-            True if added successfully, False if chat already exists
+            True if added successfully, False if chat already exists.
         """
         async with self.job_chats_lock:
             if self.job_chats.IsKey(chat.id):
@@ -123,13 +129,14 @@ class PaymentsCheckJob:
 
     async def RemoveChat(self,
                          chat: pyrogram.types.Chat) -> bool:
-        """Remove a chat from the job.
+        """
+        Remove a chat from the job.
 
         Args:
-            chat: Chat to remove
+            chat: Chat to remove.
 
         Returns:
-            True if removed successfully, False if chat not found
+            True if removed successfully, False if chat not found.
         """
         async with self.job_chats_lock:
             if not self.job_chats.IsKey(chat.id):
@@ -144,10 +151,11 @@ class PaymentsCheckJob:
             self.job_chats.Clear()
 
     def GetChats(self) -> PaymentsCheckJobChats:
-        """Get the list of chats in the job.
+        """
+        Get the list of chats in the job.
 
         Returns:
-            PaymentsCheckJobChats containing all chats
+            PaymentsCheckJobChats containing all chats.
         """
         return self.job_chats
 
@@ -167,11 +175,12 @@ class PaymentsCheckJob:
     async def __KickMembersInChat(self,
                                   chat: pyrogram.types.Chat,
                                   members_kicker: MembersKicker) -> None:
-        """Kick members with expired payments in a chat.
+        """
+        Kick members with expired payments in a chat.
 
         Args:
-            chat: Chat to check
-            members_kicker: MembersKicker instance
+            chat: Chat to check.
+            members_kicker: MembersKicker instance.
         """
         self.logger.GetLogger().info(f"Checking payments for chat {ChatHelper.GetTitleOrId(chat)}...")
         kicked_members = await members_kicker.KickAllWithExpiredPayment(chat)

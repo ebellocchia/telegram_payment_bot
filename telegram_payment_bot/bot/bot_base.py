@@ -52,9 +52,9 @@ class BotBase:
         Constructor.
 
         Args:
-            config_file: Path to configuration file
-            config_sections: Configuration sections
-            handlers_config: Handlers configuration
+            config_file: Path to configuration file.
+            config_sections: Configuration sections.
+            handlers_config: Handlers configuration.
         """
         self.config = ConfigFileSectionsLoader.Load(config_file, config_sections)
         self.logger = Logger(self.config)
@@ -83,7 +83,7 @@ class BotBase:
         Setup bot handlers.
 
         Args:
-            handlers_config: Handlers configuration
+            handlers_config: Handlers configuration.
         """
         def create_handler(handler_type, handler_cfg):
             async def async_callback(client, message):
@@ -104,10 +104,10 @@ class BotBase:
         Dispatch a command.
 
         Args:
-            client: Pyrogram client
-            message: Telegram message
-            cmd_type: Command type
-            **kwargs: Additional keyword arguments
+            client: Pyrogram client.
+            message: Telegram message.
+            cmd_type: Command type.
+            **kwargs: Additional keyword arguments.
         """
         await self.cmd_dispatcher.Dispatch(client, message, cmd_type, **kwargs)
 
@@ -120,9 +120,9 @@ class BotBase:
         Handle a message.
 
         Args:
-            client: Pyrogram client
-            message: Telegram message
-            msg_type: Message type
-            **kwargs: Additional keyword arguments
+            client: Pyrogram client.
+            message: Telegram message.
+            msg_type: Message type.
+            **kwargs: Additional keyword arguments.
         """
         await self.msg_dispatcher.Dispatch(client, message, msg_type, **kwargs)

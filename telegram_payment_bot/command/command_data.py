@@ -40,11 +40,11 @@ class CommandParametersList(WrappedList):
         Get parameter as boolean.
 
         Args:
-            idx: Parameter index
-            def_val: Default value if parameter not found
+            idx: Parameter index.
+            def_val: Default value if parameter not found.
 
         Returns:
-            Parameter value as boolean
+            Parameter value as boolean.
         """
         return self.__GetGenericParam(Utils.StrToBool, idx, def_val)
 
@@ -55,11 +55,11 @@ class CommandParametersList(WrappedList):
         Get parameter as integer.
 
         Args:
-            idx: Parameter index
-            def_val: Default value if parameter not found
+            idx: Parameter index.
+            def_val: Default value if parameter not found.
 
         Returns:
-            Parameter value as integer
+            Parameter value as integer.
         """
         return self.__GetGenericParam(Utils.StrToInt, idx, def_val)
 
@@ -70,11 +70,11 @@ class CommandParametersList(WrappedList):
         Get parameter as string.
 
         Args:
-            idx: Parameter index
-            def_val: Default value if parameter not found
+            idx: Parameter index.
+            def_val: Default value if parameter not found.
 
         Returns:
-            Parameter value as string
+            Parameter value as string.
         """
         return self.__GetGenericParam(str, idx, def_val)
 
@@ -84,10 +84,10 @@ class CommandParametersList(WrappedList):
         Check if last parameter is the specified value.
 
         Args:
-            value: Value to check
+            value: Value to check.
 
         Returns:
-            True if value is the last parameter, False otherwise
+            True if value is the last parameter, False otherwise.
         """
         try:
             return value == self.list_elements[self.Count() - 1]
@@ -100,10 +100,10 @@ class CommandParametersList(WrappedList):
         Check if value is present in parameters.
 
         Args:
-            value: Value to check
+            value: Value to check.
 
         Returns:
-            True if value is present, False otherwise
+            True if value is present, False otherwise.
         """
         return value in self.list_elements
 
@@ -115,15 +115,15 @@ class CommandParametersList(WrappedList):
         Get generic parameter with conversion function.
 
         Args:
-            conv_fct: Conversion function to apply
-            idx: Parameter index
-            def_val: Default value if parameter not found
+            conv_fct: Conversion function to apply.
+            idx: Parameter index.
+            def_val: Default value if parameter not found.
 
         Returns:
-            Converted parameter value
+            Converted parameter value.
 
         Raises:
-            CommandParameterError: If parameter is invalid and no default value provided
+            CommandParameterError: If parameter is invalid and no default value provided.
         """
         try:
             return conv_fct(self.list_elements[idx])
@@ -147,10 +147,10 @@ class CommandData:
         Constructor.
 
         Args:
-            message: Telegram message containing the command
+            message: Telegram message containing the command.
 
         Raises:
-            ValueError: If message is not a valid command
+            ValueError: If message is not a valid command.
         """
         if message.command is None or message.chat is None:
             raise ValueError("Invalid command")
@@ -166,7 +166,7 @@ class CommandData:
         Get command name.
 
         Returns:
-            Command name
+            Command name.
         """
         return self.cmd_name
 
@@ -175,7 +175,7 @@ class CommandData:
         Get command chat.
 
         Returns:
-            Telegram chat where command was executed
+            Telegram chat where command was executed.
         """
         return self.cmd_chat
 
@@ -184,7 +184,7 @@ class CommandData:
         Get command user.
 
         Returns:
-            User who executed the command, None if anonymous
+            User who executed the command, None if anonymous.
         """
         return self.cmd_user
 
@@ -193,6 +193,6 @@ class CommandData:
         Get command parameters.
 
         Returns:
-            List of command parameters
+            List of command parameters.
         """
         return self.cmd_params

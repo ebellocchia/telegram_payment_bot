@@ -38,8 +38,8 @@ class AuthorizedUsersGetter:
         Constructor.
 
         Args:
-            client: Pyrogram client
-            config: Configuration object
+            client: Pyrogram client.
+            config: Configuration object.
         """
         self.config = config
         self.chat_members_getter = ChatMembersGetter(client)
@@ -50,10 +50,10 @@ class AuthorizedUsersGetter:
         Get all authorized users from the specified chat.
 
         Args:
-            chat: Telegram chat
+            chat: Telegram chat.
 
         Returns:
-            List of authorized chat members
+            List of authorized chat members.
         """
         return await self.chat_members_getter.FilterMembers(
             chat,

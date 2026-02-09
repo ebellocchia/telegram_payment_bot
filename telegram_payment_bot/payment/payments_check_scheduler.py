@@ -70,13 +70,14 @@ class PaymentsCheckScheduler:
                  config: ConfigObject,
                  logger: Logger,
                  translator: TranslationLoader) -> None:
-        """Initialize the payments check scheduler.
+        """
+        Initialize the payments check scheduler.
 
         Args:
-            client: Pyrogram client instance
-            config: Configuration object
-            logger: Logger instance
-            translator: Translation loader instance
+            client: Pyrogram client instance.
+            config: Configuration object.
+            logger: Logger instance.
+            translator: Translation loader instance.
         """
         self.config = config
         self.logger = logger
@@ -85,31 +86,34 @@ class PaymentsCheckScheduler:
         self.scheduler.start()
 
     def GetChats(self) -> PaymentsCheckJobChats:
-        """Get the chats in the job.
+        """
+        Get the chats in the job.
 
         Returns:
-            PaymentsCheckJobChats containing all chats
+            PaymentsCheckJobChats containing all chats.
         """
         return self.payments_checker_job.GetChats()
 
     def GetPeriod(self) -> int:
-        """Get the job period.
+        """
+        Get the job period.
 
         Returns:
-            Job period in hours
+            Job period in hours.
         """
         return self.payments_checker_job.GetPeriod()
 
     def Start(self,
               period_hours: int) -> None:
-        """Start the payments check job.
+        """
+        Start the payments check job.
 
         Args:
-            period_hours: Job period in hours
+            period_hours: Job period in hours.
 
         Raises:
-            PaymentsCheckJobAlreadyRunningError: If job is already running
-            PaymentsCheckJobInvalidPeriodError: If period is invalid
+            PaymentsCheckJobAlreadyRunningError: If job is already running.
+            PaymentsCheckJobInvalidPeriodError: If period is invalid.
         """
         if self.IsRunning():
             self.logger.GetLogger().error("Payments check job already running, cannot start it")
@@ -125,10 +129,11 @@ class PaymentsCheckScheduler:
         self.__AddJob(period_hours)
 
     def Stop(self) -> None:
-        """Stop the payments check job.
+        """
+        Stop the payments check job.
 
         Raises:
-            PaymentsCheckJobNotRunningError: If job is not running
+            PaymentsCheckJobNotRunningError: If job is not running.
         """
         if not self.IsRunning():
             self.logger.GetLogger().error("Payments check job not running, cannot stop it")
@@ -139,13 +144,14 @@ class PaymentsCheckScheduler:
 
     async def AddChat(self,
                       chat: pyrogram.types.Chat) -> None:
-        """Add a chat to the job.
+        """
+        Add a chat to the job.
 
         Args:
-            chat: Chat to add
+            chat: Chat to add.
 
         Raises:
-            PaymentsCheckJobChatAlreadyPresentError: If chat is already present
+            PaymentsCheckJobChatAlreadyPresentError: If chat is already present.
         """
         if not await self.payments_checker_job.AddChat(chat):
             self.logger.GetLogger().error(
@@ -159,13 +165,14 @@ class PaymentsCheckScheduler:
 
     async def RemoveChat(self,
                          chat: pyrogram.types.Chat) -> None:
-        """Remove a chat from the job.
+        """
+        Remove a chat from the job.
 
         Args:
-            chat: Chat to remove
+            chat: Chat to remove.
 
         Raises:
-            PaymentsCheckJobChatNotPresentError: If chat is not present
+            PaymentsCheckJobChatNotPresentError: If chat is not present.
         """
         if not await self.payments_checker_job.RemoveChat(chat):
             self.logger.GetLogger().error(
@@ -179,10 +186,11 @@ class PaymentsCheckScheduler:
 
     async def ChatLeft(self,
                        chat: pyrogram.types.Chat) -> None:
-        """Handle bot leaving a chat.
+        """
+        Handle bot leaving a chat.
 
         Args:
-            chat: Chat that was left
+            chat: Chat that was left.
         """
         await self.payments_checker_job.RemoveChat(chat)
         self.logger.GetLogger().info(f"Left chat {ChatHelper.GetTitleOrId(chat)}")
@@ -193,19 +201,21 @@ class PaymentsCheckScheduler:
         self.logger.GetLogger().info("Removed all chats from payments check job")
 
     def IsRunning(self) -> bool:
-        """Check if the job is running.
+        """
+        Check if the job is running.
 
         Returns:
-            True if running, False otherwise
+            True if running, False otherwise.
         """
         return self.scheduler.get_job(PaymentsCheckSchedulerConst.JOB_ID) is not None
 
     def __AddJob(self,
                  period: int) -> None:
-        """Add the job to the scheduler.
+        """
+        Add the job to the scheduler.
 
         Args:
-            period: Job period in hours
+            period: Job period in hours.
         """
         self.payments_checker_job.SetPeriod(period)
         is_test_mode = self.config.GetValue(BotConfigTypes.APP_TEST_MODE)
@@ -228,14 +238,15 @@ class PaymentsCheckScheduler:
     @staticmethod
     def __BuildCronString(period: int,
                           is_test_mode: bool) -> str:
-        """Build a cron string for the job period.
+        """
+        Build a cron string for the job period.
 
         Args:
-            period: Job period
-            is_test_mode: True if in test mode (uses minutes), False for production (uses hours)
+            period: Job period.
+            is_test_mode: True if in test mode (uses minutes), False for production (uses hours).
 
         Returns:
-            Cron string
+            Cron string.
         """
         max_val = 24 if not is_test_mode else 60
         return ",".join([str(i) for i in range(0, max_val, period)])

@@ -33,10 +33,10 @@ class ChatHelper:
         Check if the chat is a channel.
 
         Args:
-            chat: The chat to check
+            chat: The chat to check.
 
         Returns:
-            True if the chat is a channel, False otherwise
+            True if the chat is a channel, False otherwise.
         """
         return chat.type == ChatType.CHANNEL
 
@@ -46,10 +46,10 @@ class ChatHelper:
         Get the title of the chat.
 
         Args:
-            chat: The chat to get the title from
+            chat: The chat to get the title from.
 
         Returns:
-            The chat title or an empty string if not available
+            The chat title or an empty string if not available.
         """
         return chat.title if chat.title is not None else ""
 
@@ -59,10 +59,10 @@ class ChatHelper:
         Get the title and ID of the chat, or just the ID if title is not available.
 
         Args:
-            chat: The chat to get the title or ID from
+            chat: The chat to get the title or ID from.
 
         Returns:
-            A formatted string with the title and ID, or just the ID
+            A formatted string with the title and ID, or just the ID.
         """
         return f"'{chat.title}' (ID: {chat.id})" if chat.title is not None else f"{chat.id}"
 
@@ -73,11 +73,11 @@ class ChatHelper:
         Check if the chat is a private chat between the bot and the user.
 
         Args:
-            chat: The chat to check
-            user: The user to check against
+            chat: The chat to check.
+            user: The user to check against.
 
         Returns:
-            True if the chat is a private chat, False otherwise
+            True if the chat is a private chat, False otherwise.
         """
         if ChatHelper.IsChannel(chat):
             return False
@@ -93,10 +93,10 @@ class MemberHelper:
         Check if a chat member is valid (not self, not bot, regular member status).
 
         Args:
-            member: The chat member to check
+            member: The chat member to check.
 
         Returns:
-            True if the member is valid, False otherwise
+            True if the member is valid, False otherwise.
         """
         return (
             member.status == ChatMemberStatus.MEMBER
@@ -115,10 +115,10 @@ class UserHelper:
         Get the username, name, and ID of the user, or just the ID if name is not available.
 
         Args:
-            user: The user to get information from
+            user: The user to get information from.
 
         Returns:
-            A formatted string with the user information
+            A formatted string with the user information.
         """
         if user is None:
             return "Anonymous user"
@@ -135,10 +135,10 @@ class UserHelper:
         Get the full name of the user (first name and last name).
 
         Args:
-            user: The user to get the name from
+            user: The user to get the name from.
 
         Returns:
-            The user's full name or an empty string if not available
+            The user's full name or an empty string if not available.
         """
         if user is None:
             return "Anonymous user"

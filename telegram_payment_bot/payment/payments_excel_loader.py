@@ -42,43 +42,47 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
 
     @override
     async def LoadAll(self) -> PaymentsData:
-        """Load all payment data from Excel file.
+        """
+        Load all payment data from Excel file.
 
         Returns:
-            PaymentsData containing all payments
+            PaymentsData containing all payments.
         """
         return (await self.__LoadAndCheckAll())[0]
 
     @override
     async def LoadSingleByUser(self,
                                user: User) -> Optional[SinglePayment]:
-        """Load a single payment by user from Excel file.
+        """
+        Load a single payment by user from Excel file.
 
         Args:
-            user: User to load payment for
+            user: User to load payment for.
 
         Returns:
-            SinglePayment for the user, or None if not found
+            SinglePayment for the user, or None if not found.
         """
         return (await self.LoadAll()).GetByUser(user)
 
     @override
     async def CheckForErrors(self) -> PaymentsDataErrors:
-        """Check for errors in the Excel file.
+        """
+        Check for errors in the Excel file.
 
         Returns:
-            PaymentsDataErrors containing any errors found
+            PaymentsDataErrors containing any errors found.
         """
         return (await self.__LoadAndCheckAll())[1]
 
     async def __LoadAndCheckAll(self) -> Tuple[PaymentsData, PaymentsDataErrors]:
-        """Load and check all payments from Excel file.
+        """
+        Load and check all payments from Excel file.
 
         Returns:
-            Tuple of (PaymentsData, PaymentsDataErrors)
+            Tuple of (PaymentsData, PaymentsDataErrors).
 
         Raises:
-            Exception: If an error occurs while loading the file
+            Exception: If an error occurs while loading the file.
         """
         payment_file = self.config.GetValue(BotConfigTypes.PAYMENT_EXCEL_FILE)
 
@@ -104,13 +108,14 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
 
     async def __LoadXlsFile(self,
                             payment_file: str) -> Tuple[PaymentsData, PaymentsDataErrors]:
-        """Load payment data from an Excel sheet (xls).
+        """
+        Load payment data from an Excel sheet (xls).
 
         Args:
-            payment_file: Payment file name
+            payment_file: Payment file name.
 
         Returns:
-            Tuple of (PaymentsData, PaymentsDataErrors)
+            Tuple of (PaymentsData, PaymentsDataErrors).
         """
         wb = await to_thread(xlrd.open_workbook, payment_file)
         sheet = wb.sheet_by_index(self.config.GetValue(BotConfigTypes.PAYMENT_WORKSHEET_IDX))
@@ -135,13 +140,14 @@ class PaymentsExcelLoader(PaymentsLoaderBase):
 
     async def __LoadXlsxFile(self,
                              payment_file: str) -> Tuple[PaymentsData, PaymentsDataErrors]:
-        """Load payment data from an Excel sheet (xlsx).
+        """
+        Load payment data from an Excel sheet (xlsx).
 
         Args:
-            payment_file: Payment file name
+            payment_file: Payment file name.
 
         Returns:
-            Tuple of (PaymentsData, PaymentsDataErrors)
+            Tuple of (PaymentsData, PaymentsDataErrors).
         """
         wb = await to_thread(openpyxl.load_workbook, payment_file, data_only=True)
         sheet = wb.worksheets[self.config.GetValue(BotConfigTypes.PAYMENT_WORKSHEET_IDX)]
