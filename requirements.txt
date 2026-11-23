@@ -1,7 +1,8 @@
 pygsheets
 xlrd
 openpyxl
-pyrotgfork
+pyrotgfork>=2.2.18; python_version >= "3.14"
+pyrotgfork; python_version < "3.14"
 pytgcrypto
 aiosmtplib
 aiofiles
