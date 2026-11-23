@@ -1,3 +1,7 @@
+# 0.9.0
+
+- Add Python 3.14 support
+
 # 0.8.0
 
 - Migrate to full async/await client
